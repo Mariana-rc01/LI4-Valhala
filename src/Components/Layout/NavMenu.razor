@@ -1,0 +1,27 @@
+<div class="flex w-full justify-center pt-8">
+    <img src="images/valhala.svg" class="select-none"/>
+</div>
+<MudNavMenu class="pt-12">
+    @foreach (var link in _links)
+    {
+        <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
+    }
+</MudNavMenu>
+
+@code {
+    class NavLink
+    {
+        public required string Name { get; set; }
+        public required string Href { get; set; }
+        public required string Icon { get; set; }
+    }
+
+    // TODO: Make this dynamic depending on user type
+    private List<NavLink> _links = new List<NavLink>
+    {
+        new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
+        new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
+        new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
+        new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
+    };
+}
