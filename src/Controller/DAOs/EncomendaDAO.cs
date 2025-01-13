@@ -1,14 +1,11 @@
 using System.Data.SqlClient;
 using Valhala.Controller.Products;
 
-namespace Valhala.Controller.Data
-{
-    public class EncomendaDAO
-    {
+namespace Valhala.Controller.Data {
+    public class EncomendaDAO {
         private static EncomendaDAO? _singleton = null;
 
-        public static EncomendaDAO GetInstance()
-        {
+        public static EncomendaDAO GetInstance() {
             if (_singleton == null)
             {
                 _singleton = new EncomendaDAO();
@@ -16,8 +13,7 @@ namespace Valhala.Controller.Data
             return _singleton;
         }
 
-        public static int Size()
-        {
+        public static int Size() {
             int size = 0;
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
@@ -36,9 +32,8 @@ namespace Valhala.Controller.Data
             return size;
         }
 
-        public Encomenda Get(int id)
-        {
-            Encomenda encomenda = null;
+        public Encomenda? Get(int id) {
+            Encomenda? encomenda = null;
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
@@ -65,8 +60,7 @@ namespace Valhala.Controller.Data
             return encomenda;
         }
 
-        public Encomenda Put(int id, Encomenda encomenda)
-        {
+        public Encomenda Put(int id, Encomenda encomenda) {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
@@ -103,8 +97,7 @@ namespace Valhala.Controller.Data
             return encomenda;
         }
 
-        public bool ExisteEncomenda(int id)
-        {
+        public bool ExisteEncomenda(int id) {
             bool existe = false;
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
@@ -124,8 +117,7 @@ namespace Valhala.Controller.Data
             return existe;
         }
 
-        public List<int> keySet()
-        {
+        public List<int> keySet() {
             List<int> keys = new List<int>();
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
@@ -144,8 +136,7 @@ namespace Valhala.Controller.Data
             return keys;
         }
 
-        public List<Encomenda> ListarEncomendasCliente(int idCliente)
-        {
+        public List<Encomenda> ListarEncomendasCliente(int idCliente) {
             List<Encomenda> encomendas = new List<Encomenda>();
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {

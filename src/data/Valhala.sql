@@ -96,9 +96,9 @@ CREATE TABLE IF NOT EXISTS `Funcionário` (
   PRIMARY KEY (`ID`));
 
 -- -----------------------------------------------------
--- Table `Peça`
+-- Table `Peca`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Peça` (
+CREATE TABLE IF NOT EXISTS `Peca` (
   `ID` INT NOT NULL,
   `Quantidade` INT NOT NULL,
   `Imagem` LONGBLOB NOT NULL,
@@ -114,15 +114,15 @@ CREATE TABLE IF NOT EXISTS `Peça` (
 -- Table `Produto_Peça`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Produto_Peça` (
-  `Peça_ID` INT NOT NULL,
+  `Peca_ID` INT NOT NULL,
   `Produto_ID` INT NOT NULL,
-  PRIMARY KEY (`Peça_ID`, `Produto_ID`),
-  CONSTRAINT `fk_Peça_has_Produto_Peça1`
-    FOREIGN KEY (`Peça_ID`)
-    REFERENCES `Peça` (`ID`)
+  PRIMARY KEY (`Peca_ID`, `Produto_ID`),
+  CONSTRAINT `fk_Peca_has_Produto_Peca1`
+    FOREIGN KEY (`Peca_ID`)
+    REFERENCES `Peca` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Peça_has_Produto_Produto1`
+  CONSTRAINT `fk_Peca_has_Produto_Produto1`
     FOREIGN KEY (`Produto_ID`)
     REFERENCES `Produto` (`ID`)
     ON DELETE NO ACTION
@@ -147,55 +147,55 @@ CREATE TABLE IF NOT EXISTS `Funcionário_Encomenda` (
     ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
--- Table `Peça_Etapa`
+-- Table `Peca_Etapa`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Peça_Etapa` (
-  `Peça_ID` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `Peca_Etapa` (
+  `Peca_ID` INT NOT NULL,
   `Etapa_ID` INT NOT NULL,
   `Quantidade` INT NOT NULL,
-  PRIMARY KEY (`Peça_ID`, `Etapa_ID`),
-  CONSTRAINT `fk_Peça_has_Etapa_Peça1`
-    FOREIGN KEY (`Peça_ID`)
-    REFERENCES `Peça` (`ID`)
+  PRIMARY KEY (`Peca_ID`, `Etapa_ID`),
+  CONSTRAINT `fk_Peca_has_Etapa_Peca1`
+    FOREIGN KEY (`Peca_ID`)
+    REFERENCES `Peca` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Peça_has_Etapa_Etapa1`
+  CONSTRAINT `fk_Peca_has_Etapa_Etapa1`
     FOREIGN KEY (`Etapa_ID`)
     REFERENCES `Etapa` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
--- Table `Peça_Funcionário`
+-- Table `Peca_Funcionário`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Peça_Funcionário` (
-  `Peça_ID` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `Peca_Funcionário` (
+  `Peca_ID` INT NOT NULL,
   `Funcionário_ID` INT NOT NULL,
-  PRIMARY KEY (`Peça_ID`, `Funcionário_ID`),
-  CONSTRAINT `fk_Peça_has_Funcionário_Peça1`
-    FOREIGN KEY (`Peça_ID`)
-    REFERENCES `Peça` (`ID`)
+  PRIMARY KEY (`Peca_ID`, `Funcionário_ID`),
+  CONSTRAINT `fk_Peca_has_Funcionário_Peca1`
+    FOREIGN KEY (`Peca_ID`)
+    REFERENCES `Peca` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Peça_has_Funcionário_Funcionário1`
+  CONSTRAINT `fk_Peca_has_Funcionário_Funcionário1`
     FOREIGN KEY (`Funcionário_ID`)
     REFERENCES `Funcionário` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 -- -----------------------------------------------------
--- Table `PedidoPeça`
+-- Table `PedidoPeca`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PedidoPeça` (
+CREATE TABLE IF NOT EXISTS `PedidoPeca` (
   `ID` INT NOT NULL,
   `Quantidade` INT NOT NULL,
   `Estado` TINYINT NOT NULL,
-  `Peça` INT NOT NULL,
+  `Peca` INT NOT NULL,
   `Gestor` INT NOT NULL,
   PRIMARY KEY (`ID`),
-  CONSTRAINT `Peça_ID`
-    FOREIGN KEY (`Peça`)
-    REFERENCES `Peça` (`ID`)
+  CONSTRAINT `Peca_ID`
+    FOREIGN KEY (`Peca`)
+    REFERENCES `Peca` (`ID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `Gestor`

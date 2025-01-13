@@ -1,8 +1,7 @@
 using System.Text;
 using Valhala.Controller.Data;
 
-namespace Valhala.Controller.Users
-{
+namespace Valhala.Controller.Users {
     public class Funcionario {
         private int id;
         private string nome;

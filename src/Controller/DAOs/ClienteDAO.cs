@@ -1,8 +1,7 @@
 using System.Data.SqlClient;
 using Valhala.Controller.Users;
 
-namespace Valhala.Controller.Data
-{
+namespace Valhala.Controller.Data {
     public class ClienteDAO{
         private static ClienteDAO? _singleton = null;
         private ClienteDAO(){}
@@ -29,8 +28,8 @@ namespace Valhala.Controller.Data
             return size;
         }
 
-        public Cliente Get (int id){
-            Cliente cliente = null;
+        public Cliente? Get (int id){
+            Cliente? cliente = null;
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
                 using(SqlCommand command = new SqlCommand("SELECT * FROM Cliente WHERE id = @id", connection)){

@@ -1,8 +1,7 @@
 using System.Text;
 using Valhala.Controller.Data;
 
-namespace Valhala.Controller.Products
-{
+namespace Valhala.Controller.Products {
     public class Encomenda {
         private int id;
         private int estado;

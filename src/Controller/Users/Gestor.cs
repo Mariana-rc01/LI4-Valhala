@@ -1,8 +1,7 @@
 using System.Text;
 using Valhala.Controller.Data;
 
-namespace Valhala.Controller.Users
-{
+namespace Valhala.Controller.Users {
     public class Gestor {
         private int id;
         private string nome;

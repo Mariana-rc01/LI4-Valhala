@@ -1,9 +1,7 @@
 using System.Data.SqlClient;
 
-namespace Valhala.Controller.Data
-{
-    public class DAOConfig
-    {
+namespace Valhala.Controller.Data {
+    public class DAOConfig {
         public const string USER = "mari";
         public const string PASSWORD = "pass";
         public const string MACHINE = "valhala.database.windows.net";
