@@ -17,7 +17,8 @@ INSERT INTO Produto (ID, Nome, Preço, Descrição, Imagem) VALUES
 (1, 'Cadeira LISABO', 55.00, 'Uma expressão artesanal que é tão confortável como robusta para se adequar até aos membros mais irrequietos da família. Ideal para todas as atividades à roda da mesa como comer, fazer jogos, desenhar e fazer os trabalhos de casa.', NULL),
 (2, 'Estrutura da cama MALM', 159.00, 'Um design simples com chapa de madeira maciça. Posicione a cama com ou sem a cabeceira encostada à parede. Se precisar de espaço para guardar a roupa de cama, acrescente caixas de arrumação para cama MALM com rodízios.', NULL),
 (3, 'Estante KALLAX', 50.00, 'Na vertical ou na horizontal: a gama KALLAX adapta-se ao seu gosto, espaço e orçamento. Personalize a estante com acessórios e caixas de acordo com as suas necessidades.C', NULL),
-(4, 'Produto D', 150.00, 'Descrição do Produto D', NULL);
+(4, 'Mesa de centro LACK', 24.00, 'As mesas LACK têm uma construção única em papel que as torna leves, fáceis de deslocar e estáveis ao mesmo tempo. Para melhorar ainda mais a sua disposição, também mantemos o preço baixo.', NULL),
+(5, 'Banco com arrumação PERJOHAN', 30.00, 'Este banco multifuncional pode ser usado como assento, mesa de apoio ou mesa de cabeceira. O espaço de arrumação por baixo permite manter revistas ou acessórios de fácil alcance. Além disso, a pega recortada torna-o fácil de deslocar.', NULL);
 
 -- Povoa a tabela Etapa, mudar imagem
 -- ID - 12 (1 - produto, 1 - nº etapa)
@@ -54,7 +55,17 @@ INSERT INTO Etapa (ID, Imagem, Produto) VALUES
 (39, 'Imagem9', 3),
 (310, 'Imagem9', 3),
 (311, 'Imagem9', 3),
-(10, 'Imagem10', 5000);
+-- Produto 4
+(51, 'Imagem8', 5),
+(52, 'Imagem9', 5),
+(53, 'Imagem9', 5),
+(54, 'Imagem9', 5),
+(55, 'Imagem9', 5),
+(56, 'Imagem9', 5),
+(57, 'Imagem9', 5),
+(58, 'Imagem9', 5),
+(59, 'Imagem9', 5),
+(510, 'Imagem9', 5);
 
 -- Povoa a tabela Encomenda
 INSERT INTO Encomenda (ID, Estado, `Data de Criação`, `Data de Entrega`, Cliente, Produto, Etapa) VALUES
@@ -135,20 +146,37 @@ INSERT INTO Peca (ID, Quantidade, Imagem, Fornecedor) VALUES
 (215, 140, 'Imagem10', 10), -- tabua esquerda lateral da cama
 (216, 140, 'Imagem10', 10), -- grades onde se coloca o colchão da cama
 (117228, 140, 'Imagem10', 10), -- tabua do fundo da cama
--- produto 3
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10),
-(10, 140, 'Imagem10', 10);
+-- produto 3 - estante
+(10002300, 140, 'Imagem10', 10),
+(104321, 140, 'Imagem10', 10),
+(118331, 140, 'Imagem10', 10),
+(119250, 140, 'Imagem10', 10),
+(100372, 140, 'Imagem10', 10),
+(121030, 140, 'Imagem10', 10),
+(100092, 140, 'Imagem10', 10),
+(115753, 140, 'Imagem10', 10),
+(103693, 140, 'Imagem10', 10),
+(115754, 140, 'Imagem10', 10),
+(311, 140, 'Imagem10', 10), -- tabuas grandes
+(312, 140, 'Imagem10', 10), -- tabuas pequeninas interiores
+(313, 140, 'Imagem10', 10), -- tabuas superior e inferior
+-- produto 4 - mesa de centro
+(115980, 140, 'Imagem10', 10),
+(108530, 140, 'Imagem10', 10),
+(109041, 140, 'Imagem10', 10),
+(120298, 140, 'Imagem10', 10),
+(120938, 140, 'Imagem10', 10),
+(411, 140, 'Imagem10', 10), -- tabua grande
+(412, 140, 'Imagem10', 10), -- pernas da mesa
+(413, 140, 'Imagem10', 10), -- tabua por baixo
+-- produto 5 - banco com arrumação
+(100214, 140, 'Imagem10', 10),
+(101350, 140, 'Imagem10', 10),
+(100001, 140, 'Imagem10', 10),
+(511, 140, 'Imagem10', 10), -- tabuas laterais
+(512, 140, 'Imagem10', 10), -- pernas
+(513, 140, 'Imagem10', 10), -- tabua de arrumação
+(514, 140, 'Imagem10', 10); -- tabuas superiores
 
 -- Povoa a tabela Produto_Peça
 INSERT INTO Produto_Peça (Peca_ID, Produto_ID) VALUES
@@ -182,7 +210,34 @@ INSERT INTO Produto_Peça (Peca_ID, Produto_ID) VALUES
 (215, 2),
 (216, 2),
 (117228, 2),
-(10, 10);
+(10002300,3),
+(104321,3),
+(118331,3),
+(119250,3),
+(100372,3),
+(121030,3),
+(100092,3),
+(115753,3),
+(103693,3),
+(115754,3),
+(311, 3),
+(312, 3),
+(313, 3),
+(115980, 4),
+(108530, 4),
+(109041, 4),
+(120298, 4),
+(120938, 4),
+(411, 4),
+(412, 4),
+(413, 4),
+(100214, 5),
+(101350, 5),
+(100001, 5),
+(511, 5),
+(512, 5),
+(513, 5),
+(514, 5);
 
 -- Povoa a tabela Funcionário_Encomenda
 INSERT INTO Funcionário_Encomenda (Funcionário_ID, Encomenda_ID) VALUES
@@ -229,27 +284,42 @@ INSERT INTO Peca_Etapa (Peca_ID, Etapa_ID, Quantidade) VALUES
 (105163, 210, 4),
 (10096286, 210, 4),
 -- Etapas do Produto 3
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(113453, 22, 1),
-(0,0,0);
+(118331, 31, 12),
+(311, 31, 2),
+(312, 32, 3),
+(119250, 34, 12),
+(313, 35, 2),
+(121030, 36, 1),
+(100092, 36, 1),
+(104321, 36, 8),
+(10002300, 37, 4),
+(115753, 38, 2),
+(100372, 38, 4),
+(103693, 311, 2),
+(115754, 311, 2),
+-- Etapas do Produto 4
+(115980, 41, 4),
+(411, 41, 1),
+(412, 42, 4),
+(120938, 43, 2),
+(108530, 44, 2),
+(120298, 44, 2),
+(108530, 46, 2),
+(120298, 46, 2),
+(413, 47, 1),
+(109041, 48, 4),
+-- Etapas do Produto 5
+(101350, 41, 8),
+(511, 51, 2),
+(512, 52, 1),
+(100214, 53, 4),
+(101350, 54, 2),
+(513, 54, 1),
+(512, 56, 1),
+(100214, 57, 4),
+(101350, 58, 4),
+(514, 59, 2),
+(100214, 510, 4);
 
 -- Povoa a tabela Peca_Funcionário
 INSERT INTO Peca_Funcionário (Peca_ID, Funcionário_ID) VALUES
