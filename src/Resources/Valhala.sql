@@ -26,7 +26,7 @@ CREATE TABLE [Produto] (
     [Nome] NVARCHAR(75) NOT NULL,
     [Preço] DECIMAL(18, 2) NOT NULL,
     [Descrição] NVARCHAR(MAX) NOT NULL,
-    [Imagem] VARBINARY(MAX) NULL
+    [Imagem] VARCHAR(200) NULL
 );
 GO
 
@@ -35,7 +35,7 @@ GO
 -- -----------------------------------------------------
 CREATE TABLE [Etapa] (
     [ID] INT NOT NULL PRIMARY KEY,
-    [Imagem] VARBINARY(MAX) NULL,
+    [Imagem] VARCHAR(200) NULL,
     [Produto] INT NOT NULL,
     FOREIGN KEY ([Produto]) REFERENCES [Produto]([ID])
         ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -98,7 +98,7 @@ GO
 CREATE TABLE [Peça] (
     [ID] INT NOT NULL PRIMARY KEY,
     [Quantidade] INT NOT NULL,
-    [Imagem] VARBINARY(MAX) NULL,
+    [Imagem] VARCHAR(200) NULL,
     [Fornecedor] INT NOT NULL,
     FOREIGN KEY ([Fornecedor]) REFERENCES [Fornecedor]([ID])
         ON DELETE NO ACTION ON UPDATE NO ACTION

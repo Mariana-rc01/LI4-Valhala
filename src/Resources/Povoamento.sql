@@ -17,11 +17,11 @@ INSERT INTO Cliente (ID, Nome, Senha) VALUES
 
 -- Tabela Produto
 INSERT INTO Produto (ID, Nome, [Preço], Descrição, [Imagem]) VALUES
-(1, 'Cadeira LISABO', 55.00, 'Uma expressão artesanal...', NULL),
-(2, 'Estrutura da cama MALM', 159.00, 'Um design simples...', NULL),
-(3, 'Estante KALLAX', 50.00, 'Na vertical ou na horizontal...', NULL),
-(4, 'Mesa de centro LACK', 24.00, 'As mesas LACK têm uma construção...', NULL),
-(5, 'Banco com arrumação PERJOHAN', 30.00, 'Este banco multifuncional...', NULL);
+(1, 'Cadeira LISABO', 55.00, 'Uma expressão artesanal...', 'images/products/cadeira.png'),
+(2, 'Estrutura da cama MALM', 159.00, 'Um design simples...', 'images/products/cama.png'),
+(3, 'Estante KALLAX', 50.00, 'Na vertical ou na horizontal...', 'images/products/estante.png'),
+(4, 'Mesa de centro LACK', 24.00, 'As mesas LACK têm uma construção...', 'images/products/mesa.png'),
+(5, 'Banco com arrumação PERJOHAN', 30.00, 'Este banco multifuncional...', 'images/products/banco.png');
 
 -- Tabela Etapa
 INSERT INTO Etapa (ID, [Imagem], Produto) VALUES
