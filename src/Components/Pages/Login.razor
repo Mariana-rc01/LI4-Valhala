@@ -1,0 +1,76 @@
+@page "/login"
+@using Valhala.Controller.UI
+@using Microsoft.AspNetCore.Components.Authorization
+@using Valhala.Authentication
+
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+@inject IJSRuntime js
+@inject UIService UIService
+
+<PageTitle>Login</PageTitle>
+<div class="h-full flex flex-col justify-center z-50">
+    <div class="space-y-16">
+        <div class="bg-gradient-to-r from-blue-500 via-teal-500 to-purple-700 w-full h-screen absolute top-0 left-0"></div>
+        <div class="relative bg-white border rounded-xl p-8 w-[30rem] h-fit m-auto space-y-4 shadow-md">
+            <h1 class="text-3xl font-bold text-center pb-4">Bem-Vindo!</h1>
+            <form class="space-y-6" @onsubmit="Authenticate">
+                 <select @bind="UserType">
+                    <option value="Cliente">Cliente</option>
+                    <option value="Gestor">Gestor</option>
+                    <option value="Trabalhador">Trabalhador</option>
+                    <option value="Fornecedor">Fornecedor</option>
+                </select>
+
+                <div>
+                    <label for="id" class="block text-sm font-medium text-gray-900">Identificador</label>
+                    <div class="mt-2">
+                        <InputNumber @bind-Value="@ID" type="id" id="id" class="block w-full rounded-md border-gray-300 shadow-sm px-4 py-2" placeholder="Identificador" />
+                    </div>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-900">Palavra passe</label>
+                    <div class="mt-2">
+                        <InputText @bind-Value="@Password" type="password" id="password" class="block w-full rounded-md border-gray-300 shadow-sm px-4 py-2" />
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white rounded-lg py-2 font-medium hover:bg-blue-600 transition-colors">
+                    Log In
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private int ID { get; set; }
+    private string Password { get; set; }
+    private string UserType { get; set; } = "Cliente"; // Default user type
+
+    private async Task Authenticate()
+    {
+        string role = string.Empty;
+        try
+        {
+            Dictionary<int, string> loginResult = UIService.Login(ID, Password, UserType); // Pass UserType
+            ID = loginResult.Keys.First();
+            role = loginResult.Values.First();
+        }
+        catch (Exception e)
+        {
+            await js.InvokeVoidAsync("alert", e.Message);
+            return;
+        }
+
+        ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider) AuthStateProvider;
+        UserUI userInfo = UIService.GetInformacaoUtilizador(ID, role);
+        await valhalaAuthStateProvider.UpdateAuthenticationState(new UserSession
+        {
+            ID = ID,
+            Name = userInfo.GetNome(),
+            Role = userInfo.GetUserType()
+        });
+        NavManager.NavigateTo("/", true);
+    }
+}
