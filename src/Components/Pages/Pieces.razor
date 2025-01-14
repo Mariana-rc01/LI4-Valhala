@@ -1,0 +1,31 @@
+@using Valhala.Controller.Products
+@page "/parts"
+
+<PageTitle>Home</PageTitle>
+
+<MudText Typo="Typo.h1">
+    Gestão de Peças
+</MudText>
+
+<MudTable Items="@pecas" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8">
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Identificador</MudTh>
+        <MudTh>Stock</MudTh>
+        <MudTh>Fornecedor</MudTh>
+    </HeaderContent>
+    <PagerContent>
+            <MudTablePager HideRowsPerPage="@true"  />
+    </PagerContent>
+</MudTable>
+
+@code { 
+    private bool _loading;
+    private IEnumerable<Peca> pecas = new List<Peca>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        pecas = new List<Peca>();
+    }
+
+}
