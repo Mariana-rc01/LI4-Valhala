@@ -43,7 +43,7 @@ namespace Valhala.Controller.Data {
                         {
                             etapa = new Etapa(
                                 reader.GetInt32(0),  // ID
-                                (byte[])reader["Imagem"],  // Imagem
+                                reader.GetString(1),  // Imagem
                                 reader.GetInt32(2)  // ProdutoID
                             );
                         }
@@ -67,7 +67,7 @@ namespace Valhala.Controller.Data {
                         {
                             etapas.Add(new Etapa(
                                 reader.GetInt32(0),  // ID
-                                (byte[])reader["Imagem"],  // Imagem
+                                reader.GetString(1),  // Imagem
                                 reader.GetInt32(2)  // ProdutoID
                             ));
                         }
@@ -136,7 +136,7 @@ namespace Valhala.Controller.Data {
                         {
                             etapas.Add(new Etapa(
                                 reader.GetInt32(0),  // ID
-                                (byte[])reader["Imagem"],  // Imagem
+                                reader.GetString(1),  // Imagem
                                 reader.GetInt32(2)  // ProdutoID
                             ));
                         }

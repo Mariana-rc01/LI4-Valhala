@@ -1,5 +1,6 @@
 using Valhala.Components;
 using MudBlazor.Services;
+using Valhala.Controller.UI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+
+builder.Services.AddScoped<UIService>();
 
 var app = builder.Build();
 

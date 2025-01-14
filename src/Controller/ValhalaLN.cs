@@ -5,6 +5,16 @@ namespace Valhala.Controller;
 
 public class ValhalaLN : IValhalaLN {
 
-    // Implementar aqui os métodos que serão precisos ao longo do tempo
+    private readonly ISubProducts subProducts;
+
+    public ValhalaLN() {
+        this.subProducts = new SubProducts();
+    }
+
+    // Peças
+
+    public List<Peca> listPecas() {
+        return this.subProducts.listPecas();
+    }
 
 }

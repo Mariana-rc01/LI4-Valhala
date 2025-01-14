@@ -44,13 +44,12 @@ namespace Valhala.Controller.Data {
                     {
                         if (reader.Read())
                         {
-                            byte[]? imagem = reader.IsDBNull(4) ? null : (byte[])reader["Imagem"];
                             produto = new Produto(
                                 reader.GetInt32(0),   // ID
                                 reader.GetString(1),  // Nome
                                 reader.GetDecimal(2), // Preço
                                 reader.GetString(3),  // Descrição
-                                imagem                // Imagem
+                                reader.GetString(4)  // Imagem
                             );
                         }
                     }
@@ -140,13 +139,12 @@ namespace Valhala.Controller.Data {
                     {
                         while (reader.Read())
                         {
-                            byte[]? imagem = reader.IsDBNull(4) ? null : (byte[])reader["Imagem"];
                             produtos.Add(new Produto(
                                 reader.GetInt32(0),   // ID
                                 reader.GetString(1),  // Nome
                                 reader.GetDecimal(2), // Preço
                                 reader.GetString(3),  // Descrição
-                                imagem                // Imagem
+                                reader.GetString(4)  // Imagem
                             ));
                         }
                     }

@@ -1,5 +1,9 @@
-@using Valhala.Controller.Products
 @page "/parts"
+
+@using Valhala.Controller.Products
+@using Valhala.Controller.UI
+
+@inject UIService UIService
 
 <PageTitle>Home</PageTitle>
 
@@ -14,6 +18,12 @@
         <MudTh>Stock</MudTh>
         <MudTh>Fornecedor</MudTh>
     </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="">@context.GetImagem()</MudTd>
+        <MudTd DataLabel="Identificador">@context.GetID()</MudTd>
+        <MudTd DataLabel="Stock">@context.GetQuantidade()</MudTd>
+        <MudTd DataLabel="Fornecedor">@context.GetFornecedorNome()</MudTd>
+    </RowTemplate>
     <PagerContent>
             <MudTablePager HideRowsPerPage="@true"  />
     </PagerContent>
@@ -21,11 +31,11 @@
 
 @code { 
     private bool _loading;
-    private IEnumerable<Peca> pecas = new List<Peca>();
+    private IEnumerable<PecaUI> pecas = new List<PecaUI>();
 
     protected override async Task OnInitializedAsync()
     {
-        pecas = new List<Peca>();
+        pecas = UIService.listPecas();
     }
 
 }
