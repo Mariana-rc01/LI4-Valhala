@@ -2,25 +2,21 @@ using Valhala.Controller.Data;
 using Valhala.Controller.Users;
 using System.Collections.Generic;
 
-namespace Valhala.Controller.Users
-{
-    public class SubUtilizadores : ISubUtilizadores
-    {
+namespace Valhala.Controller.Users {
+    public class SubUtilizadores : ISubUtilizadores {
         private ClienteDAO clienteDAO;
         private FuncionarioDAO funcionarioDAO;
         private GestorDAO gestorDAO;
         private FornecedorDAO fornecedorDAO;
 
-        public SubUtilizadores()
-        {
+        public SubUtilizadores() {
             this.clienteDAO = ClienteDAO.GetInstance();
             this.funcionarioDAO = FuncionarioDAO.GetInstance();
             this.gestorDAO = GestorDAO.GetInstance();
             this.fornecedorDAO = FornecedorDAO.GetInstance();
         }
 
-        public Dictionary<int, string> ValidarLogin(int id, string senha, string tipo)
-        {
+        public Dictionary<int, string> ValidarLogin(int id, string senha, string tipo) {
             Dictionary<int, string> resultado = new Dictionary<int, string>();
 
             switch (tipo.ToLower())
@@ -76,8 +72,7 @@ namespace Valhala.Controller.Users
             return resultado;
         }
 
-        public string GetNomeUtilizador(int id, string tipo)
-        {
+        public string GetNomeUtilizador(int id, string tipo) {
             string nome = string.Empty;
 
             switch (tipo.ToLower())

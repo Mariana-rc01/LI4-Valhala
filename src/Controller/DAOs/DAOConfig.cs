@@ -2,9 +2,9 @@ using System.Data.SqlClient;
 
 namespace Valhala.Controller.Data {
     public class DAOConfig {
-        public const string USER = "mari";
-        public const string PASSWORD = "pass";
-        public const string MACHINE = "valhala.database.windows.net";
+        public const string USER = "sa";
+        public const string PASSWORD = "Password1234";
+        public const string MACHINE = "localhost";
         public const string DATABASE = "Valhala";
         public static string GetConnectionString()
         {
