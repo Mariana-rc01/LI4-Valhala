@@ -17,7 +17,7 @@ namespace Valhala.Controller.Data {
             int size = 0;
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Funcionario", connection)){
+                using(SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Funcionário", connection)){
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
                             size = reader.GetInt32(0);
@@ -32,7 +32,7 @@ namespace Valhala.Controller.Data {
             Funcionario? funcionario = null;
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM Funcionario WHERE id = @id", connection)){
+                using(SqlCommand command = new SqlCommand("SELECT * FROM Funcionário WHERE id = @id", connection)){
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
@@ -47,7 +47,7 @@ namespace Valhala.Controller.Data {
         public Funcionario Put(int id, Funcionario funcionario) {
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                string sql = "MERGE INTO Funcionario USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Funcionario.id = values.id WHEN MATCHED THEN UPDATE SET Funcionario.nome = values.nome, Funcionario.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
+                string sql = "MERGE INTO Funcionário USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Funcionário.id = values.id WHEN MATCHED THEN UPDATE SET Funcionario.nome = values.nome, Funcionario.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
                 using(SqlCommand command = new SqlCommand(sql, connection)){
                     command.Parameters.AddWithValue("@id", id);
                     command.Parameters.AddWithValue("@nome", funcionario.GetNome());
@@ -62,7 +62,7 @@ namespace Valhala.Controller.Data {
             bool existe = false;
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM Funcionario WHERE id = @id", connection)){
+                using(SqlCommand command = new SqlCommand("SELECT * FROM Funcionário WHERE id = @id", connection)){
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         existe = reader.Read();
@@ -76,7 +76,7 @@ namespace Valhala.Controller.Data {
             List<int> keys = new List<int>();
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT id FROM Funcionario", connection)){
+                using(SqlCommand command = new SqlCommand("SELECT id FROM Funcionário", connection)){
                     using(SqlDataReader reader = command.ExecuteReader()){
                         while(reader.Read()){
                             keys.Add(reader.GetInt32(0));

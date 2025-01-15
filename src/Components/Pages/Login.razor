@@ -30,10 +30,12 @@
 
 <div class="h-screen flex justify-center items-center">
     <div class="flex w-full h-full">
-        <div class="w-1/2 h-screen bg-[#0D051B] flex justify-center items-start relative z-1">
+        <!-- Fundo preto ajustável -->
+        <div class="w-1/2 h-full bg-[#0D051B] flex justify-center items-start relative z-10">
             <img src="images/loginBackground.png" class="absolute top-0 left-0 w-full h-full object-cover select-none" />
         </div>
 
+        <!-- Contêiner do formulário de login -->
         <div class="w-1/2 h-screen flex justify-center items-center p-8 bg-[#F7FFFF]">
             <div class="w-[30rem] space-y-8">
                 <!-- Bem-Vindo -->
@@ -92,7 +94,7 @@
     private string errorMessage = ""; // Mensagem de erro que será exibida no modal
 
     // Lista de tipos de utilizadores
-    private string[] UserTypes = new string[] { "Cliente", "Gestor", "Trabalhador", "Fornecedor" };
+    private string[] UserTypes = new string[] { "Cliente", "Gestor", "Funcionario", "Fornecedor" };
 
     private async Task Authenticate()
     {
@@ -118,15 +120,10 @@
             await js.InvokeVoidAsync("alert", e.Message);
             return;
         }
-
+        int id = ID ?? 0;
         ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider)AuthStateProvider;
-        UserUI userInfo = UIService.GetInformacaoUtilizador(ID ?? 0, UserType);
-        await valhalaAuthStateProvider.UpdateAuthenticationState(new UserSession
-        {
-            ID = ID ?? 0,
-            Name = userInfo.GetNome(),
-            Role = userInfo.GetUserType()
-        });
+        UserUI userInfo = UIService.GetInformacaoUtilizador(id, UserType);
+        await valhalaAuthStateProvider.UpdateAuthenticationState(new UserSession(id, userInfo.GetNome(), userInfo.GetUserType()));
         NavManager.NavigateTo("/teste", true);
     }
 
@@ -141,3 +138,4 @@
         return userType == UserType ? "text-black font-bold" : "text-gray-500";
     }
 }
+

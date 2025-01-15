@@ -1,10 +1,31 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using Valhala.Authentication
+@using Microsoft.AspNetCore.Components
+@inject AuthenticationStateProvider AuthStateProvider
+
 <div class="flex w-full justify-center pt-8">
     <img src="images/valhala.svg" class="select-none"/>
 </div>
+
 <MudNavMenu class="pt-12">
     @foreach (var link in _links)
     {
         <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
+    }
+
+    @if (userSession != null)
+    {
+        <div class="mt-12 pt-8 pb-4">
+            <div class="flex bottom-0 left-0 justify-start">
+                <img src="images/avatar.png" alt="User" class="w-12 h-12 rounded-full mr-4" />
+                
+                <div>
+                    <div style="font-size: 15px; font-weight: bold;">@userSession.Name</div>
+                    <div style="font-size: 10px;">@userSession.Role</div>
+                </div>
+            </div>
+        </div>
     }
 </MudNavMenu>
 
@@ -16,7 +37,6 @@
         public required string Icon { get; set; }
     }
 
-    // TODO: Make this dynamic depending on user type
     private List<NavLink> _links = new List<NavLink>
     {
         new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
@@ -24,4 +44,69 @@
         new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
         new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
     };
+
+    private UserSession? userSession;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id), name, role);
+
+            // Filtrando os links com base no tipo de usuário
+            _links = GetUserLinks(role);
+        }
+        else
+        {
+            userSession = null; // Nenhum usuário autenticado
+        }
+    }
+
+    // Método que retorna os links com base no papel do usuário
+    private List<NavLink> GetUserLinks(string role)
+    {
+        switch (role)
+        {
+            case "Gestor":
+                return new List<NavLink>
+                {
+                    new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
+                    new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
+                    new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
+                    new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
+                };
+
+            case "Cliente":
+                return new List<NavLink>
+                {
+                    new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
+                    new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
+                };
+
+            case "Fornecedor":
+                return new List<NavLink>
+                {
+                    new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
+                    new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
+                };
+
+            case "Funcionario":
+                return new List<NavLink>
+                {
+                    new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
+                    new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
+                    new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
+                };
+
+            default:
+                return new List<NavLink>(); // Retorna uma lista vazia se o papel não for reconhecido
+        }
+    }
 }
