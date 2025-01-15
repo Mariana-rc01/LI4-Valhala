@@ -19,7 +19,11 @@
         <MudTh>Fornecedor</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="">@context.GetImagem()</MudTd>
+        <MudTd DataLabel="">
+            @if(@context.GetImagem() != ""){
+                <img class="w-16 h-16" src=@context.GetImagem() />
+            }
+        </MudTd>
         <MudTd DataLabel="Identificador">@context.GetID()</MudTd>
         <MudTd DataLabel="Stock">@context.GetQuantidade()</MudTd>
         <MudTd DataLabel="Fornecedor">@context.GetFornecedorNome()</MudTd>

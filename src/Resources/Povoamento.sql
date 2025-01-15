@@ -108,10 +108,10 @@ INSERT INTO Funcionário (ID, Nome, Senha) VALUES
 -- Tabela Peca
 INSERT INTO Peça (ID, Quantidade, [Imagem], Fornecedor) VALUES
 -- produto 1 - cadeira
-(123595, 100, NULL, 1),
-(100212, 200, NULL, 1),
-(10087753, 150, NULL, 1),
-(195701, 180, NULL, 1),
+(123595, 100, "images/parts/123595.svg", 1),
+(100212, 200, "images/parts/100212.svg", 1),
+(10087753, 150, "images/parts/10087753.svg", 1),
+(195701, 180, "images/parts/195701.svg", 1),
 (111, 120, NULL, 2), -- tabula 1 da cadeira
 (112, 120, NULL, 2), -- tabula 2 da cadeira
 (113, 120, NULL, 2), -- suporte da cadeira
