@@ -1,10 +1,38 @@
-<div class="flex w-full justify-center pt-8">
-    <img src="images/valhala.svg" class="select-none"/>
+@using MudBlazor
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+
+<div class="flex w-full justify-start pt-8"> 
+    <img src="images/valhala.svg" class="select-none" />
 </div>
-<MudNavMenu class="pt-12">
+
+<MudNavMenu class="pt-12" aling="left">
     @foreach (var link in _links)
     {
-        <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
+        if (link.SubLinks != null)
+        {
+            <MudNavGroup href="@link.Href" Icon="@link.Icon" title="@link.Name">
+                @foreach (var subLink in link.SubLinks)
+                {
+                    if (subLink.Name == "Registar Utilizador")
+                    {
+                        <MudButton Href="javascript:void(0);" StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog">
+                            @subLink.Name
+                        </MudButton>
+                    }
+                    else
+                    {
+                        <MudButton Href="javascript:void(0);" StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog">
+                            @subLink.Name
+                        </MudButton>
+                    }
+                }
+            </MudNavGroup>
+        }
+        else
+        {
+            <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
+        }
     }
 </MudNavMenu>
 
@@ -14,14 +42,36 @@
         public required string Name { get; set; }
         public required string Href { get; set; }
         public required string Icon { get; set; }
+        public List<NavLink>? SubLinks { get; set; } // Corrected to List<NavLink>
     }
 
-    // TODO: Make this dynamic depending on user type
     private List<NavLink> _links = new List<NavLink>
     {
         new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
         new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
         new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
-        new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
+        new NavLink
+        {
+            Name = "Utilizadores",
+            Href = "/users",
+            Icon = Icons.Material.Outlined.Group,
+            SubLinks = new List<NavLink>
+            {
+                new NavLink { Name = "Registar Utilizador", Href = "/users/add", Icon = Icons.Material.Outlined.PersonAdd },
+                new NavLink { Name = "Remover Utilizador", Href = "/users/remove", Icon = Icons.Material.Outlined.PersonSearch },
+            }
+        },
     };
+
+    private void OpenUserRegistrationDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
+        DialogService.ShowAsync<UserRegistrationDialog>("Styling Example Dialog", options);
+    }
+
+    private void OpenUserRemoveDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
+        DialogService.ShowAsync<UserRemoveDialog>("Styling Example Dialog", options);
+    }
 }

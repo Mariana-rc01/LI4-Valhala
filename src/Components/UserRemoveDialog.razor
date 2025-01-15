@@ -1,0 +1,36 @@
+@using MudBlazor
+
+<MudDialog Class="custom-modal">
+    <TitleContent>
+        Remover utilizador
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField Label="Identificador" @bind-Value="user.Id" />
+            </MudItem>
+            <MudItem xs="6">
+                <!-- Add any additional content here if needed -->
+            </MudItem>
+            <MudItem xs="6" Style="display: flex; justify-content: flex-end;">
+                <DialogActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Submit">Remover Utilizador</MudButton>
+                </DialogActions>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance? MudDialog { get; set; }
+
+    private UserRemoveModel user = new UserRemoveModel();
+
+    private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+
+    public class UserRemoveModel
+    {
+        public int Id { get; set; }
+    }
+}

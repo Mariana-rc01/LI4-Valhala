@@ -1,0 +1,67 @@
+@using MudBlazor
+
+<MudDialog Class="custom-modal">
+    <TitleContent>
+        Registar novo utilizador
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudTextField Label="Identificador" @bind-Value="user.Id" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField Label="Nome" @bind-Value="user.Name" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField Label="Password" @bind-Value="user.Password" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudTextField Label="Confirmar Password" @bind-Value="user.ConfirmPassword" />
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudSelect T="string" Label="Tipo de utilizador" AnchorOrigin="Origin.BottomCenter"
+                    @bind-Value="user.UserType">
+                    <MudSelectItem Value="@UserTypes.Funcionario">Funcionário</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Gestor">Gestor</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Fornecedor">Fornecedor</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Cliente">Cliente</MudSelectItem>
+                </MudSelect>
+
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <DialogActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit">Criar Utilizador
+                    </MudButton>
+                </DialogActions>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>
+
+@code {
+
+    public static class UserTypes
+    {
+        public const string Funcionario = "Funcionário";
+        public const string Gestor = "Gestor";
+        public const string Fornecedor = "Fornecedor";
+        public const string Cliente = "Cliente";
+    }
+
+
+    private MudDialogInstance? MudDialog { get; set; }
+
+    private UserRegistrationModel user = new UserRegistrationModel();
+
+    private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+
+    public class UserRegistrationModel
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set; }
+        public string? UserType { get; set; }
+    }
+}
