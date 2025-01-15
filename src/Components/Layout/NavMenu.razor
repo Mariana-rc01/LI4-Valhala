@@ -72,12 +72,11 @@
         {
             userSession = new UserSession(int.Parse(id), name, role);
 
-            // Filtrando os links com base no tipo de usuário
             _links = GetUserLinks(role);
         }
         else
         {
-            userSession = null; // Nenhum usuário autenticado
+            userSession = null;
         }
     }
 
