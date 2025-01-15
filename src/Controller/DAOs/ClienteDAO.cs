@@ -1,4 +1,5 @@
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 using Valhala.Controller.Users;
 
 namespace Valhala.Controller.Data {
@@ -36,7 +37,7 @@ namespace Valhala.Controller.Data {
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
-                            cliente = new Cliente(reader.GetString(1), reader.GetString(2));
+                            cliente = new Cliente(reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
                         }
                     }
                 }
