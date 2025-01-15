@@ -8,11 +8,11 @@ namespace Valhala.Controller.Products {
         private string nome;
         private decimal preco;
         private string descricao;
-        private byte[]? imagem;
+        private string imagem;
 
         private static int _contadorProdutos = ProdutoDAO.Size();
 
-        public Produto(int id, string nome, decimal preco, string descricao, byte[]? imagem = null) {
+        public Produto(int id, string nome, decimal preco, string descricao, string imagem) {
             this.id = id;
             this.nome = nome;
             this.preco = preco;
@@ -20,7 +20,7 @@ namespace Valhala.Controller.Products {
             this.imagem = imagem;
         }
 
-        public Produto(string nome, decimal preco, string descricao, byte[]? imagem = null) {
+        public Produto(string nome, decimal preco, string descricao, string imagem) {
             this.id = ++_contadorProdutos;
             this.nome = nome;
             this.preco = preco;
@@ -44,7 +44,7 @@ namespace Valhala.Controller.Products {
             return this.descricao;
         }
 
-        public byte[]? GetImagem() {
+        public string GetImagem() {
             return this.imagem;
         }
 
@@ -60,7 +60,7 @@ namespace Valhala.Controller.Products {
             this.descricao = descricao;
         }
 
-        public void SetImagem(byte[]? imagem) {
+        public void SetImagem(string imagem) {
             this.imagem = imagem;
         }
 

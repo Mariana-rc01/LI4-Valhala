@@ -5,23 +5,26 @@ namespace Valhala.Controller.Products {
     public class Peca {
         private int id;
         private int quantidade;
-        private byte[] imagem;
+        private string imagem;
         private int fornecedor;
+        private FornecedorDAO fornecedorDAO;
 
         private static int _contadorPecas = PecaDAO.Size();
 
-        public Peca(int id, int quantidade, byte[] imagem, int fornecedor) {
+        public Peca(int id, int quantidade, string imagem, int fornecedor) {
             this.id = id;
             this.quantidade = quantidade;
             this.imagem = imagem;
             this.fornecedor = fornecedor;
+            this.fornecedorDAO = FornecedorDAO.GetInstance();
         }
 
-        public Peca(int quantidade, byte[] imagem, int fornecedor) {
+        public Peca(int quantidade, string imagem, int fornecedor) {
             this.id = ++_contadorPecas;
             this.quantidade = quantidade;
             this.imagem = imagem;
             this.fornecedor = fornecedor;
+            this.fornecedorDAO = FornecedorDAO.GetInstance();
         }
 
         public int GetID() {
@@ -32,7 +35,7 @@ namespace Valhala.Controller.Products {
             return this.quantidade;
         }
 
-        public byte[] GetImagem() {
+        public string GetImagem() {
             return this.imagem;
         }
 
@@ -44,7 +47,7 @@ namespace Valhala.Controller.Products {
             this.quantidade = quantidade;
         }
 
-        public void SetImagem(byte[] imagem) {
+        public void SetImagem(string imagem) {
             this.imagem = imagem;
         }
 
