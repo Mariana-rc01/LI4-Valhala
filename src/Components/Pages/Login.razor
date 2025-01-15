@@ -1,8 +1,11 @@
 @page "/login"
+@using MudBlazor
 @using Valhala.Controller.UI
 @using Microsoft.AspNetCore.Components.Authorization
 @using Valhala.Authentication
 @using Microsoft.AspNetCore.Components
+@using Valhala.Components.Layout
+@layout LogInLayout
 
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
@@ -10,44 +13,86 @@
 @inject UIService UIService
 
 <PageTitle>Login</PageTitle>
-<div class="h-full flex flex-col justify-center z-50">
-    <div class="space-y-16">
-        <div class="bg-gradient-to-r from-blue-500 via-teal-500 to-purple-700 w-full h-screen absolute top-0 left-0"></div>
-        <div class="relative bg-white border rounded-xl p-8 w-[30rem] h-fit m-auto space-y-4 shadow-md">
-            <h1 class="text-3xl font-bold text-center pb-4">Bem-Vindo!</h1>
-            <form class="space-y-6" @onsubmit="Authenticate">
-                 <select @bind="UserType">
-                    <option value="Cliente">Cliente</option>
-                    <option value="Gestor">Gestor</option>
-                    <option value="Trabalhador">Trabalhador</option>
-                    <option value="Fornecedor">Fornecedor</option>
-                </select>
 
-                <div>
-                    <label for="id" class="block text-sm font-medium text-gray-900">Identificador</label>
-                    <div class="mt-2">
-                        <InputNumber @bind-Value="@ID" type="id" id="id" class="block w-full rounded-md border-gray-300 shadow-sm px-4 py-2" placeholder="Identificador" />
+<!-- Janela de erro -->
+@if (showErrorModal)
+{
+    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 class="text-xl font-semibold text-red-500">Aviso</h3>
+            <p class="mt-4">@errorMessage</p>
+            <div class="mt-6 flex justify-end">
+                <button class="bg-black text-white py-2 px-4 rounded-full" @onclick="CloseErrorModal">Fechar</button>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="h-screen flex justify-center items-center">
+    <div class="flex w-full h-full">
+        <div class="w-1/2 h-screen bg-[#0D051B] flex justify-center items-start relative z-1">
+            <img src="images/loginBackground.png" class="absolute top-0 left-0 w-full h-full object-cover select-none" />
+        </div>
+
+        <div class="w-1/2 h-screen flex justify-center items-center p-8 bg-[#F7FFFF]">
+            <div class="w-[30rem] space-y-8">
+                <!-- Bem-Vindo -->
+                <h1 class="text-3xl font-bold text-center text-black pb-4">Bem-Vindo!</h1>
+                <form class="space-y-6" @onsubmit="Authenticate">
+                    <!-- MudRadioGroup para selecionar o tipo de utilizador -->
+                    <div class="flex justify-around space-x-6">
+                        @foreach (var userType in UserTypes)
+                        {
+                            <MudRadioGroup T="string" @bind-Value="UserType" class="flex items-center">
+                                <MudRadio 
+                                    T="string" 
+                                    Value="@userType"
+                                    Style="border-radius: 50%;"
+                                    Class="@GetRadioClass(userType)"
+                                >
+                                    @userType
+                                </MudRadio>
+                            </MudRadioGroup>
+                        }
                     </div>
-                </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium text-gray-900">Palavra passe</label>
-                    <div class="mt-2">
-                        <InputText @bind-Value="@Password" type="password" id="password" class="block w-full rounded-md border-gray-300 shadow-sm px-4 py-2" />
+
+                    <!-- Identificador -->
+                    <div>
+                        <div class="mt-2">
+                            <InputNumber @bind-Value="@ID" type="id" id="id" class="block w-full rounded-full border-2 border-black shadow-sm px-4 py-2" placeholder="Identificador" />
+                        </div>
                     </div>
+
+                    <!-- Palavra Passe -->
+                    <div>
+                        <div class="mt-2">
+                            <InputText @bind-Value="@Password" type="password" id="password" class="block w-full rounded-full border-2 border-black shadow-sm px-4 py-2" placeholder="Password" />
+                        </div>
+                    </div>
+
+                    <!-- Botão Login -->
+                    <button type="submit" class="w-full bg-black text-white rounded-full py-3 font-medium hover:bg-gray-800 transition-colors">
+                        Log In
+                    </button>
+                </form>
+
+                <div class="flex justify-center mt-14">
+                    <img src="images/valhala.svg" class="select-none"/>
                 </div>
-                <button type="submit" class="w-full bg-blue-500 text-white rounded-lg py-2 font-medium hover:bg-blue-600 transition-colors">
-                    Log In
-                </button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
-
 @code {
-    private int ID { get; set; }
+    private int? ID { get; set; }
     private string? Password { get; set; }
     private string UserType { get; set; } = "Cliente"; // Default user type
+    private bool showErrorModal = false;  // Controla a visibilidade do modal de erro
+    private string errorMessage = ""; // Mensagem de erro que será exibida no modal
+
+    // Lista de tipos de utilizadores
+    private string[] UserTypes = new string[] { "Cliente", "Gestor", "Trabalhador", "Fornecedor" };
 
     private async Task Authenticate()
     {
@@ -55,12 +100,16 @@
         {
             if (string.IsNullOrEmpty(Password))
             {
-                await js.InvokeVoidAsync("alert", "Password cannot be empty.");
+                errorMessage = "Por favor, insira as suas credenciais.";
+                showErrorModal = true;
                 return;
             }
-            int loginResult = UIService.Login(ID, Password, UserType); 
-            if (loginResult == null || loginResult == 0) {
-                await js.InvokeVoidAsync("alert", "Invalid login credentials.");
+
+            int loginResult = UIService.Login(ID ?? 0, Password, UserType); 
+
+            if (loginResult == 0) {
+                errorMessage = "Por favor, verifique o seu identificador e senha, e tente novamente.";
+                showErrorModal = true;
                 return;
             }
         }
@@ -70,15 +119,25 @@
             return;
         }
 
-        ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider)AuthStateProvider; // está a dar erro aqui
-        UserUI userInfo = UIService.GetInformacaoUtilizador(ID, UserType);
+        ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider)AuthStateProvider;
+        UserUI userInfo = UIService.GetInformacaoUtilizador(ID ?? 0, UserType);
         await valhalaAuthStateProvider.UpdateAuthenticationState(new UserSession
         {
-            ID = ID,
+            ID = ID ?? 0,
             Name = userInfo.GetNome(),
             Role = userInfo.GetUserType()
         });
         NavManager.NavigateTo("/teste", true);
     }
 
+    private void CloseErrorModal()
+    {
+        showErrorModal = false;
+    }
+
+    // Tipo de Utilizador
+    private string GetRadioClass(string userType)
+    {
+        return userType == UserType ? "text-black font-bold" : "text-gray-500";
+    }
 }

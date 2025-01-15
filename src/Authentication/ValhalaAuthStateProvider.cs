@@ -22,7 +22,7 @@ namespace Valhala.Authentication {
                 
                 var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, userSession.ID.ToString()), // Usar ID em vez de UserId
+                    new Claim(ClaimTypes.NameIdentifier, userSession.ID?.ToString() ?? string.Empty), // Usar ID em vez de UserId
                     new Claim(ClaimTypes.Name, userSession.Name ?? string.Empty),
                     new Claim(ClaimTypes.Role, userSession.Role ?? string.Empty)
                 }, "ValhalaAuth"));
@@ -44,7 +44,7 @@ namespace Valhala.Authentication {
 
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, userSession.ID.ToString()), // Usar ID em vez de UserId
+                    new Claim(ClaimTypes.NameIdentifier, userSession.ID?.ToString() ?? string.Empty), // Usar ID em vez de UserId
                     new Claim(ClaimTypes.Name, userSession.Name ?? string.Empty),
                     new Claim(ClaimTypes.Role, userSession.Role ?? string.Empty)
                 }, "ValhalaAuth"));
