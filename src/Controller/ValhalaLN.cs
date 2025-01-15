@@ -1,20 +1,29 @@
 using Valhala.Controller.Products;
 using Valhala.Controller.Users;
 
-namespace Valhala.Controller;
+namespace Valhala.Controller {
+    public class ValhalaLN : IValhalaLN {
+      
+      private readonly ISubUtilizadores subUtilizadores;
+      private readonly ISubProducts subProducts;
 
-public class ValhalaLN : IValhalaLN {
+      public ValhalaLN() {
+          this.subUtilizadores = new SubUtilizadores();
+          this.subProducts = new SubProducts();
+      }
 
-    private readonly ISubProducts subProducts;
+      public int ValidarLogin(int id, string senha, string tipo) {
+          return subUtilizadores.ValidarLogin(id, senha, tipo);
+      }
 
-    public ValhalaLN() {
-        this.subProducts = new SubProducts();
+      public string GetNomeUtilizador(int id, string tipo) {
+          return subUtilizadores.GetNomeUtilizador(id, tipo);
+      }
+
+      // Peças
+      public List<Peca> listPecas() {
+          return this.subProducts.listPecas();
+      }
+
     }
-
-    // Peças
-
-    public List<Peca> listPecas() {
-        return this.subProducts.listPecas();
-    }
-
 }

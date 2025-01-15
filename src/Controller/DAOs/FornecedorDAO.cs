@@ -36,7 +36,7 @@ namespace Valhala.Controller.Data {
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
-                            fornecedor = new Fornecedor(reader.GetString(1), reader.GetString(2));
+                            fornecedor = new Fornecedor(reader.GetInt32(0),reader.GetString(1), reader.GetString(2));
                         }
                     }
                 }

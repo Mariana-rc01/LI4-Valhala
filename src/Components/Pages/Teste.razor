@@ -1,0 +1,37 @@
+@page "/teste"
+@using System.Security.Claims
+@using Valhala.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+<h3>Informações do Utilizador</h3>
+
+<p><strong>ID:</strong> @userSession?.ID</p>
+<p><strong>Nome:</strong> @userSession?.Name</p>
+<p><strong>Tipo de Utilizador:</strong> @userSession?.Role</p>
+
+@code {
+    private UserSession? userSession;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        // Recuperar as informações do utilizador do estado de autenticação
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        // Verificando se todas as informações estão presentes antes de criar o UserSession
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id),name,role);
+        }
+        else
+        {
+            userSession = new UserSession(0, "Desconhecido", "Desconhecido");
+        }
+    }
+}
