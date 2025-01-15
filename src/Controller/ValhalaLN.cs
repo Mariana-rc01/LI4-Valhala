@@ -10,7 +10,7 @@ namespace Valhala.Controller {
             this.subUtilizadores = new SubUtilizadores();
         }
 
-        public Dictionary<int, string> ValidarLogin(int id, string senha, string tipo) {
+        public int ValidarLogin(int id, string senha, string tipo) {
             return subUtilizadores.ValidarLogin(id, senha, tipo);
         }
 

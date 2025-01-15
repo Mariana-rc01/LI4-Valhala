@@ -2,6 +2,7 @@
 @using Valhala.Controller.UI
 @using Microsoft.AspNetCore.Components.Authorization
 @using Valhala.Authentication
+@using Microsoft.AspNetCore.Components
 
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
@@ -45,17 +46,23 @@
 
 @code {
     private int ID { get; set; }
-    private string Password { get; set; }
+    private string? Password { get; set; }
     private string UserType { get; set; } = "Cliente"; // Default user type
 
     private async Task Authenticate()
     {
-        string role = string.Empty;
         try
         {
-            Dictionary<int, string> loginResult = UIService.Login(ID, Password, UserType); // Pass UserType
-            ID = loginResult.Keys.First();
-            role = loginResult.Values.First();
+            if (string.IsNullOrEmpty(Password))
+            {
+                await js.InvokeVoidAsync("alert", "Password cannot be empty.");
+                return;
+            }
+            int loginResult = UIService.Login(ID, Password, UserType); 
+            if (loginResult == null || loginResult == 0) {
+                await js.InvokeVoidAsync("alert", "Invalid login credentials.");
+                return;
+            }
         }
         catch (Exception e)
         {
@@ -63,14 +70,15 @@
             return;
         }
 
-        ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider) AuthStateProvider;
-        UserUI userInfo = UIService.GetInformacaoUtilizador(ID, role);
+        ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider)AuthStateProvider; // está a dar erro aqui
+        UserUI userInfo = UIService.GetInformacaoUtilizador(ID, UserType);
         await valhalaAuthStateProvider.UpdateAuthenticationState(new UserSession
         {
             ID = ID,
             Name = userInfo.GetNome(),
             Role = userInfo.GetUserType()
         });
-        NavManager.NavigateTo("/", true);
+        NavManager.NavigateTo("/teste", true);
     }
+
 }

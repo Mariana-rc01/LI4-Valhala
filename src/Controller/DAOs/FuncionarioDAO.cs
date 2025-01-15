@@ -36,7 +36,7 @@ namespace Valhala.Controller.Data {
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
-                            funcionario = new Funcionario(reader.GetString(1), reader.GetString(2));
+                            funcionario = new Funcionario(reader.GetInt32(0),reader.GetString(1), reader.GetString(2));
                         }
                     }
                 }

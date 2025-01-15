@@ -16,8 +16,8 @@ namespace Valhala.Controller.Users {
             this.fornecedorDAO = FornecedorDAO.GetInstance();
         }
 
-        public Dictionary<int, string> ValidarLogin(int id, string senha, string tipo) {
-            Dictionary<int, string> resultado = new Dictionary<int, string>();
+        public int ValidarLogin(int id, string senha, string tipo) {
+            int resultado = 0;
 
             switch (tipo.ToLower())
             {
@@ -25,9 +25,9 @@ namespace Valhala.Controller.Users {
                     if (clienteDAO.ExisteCliente(id))
                     {
                         Cliente? cliente = clienteDAO.Get(id);
-                        if (cliente != null && cliente.GetSenha() == senha)
+                        if (cliente != null && cliente.GetSenha().Trim() == senha.Trim())
                         {
-                            resultado.Add(id, "cliente");
+                            resultado = 1;
                         }
                     }
                     break;
@@ -36,9 +36,9 @@ namespace Valhala.Controller.Users {
                     if (funcionarioDAO.ExisteFuncionario(id))
                     {
                         Funcionario? funcionario = funcionarioDAO.Get(id);
-                        if (funcionario != null && funcionario.GetSenha() == senha)
+                        if (funcionario != null && funcionario.GetSenha().Trim() == senha.Trim())
                         {
-                            resultado.Add(id, "funcionario");
+                            resultado = 1;
                         }
                     }
                     break;
@@ -47,9 +47,9 @@ namespace Valhala.Controller.Users {
                     if (gestorDAO.ExisteGestor(id))
                     {
                         Gestor? gestor = gestorDAO.Get(id);
-                        if (gestor != null && gestor.GetSenha() == senha)
+                        if (gestor != null && gestor.GetSenha().Trim() == senha.Trim())
                         {
-                            resultado.Add(id, "gestor");
+                            resultado = 1;
                         }
                     }
                     break;
@@ -58,9 +58,9 @@ namespace Valhala.Controller.Users {
                     if (fornecedorDAO.ExisteFornecedor(id))
                     {
                         Fornecedor? fornecedor = fornecedorDAO.Get(id);
-                        if (fornecedor != null && fornecedor.GetSenha() == senha)
+                        if (fornecedor != null && fornecedor.GetSenha().Trim() == senha.Trim())
                         {
-                            resultado.Add(id, "fornecedor");
+                            resultado = 1;
                         }
                     }
                     break;

@@ -5,7 +5,7 @@ namespace Valhala.Controller.UI {
     public class UIService {
         private readonly ValhalaLN valhalaLn = new();
 
-        public Dictionary<int, string> Login(int id, string password, string userType) {
+        public int Login(int id, string password, string userType) {
             return valhalaLn.ValidarLogin(id, password, userType);
         }
 
