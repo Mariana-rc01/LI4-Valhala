@@ -112,64 +112,64 @@ INSERT INTO Peça (ID, Quantidade, [Imagem], Fornecedor) VALUES
 (100212, 200, "images/parts/100212.svg", 1),
 (10087753, 150, "images/parts/10087753.svg", 1),
 (195701, 180, "images/parts/195701.svg", 1),
-(111, 120, NULL, 2), -- tabula 1 da cadeira
-(112, 120, NULL, 2), -- tabula 2 da cadeira
-(113, 120, NULL, 2), -- suporte da cadeira
-(114, 120, NULL, 2), -- sento da cadeira
-(115, 120, NULL, 2), -- pedaço de madeira do passo2
+(111, 120, "images/parts/111.svg", 2), -- tabua 1 da cadeira
+(112, 120, "images/parts/112.svg", 2), -- tabua 2 da cadeira
+(113, 120, "images/parts/113.svg", 2), -- suporte da cadeira
+(114, 120, "images/parts/114.svg", 2), -- sento da cadeira
+(115, 120, "images/parts/115.svg", 2), -- pedaço de madeira do passo2
 -- produto 2 - cama
-(101367, 140, NULL, 3),
-(101359, 140, NULL, 3),
-(110789, 140, NULL, 3),
-(105163, 140, NULL, 3),
-(130507, 140, NULL, 4),
-(10096286, 140, NULL, 4),
-(114254, 140, NULL, 5),
-(123491, 140, NULL, 2),
-(114334, 140, NULL, 1),
-(114670, 140, NULL, 3),
-(122998, 140, NULL, 3),
-(100049, 140, NULL, 3),
-(113453, 140, NULL, 4),
-(122628, 140, NULL, 4),
-(211, 140, NULL, 4), -- tabua 1 da cama
-(212, 140, NULL, 5), -- tabua 2 da cama
-(213, 140, NULL, 5), -- tabua 3 da cama
-(214, 140, NULL, 5), -- tabua direita lateral da cama
-(215, 140, NULL, 2), -- tabua esquerda lateral da cama
-(216, 140, NULL, 1), -- grades onde se coloca o colchão da cama
-(117228, 140, NULL, 5), -- tabua do fundo da cama
+(101367, 140, "images/parts/101367.svg", 3),
+(101359, 140, "images/parts/101359.svg", 3),
+(110789, 140, "images/parts/110789.svg", 3),
+(105163, 140, "images/parts/105163.svg", 3),
+(130507, 140, "images/parts/130507.svg", 4),
+(10096286, 140, "images/parts/10096286.svg", 4),
+(114254, 140, "images/parts/114254.svg", 5),
+(123491, 140, "images/parts/123491.svg", 2),
+(114334, 140, "images/parts/114334.svg", 1),
+(114670, 140, "images/parts/114670.svg", 3),
+(122998, 140, "images/parts/122998.svg", 3),
+(100049, 140, "images/parts/100049.svg", 3),
+(113453, 140, "images/parts/113453.svg", 4),
+(122628, 140, "images/parts/122628.svg", 4),
+(211, 140, "images/parts/211.svg", 4), -- tabua 1 da cama
+(212, 140, "images/parts/212.svg", 5), -- tabua 2 da cama
+(213, 140, "images/parts/213.svg", 5), -- tabua 3 da cama
+(214, 140, "images/parts/214.svg", 5), -- tabua direita lateral da cama
+(215, 140, "images/parts/215.svg", 2), -- tabua esquerda lateral da cama
+(216, 140, "images/parts/216.svg", 1), -- grades onde se coloca o colchão da cama
+(117228, 140, "images/parts/117228.svg", 5), -- tabua do fundo da cama
 -- produto 3 - estante
-(10002300, 140, NULL, 3),
-(104321, 140, NULL, 3),
-(118331, 140, NULL, 3),
-(119250, 140, NULL, 3),
-(100372, 140, NULL, 3),
-(121030, 140, NULL, 3),
-(100092, 140, NULL, 4),
-(115753, 140, NULL, 4),
-(103693, 140, NULL, 4),
-(115754, 140, NULL, 4),
-(311, 140, NULL, 5), -- tabuas grandes
-(312, 140, NULL, 5), -- tabuas pequeninas interiores
-(313, 140, NULL, 5), -- tabuas superior e inferior
+(10002300, 140, "images/parts/10002300.svg", 3),
+(104321, 140, "images/parts/104321.svg", 3),
+(118331, 140, "images/parts/118331.svg", 3),
+(119250, 140, "images/parts/119250.svg", 3),
+(100372, 140, "images/parts/100372.svg", 3),
+(121030, 140, "images/parts/121030.svg", 3),
+(100092, 140, "images/parts/100092.svg", 4),
+(115753, 140, "images/parts/115753.svg", 4),
+(103693, 140, "images/parts/103693.svg", 4),
+(115754, 140, "images/parts/115754.svg", 4),
+(311, 140, "images/parts/311.svg", 5), -- tabuas grandes
+(312, 140, "images/parts/312.svg", 5), -- tabuas pequeninas interiores
+(313, 140, "images/parts/313.svg", 5), -- tabuas superior e inferior
 -- produto 4 - mesa de centro
-(115980, 140, NULL, 5),
-(108530, 140, NULL, 5),
-(109041, 140, NULL, 2),
-(120298, 140, NULL, 2),
-(120938, 140, NULL, 2),
-(411, 140, NULL, 2), -- tabua grande
-(412, 140, NULL, 2), -- pernas da mesa
-(413, 140, NULL, 2), -- tabua por baixo
+(115980, 140, "images/parts/115980.svg", 5),
+(108530, 140, "images/parts/108530.svg", 5),
+(109041, 140, "images/parts/109041.svg", 2),
+(120298, 140, "images/parts/120298.svg", 2),
+(120938, 140, "images/parts/120938.svg", 2),
+(411, 140, "images/parts/411.svg", 2), -- tabua grande
+(412, 140, "images/parts/412.svg", 2), -- pernas da mesa
+(413, 140, "images/parts/413.svg", 2), -- tabua por baixo
 -- produto 5 - banco com arrumação
-(100214, 140, NULL, 1),
-(101350, 140, NULL, 2),
-(100001, 140, NULL, 3),
-(511, 140, NULL, 4), -- tabuas laterais
-(512, 140, NULL, 5), -- pernas
-(513, 140, NULL, 1), -- tabua de arrumação
-(514, 140, NULL, 2); -- tabuas superiores
+(100214, 140, "images/parts/100214.svg", 1),
+(101350, 140, "images/parts/101350.svg", 2),
+(100001, 140, "images/parts/100001.svg", 3),
+(511, 140, "images/parts/511.svg", 4), -- tabuas laterais
+(512, 140, "images/parts/512.svg", 5), -- pernas
+(513, 140, "images/parts/513.svg", 1), -- tabua de arrumação
+(514, 140, "images/parts/514.svg", 2); -- tabuas superiores
 
 -- Tabela ProdutoPeça
 INSERT INTO ProdutoPeça (Peca_ID, Produto_ID) VALUES
