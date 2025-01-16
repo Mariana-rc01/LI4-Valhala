@@ -2,9 +2,9 @@
 @using System.Security.Claims
 @using Valhala.Authentication
 @using Microsoft.AspNetCore.Components
-@using MudBlazor
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
+
 @inject IDialogService DialogService
 
 <div class="flex w-full justify-center pt-8">
@@ -16,18 +16,18 @@
     {
         if (link.SubLinks != null)
         {
-            <MudNavGroup href="@link.Href" Icon="@link.Icon" title="@link.Name">
+            <MudNavGroup Icon="@link.Icon" title="@link.Name" Expanded="true">
                 @foreach (var subLink in link.SubLinks)
                 {
                     if (subLink.Name == "Registar Utilizador")
                     {
-                        <MudButton Href="javascript:void(0);" StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog">
+                        <MudButton Href="@subLink.Href" StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog">
                             @subLink.Name
                         </MudButton>
                     }
-                    else
+                    else if (subLink.Name == "Remover Utilizador")
                     {
-                        <MudButton Href="javascript:void(0);" StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog">
+                        <MudButton Href="@subLink.Href" StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog">
                             @subLink.Name
                         </MudButton>
                     }
@@ -37,8 +37,10 @@
         else
         {
             <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
-        }
+        } 
     }
+
+    
 
     @if (userSession != null) {
         <div class="mt-12 pt-8 pb-4">
@@ -65,21 +67,24 @@
     }
 </MudNavMenu>
 
+
 @code {
     class NavLink
     {
+        
         public required string Name { get; set; }
         public required string Href { get; set; }
         public required string Icon { get; set; }
         public List<NavLink>? SubLinks { get; set; }
+        public bool Expanded { get; set; } = false;
     }
 
     private List<NavLink> _links = new List<NavLink>();
-
     private UserSession? userSession;
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("Hello World!");
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 
@@ -92,6 +97,7 @@
             userSession = new UserSession(int.Parse(id), name, role);
 
             _links = GetUserLinks(role);
+
         }
         else
         {
@@ -109,17 +115,11 @@
                     new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
                     new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
                     new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
-                    new NavLink
+                    new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group, Expanded = true, SubLinks = new List<NavLink>
                     {
-                        Name = "Utilizadores",
-                        Href = "/users",
-                        Icon = Icons.Material.Outlined.Group,
-                        SubLinks = new List<NavLink>
-                        {
-                            new NavLink { Name = "Registar Utilizador", Href = "/users/add", Icon = Icons.Material.Outlined.PersonAdd },
-                            new NavLink { Name = "Remover Utilizador", Href = "/users/remove", Icon = Icons.Material.Outlined.PersonSearch },
-                        }
-                    },
+                        new NavLink { Name = "Registar Utilizador", Href = "/users/register", Icon = Icons.Material.Outlined.PersonAdd },
+                        new NavLink { Name = "Remover Utilizador", Href = "/users/remove", Icon = Icons.Material.Outlined.PersonRemove },
+                    }},
                 };
 
             case "Cliente":
@@ -152,7 +152,7 @@
     private void Logout()
     {
         userSession = null;
-        NavigationManager.NavigateTo("/login", true);
+        NavigationManager.NavigateTo("/login", true); // depois redirecionámos para o catálogo
     }
 
     private void OpenUserRegistrationDialog()
@@ -166,4 +166,5 @@
         var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
         DialogService.Show<UserRemoveDialog>("Styling Example Dialog", options);
     }
+
 }
