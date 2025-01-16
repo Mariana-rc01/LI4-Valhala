@@ -9,4 +9,6 @@ public interface IValhalaLN {
 
     public string GetNomeUtilizador(int id, string tipo);
 
+    public bool RemoverUtilizador(int id , string tipo);
+
 }

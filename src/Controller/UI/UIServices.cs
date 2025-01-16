@@ -13,5 +13,13 @@ namespace Valhala.Controller.UI {
             string nome = valhalaLn.GetNomeUtilizador(id, userType);
             return new UserUI(id, nome, userType);
         }
+
+        public bool RemoverUser(int id, string userType) {
+            return valhalaLn.RemoverUtilizador(id, userType);
+        }
+
+        public bool RegisterUser(int id, string nome, string password, string userType) {
+            return valhalaLn.RegistarUtilizador(id, nome, password, userType);
+        }
     }
 }

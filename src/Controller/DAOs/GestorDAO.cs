@@ -87,5 +87,14 @@ namespace Valhala.Controller.Data {
             return keys;
         }
 
+        public void Remove(int id) {
+            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+                connection.Open();
+                using(SqlCommand command = new SqlCommand("DELETE FROM Gestor WHERE id = @id", connection)){
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

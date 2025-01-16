@@ -1,4 +1,7 @@
 @using MudBlazor
+@inject Valhala.Controller.UI.UIService UIService
+@inject UIService UIService
+
 
 <MudDialog Class="custom-modal">
     <TitleContent>
@@ -10,7 +13,13 @@
                 <MudTextField Label="Identificador" @bind-Value="user.Id" />
             </MudItem>
             <MudItem xs="6">
-                <!-- Add any additional content here if needed -->
+                <MudSelect T="string" Label="Tipo de utilizador" AnchorOrigin="Origin.BottomCenter"
+                    @bind-Value="user.UserType">
+                    <MudSelectItem Value="@UserTypes.Funcionario">Funcionário</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Gestor">Gestor</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Fornecedor">Fornecedor</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Cliente">Cliente</MudSelectItem>
+                </MudSelect>
             </MudItem>
             <MudItem xs="6" Style="display: flex; justify-content: flex-end;">
                 <DialogActions>
@@ -27,10 +36,24 @@
 
     private UserRemoveModel user = new UserRemoveModel();
 
-    private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+    private void Submit()
+    {
+        bool result = UIService.RemoveUser(user.Id, user.UserType);
+        MudDialog?.Close(DialogResult.Ok(result));
+    }
+ 
 
     public class UserRemoveModel
     {
         public int Id { get; set; }
+        public string? UserType { get; set; }
     }
+        public static class UserTypes
+    {
+        public const string Funcionario = "Funcionário";
+        public const string Gestor = "Gestor";
+        public const string Fornecedor = "Fornecedor";
+        public const string Cliente = "Cliente";
+    }
+
 }

@@ -21,13 +21,13 @@
                 {
                     if (subLink.Name == "Registar Utilizador")
                     {
-                        <MudButton Href="@subLink.Href" StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog">
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog">
                             @subLink.Name
                         </MudButton>
                     }
                     else if (subLink.Name == "Remover Utilizador")
                     {
-                        <MudButton Href="@subLink.Href" StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog">
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog">
                             @subLink.Name
                         </MudButton>
                     }
@@ -84,7 +84,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Hello World!");
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 
@@ -168,3 +167,4 @@
     }
 
 }
+

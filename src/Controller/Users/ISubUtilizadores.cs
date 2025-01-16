@@ -6,5 +6,8 @@ namespace Valhala.Controller.Users {
 
         public string GetNomeUtilizador(int id, string tipo);
 
+        public bool RemoverUtilizador(int id, string tipo);
+
+        public bool RegistarUtilizador(int id, string nome, string senha, string tipo);
     }
 }

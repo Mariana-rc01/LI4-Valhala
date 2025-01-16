@@ -1,5 +1,8 @@
 @using MudBlazor
 
+@inject UIService UIService
+
+
 <MudDialog Class="custom-modal">
     <TitleContent>
         Registar novo utilizador
@@ -53,15 +56,33 @@
 
     private UserRegistrationModel user = new UserRegistrationModel();
 
-    private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+    
+    private void Submit()
+    {
+        try{
+            if(user.Password != user.ConfirmPassword)
+            {
+                throw new Exception("Passwords não coincidem");
+            }
+        }
+        catch(Exception e)
+        {
+            
+            return;
+        }
+
+        int registerResult= UIService.RegisterUser(user.Id, user.Name, user.Password, user.UserType);
+        MudDialog?.Close(DialogResult.Ok(registerResult));
+    }
 
     public class UserRegistrationModel
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public string? Email { get; set; }
         public string? Password { get; set; }
         public string? ConfirmPassword { get; set; }
         public string? UserType { get; set; }
     }
+
+
 }
