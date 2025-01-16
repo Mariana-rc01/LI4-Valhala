@@ -152,5 +152,59 @@ namespace Valhala.Controller.Data {
             }
             return produtos;
         }
+
+        public void Delete(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+
+                // Iniciar uma transação para garantir consistência
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Deletar dependências nas tabelas relacionadas
+                        using (SqlCommand command = new SqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.Transaction = transaction;
+
+                            // Deletar dependências da tabela ProdutoPeça
+                            command.CommandText = "DELETE FROM ProdutoPeça WHERE Produto_ID = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            // Deletar dependências da tabela Etapa
+                            command.CommandText = "DELETE FROM Etapa WHERE Produto = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            // Deletar dependências da tabela Encomenda
+                            command.CommandText = "DELETE FROM Encomenda WHERE Produto = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            // Deletar o produto na tabela Produto
+                            command.CommandText = "DELETE FROM Produto WHERE ID = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                        }
+
+                        // Commit na transação
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        // Rollback em caso de erro
+                        transaction.Rollback();
+                        throw; // Relançar a exceção para ser tratada externamente
+                    }
+                }
+            }
+        }
     }
 }

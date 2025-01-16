@@ -163,5 +163,25 @@ namespace Valhala.Controller.Data {
             }
             return encomendas;
         }
+
+        public int GetCountByProdutoID(int ProdutoID) {
+            int count = 0;
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Encomenda WHERE Produto = @produto", connection))
+                {
+                    command.Parameters.AddWithValue("@produto", ProdutoID);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return count;
+        }
     }
 }
