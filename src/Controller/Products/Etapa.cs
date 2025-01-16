@@ -4,10 +4,10 @@ using Valhala.Controller.Data;
 namespace Valhala.Controller.Products {
     public class Etapa {
         public int ID { get; set; }
-        public byte[] Imagem { get; set; }
+        public string Imagem { get; set; }
         public int ProdutoID { get; set; }
 
-        public Etapa(int id, byte[] imagem, int produtoID)
+        public Etapa(int id, string imagem, int produtoID)
         {
             ID = id;
             Imagem = imagem;

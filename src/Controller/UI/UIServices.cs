@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
-using Valhala.Controller;
 
+using Valhala.Controller;
+using Valhala.Controller.Products;
 namespace Valhala.Controller.UI
 {
     public class UIService
@@ -18,9 +19,23 @@ namespace Valhala.Controller.UI
             return new UserUI(id, nome, userType);
         }
 
-        public int RemoverUser(int id, string userType)
+        public List<PecaUI> listPecas()
         {
-            return valhalaLn.RemoverUtilizador(id, userType);
+            List<Peca> pecas = this.valhalaLn.listPecas();
+            List<PecaUI> pecasUI = new List<PecaUI>();
+
+            for (int i = 0; i < pecas.Count; i++)
+            {
+                Peca peca = pecas[i];
+                pecasUI.Add(new PecaUI(peca));
+            }
+
+            return pecasUI;
+        }
+        
+        public async Task<int> RemoverUser(int id, string userType)
+        {
+            return await Task.Run(() =>valhalaLn.RemoverUtilizador(id, userType));
         }
 
         public async Task<int> RegisterUserAsync(int id, string nome, string password, string userType)
@@ -29,4 +44,6 @@ namespace Valhala.Controller.UI
         }
 
     }
+
+
 }

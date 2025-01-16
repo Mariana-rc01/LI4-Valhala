@@ -44,11 +44,10 @@ namespace Valhala.Controller.Data {
                     {
                         if (reader.Read())
                         {
-                            byte[] imagem = (byte[])reader["Imagem"];
                             peca = new Peca(
                                 reader.GetInt32(0), // ID
                                 reader.GetInt32(1), // Quantidade
-                                imagem,              // Imagem
+                                reader.GetString(2),// Imagem
                                 reader.GetInt32(3)  // Fornecedor
                             );
                         }
@@ -84,6 +83,30 @@ namespace Valhala.Controller.Data {
                 }
             }
             return peca;
+        }
+
+        public List<Peca> List() {
+            List<Peca> pecas = new List<Peca>();
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Peça", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            pecas.Add(new Peca(
+                                reader.GetInt32(0), // ID
+                                reader.GetInt32(1), // Quantidade
+                                reader.IsDBNull(2) ? "" : reader.GetString(2),// Imagem
+                                reader.GetInt32(3)  // Fornecedor
+                            ));
+                        }
+                    }
+                }
+            }
+            return pecas;
         }
 
         public bool ExistePeca(int id) {
@@ -137,11 +160,10 @@ namespace Valhala.Controller.Data {
                     {
                         while (reader.Read())
                         {
-                            byte[] imagem = (byte[])reader["Imagem"];
                             pecas.Add(new Peca(
                                 reader.GetInt32(0), // ID
                                 reader.GetInt32(1), // Quantidade
-                                imagem,              // Imagem
+                                reader.GetString(2),// Imagem
                                 reader.GetInt32(3)  // Fornecedor
                             ));
                         }

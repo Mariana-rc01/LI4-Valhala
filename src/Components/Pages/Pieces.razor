@@ -1,0 +1,45 @@
+@page "/parts"
+
+@using Valhala.Controller.Products
+@using Valhala.Controller.UI
+
+@inject UIService UIService
+
+<PageTitle>Home</PageTitle>
+
+<MudText Typo="Typo.h1">
+    Gestão de Peças
+</MudText>
+
+<MudTable Items="@pecas" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6">
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Identificador</MudTh>
+        <MudTh>Stock</MudTh>
+        <MudTh>Fornecedor</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="">
+            @if(@context.GetImagem() != ""){
+                <img class="w-16 h-16" src=@context.GetImagem() />
+            }
+        </MudTd>
+        <MudTd DataLabel="Identificador">@context.GetID()</MudTd>
+        <MudTd DataLabel="Stock">@context.GetQuantidade()</MudTd>
+        <MudTd DataLabel="Fornecedor">@context.GetFornecedorNome()</MudTd>
+    </RowTemplate>
+    <PagerContent>
+            <MudTablePager HideRowsPerPage="@true"  />
+    </PagerContent>
+</MudTable>
+
+@code { 
+    private bool _loading;
+    private IEnumerable<PecaUI> pecas = new List<PecaUI>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        pecas = UIService.listPecas();
+    }
+
+}
