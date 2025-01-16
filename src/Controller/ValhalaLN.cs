@@ -19,11 +19,11 @@ namespace Valhala.Controller {
         }
 
 
-        public bool RemoverUtilizador(int id, string tipo) {
+        public int RemoverUtilizador(int id, string tipo) {
             return subUtilizadores.RemoverUtilizador(id , tipo);
         }
 
-        public bool RegistarUtilizador(int id, string nome, string senha, string tipo) {
+        public int RegistarUtilizador(int id, string nome, string senha, string tipo) {
             return subUtilizadores.RegistarUtilizador(id, nome, senha, tipo);
         }
     }

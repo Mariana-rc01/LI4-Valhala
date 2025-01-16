@@ -116,8 +116,8 @@ namespace Valhala.Controller.Users {
             return nome;
         }
 
-        public bool RemoverUtilizador(int id, string tipo) {
-            bool resultado = false;
+        public int RemoverUtilizador(int id, string tipo) {
+            int resultado = 0;
 
             switch (tipo.ToLower())
             {
@@ -125,7 +125,7 @@ namespace Valhala.Controller.Users {
                     if (clienteDAO.ExisteCliente(id))
                     {
                         clienteDAO.Remove(id);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
@@ -133,7 +133,7 @@ namespace Valhala.Controller.Users {
                     if (funcionarioDAO.ExisteFuncionario(id))
                     {
                         funcionarioDAO.Remove(id);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
@@ -141,7 +141,7 @@ namespace Valhala.Controller.Users {
                     if (gestorDAO.ExisteGestor(id))
                     {
                         gestorDAO.Remove(id);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
@@ -149,7 +149,7 @@ namespace Valhala.Controller.Users {
                     if (fornecedorDAO.ExisteFornecedor(id))
                     {
                         fornecedorDAO.Remove(id);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
@@ -161,44 +161,50 @@ namespace Valhala.Controller.Users {
         }
             
 
-        public bool RegistarUtilizador(int id, string nome, string senha, string tipo) {
-            bool resultado = false;
+        public int RegistarUtilizador(int id, string nome, string senha, string tipo) {
+            int resultado = 0;
+
+            // Verificar se o tipo de utilizador é válido
+            string[] tiposValidos = { "cliente", "funcionario", "gestor", "fornecedor" };
+            if (!tiposValidos.Contains(tipo.ToLower())) {
+                throw new ArgumentException("Tipo de utilizador inválido.");
+            }
 
             switch (tipo.ToLower())
             {
                 case "cliente":
                     if (!clienteDAO.ExisteCliente(id))
                     {
-                        Cliente cliente = new Cliente(id, nome, senha);
+                        Cliente cliente = new(id, nome, senha);
                         clienteDAO.Put(id, cliente);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
                 case "funcionario":
                     if (!funcionarioDAO.ExisteFuncionario(id))
                     {
-                        Funcionario funcionario = new Funcionario(id, nome, senha);
+                        Funcionario funcionario = new(id, nome, senha);
                         funcionarioDAO.Put(id, funcionario);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
                 case "gestor":
                     if (!gestorDAO.ExisteGestor(id))
                     {
-                        Gestor gestor = new Gestor(id, nome, senha);
+                        Gestor gestor = new(id, nome, senha);
                         gestorDAO.Put(id, gestor);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 
                 case "fornecedor":
                     if (!fornecedorDAO.ExisteFornecedor(id))
                     {
-                        Fornecedor fornecedor = new Fornecedor(id, nome, senha);
+                        Fornecedor fornecedor = new(id, nome, senha);
                         fornecedorDAO.Put(id, fornecedor);
-                        resultado = true;
+                        resultado = 1;
                     }
                     break;
 

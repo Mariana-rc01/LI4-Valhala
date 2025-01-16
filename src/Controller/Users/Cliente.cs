@@ -67,7 +67,7 @@ namespace Valhala.Controller.Users {
 
         public void Remover(int id){
             ClienteDAO clienteDAO = ClienteDAO.GetInstance();
-            clienteDAO.Remover(id);
+            clienteDAO.Remove(id);
         }
     }
 }

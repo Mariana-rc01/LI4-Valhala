@@ -16,9 +16,9 @@ namespace Valhala.Controller.Data {
 
         public static int Size(){
             int size = 0;
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+            using(SqlConnection connection = new(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Cliente", connection)){
+                using(SqlCommand command = new("SELECT COUNT(*) FROM Cliente", connection)){
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
                             size = reader.GetInt32(0);
@@ -31,9 +31,9 @@ namespace Valhala.Controller.Data {
 
         public Cliente? Get (int id){
             Cliente? cliente = null;
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+            using(SqlConnection connection = new(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM Cliente WHERE id = @id", connection)){
+                using(SqlCommand command = new("SELECT * FROM Cliente WHERE id = @id", connection)){
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         if(reader.Read()){
@@ -46,24 +46,23 @@ namespace Valhala.Controller.Data {
         }
 
         public Cliente Put(int id, Cliente cliente){
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+            using(SqlConnection connection = new(DAOConfig.GetConnectionString())){
                 connection.Open();
                 string sql = "MERGE INTO Cliente USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Cliente.id = values.id WHEN MATCHED THEN UPDATE SET Cliente.nome = values.nome, Cliente.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
-                using(SqlCommand command = new SqlCommand(sql, connection)){
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@nome", cliente.GetNome());
-                    command.Parameters.AddWithValue("@senha", cliente.GetSenha());
-                    command.ExecuteNonQuery();
-                }
+                using SqlCommand command = new(sql, connection);
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@nome", cliente.GetNome());
+                command.Parameters.AddWithValue("@senha", cliente.GetSenha());
+                command.ExecuteNonQuery();
             }
             return cliente;
         }
 
         public bool ExisteCliente(int id){
             bool existe = false;
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+            using(SqlConnection connection = new(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT * FROM Cliente WHERE id = @id", connection)){
+                using(SqlCommand command = new("SELECT * FROM Cliente WHERE id = @id", connection)){
                     command.Parameters.AddWithValue("@id", id);
                     using(SqlDataReader reader = command.ExecuteReader()){
                         existe = reader.Read();
@@ -74,10 +73,10 @@ namespace Valhala.Controller.Data {
         }
 
         public List<int> keySet(){
-            List<int> keys = new List<int>();
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+            List<int> keys = new();
+            using(SqlConnection connection = new(DAOConfig.GetConnectionString())){
                 connection.Open();
-                using(SqlCommand command = new SqlCommand("SELECT id FROM Cliente", connection)){
+                using(SqlCommand command = new("SELECT id FROM Cliente", connection)){
                     using(SqlDataReader reader = command.ExecuteReader()){
                         while(reader.Read()){
                             keys.Add(reader.GetInt32(0));
@@ -90,13 +89,11 @@ namespace Valhala.Controller.Data {
 
 
         public void Remove(int id){
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
-                connection.Open();
-                using(SqlCommand command = new SqlCommand("DELETE FROM Cliente WHERE id = @id", connection)){
-                    command.Parameters.AddWithValue("@id", id);
-                    command.ExecuteNonQuery();
-                }
-            }
+            using SqlConnection connection = new(DAOConfig.GetConnectionString());
+            connection.Open();
+            using SqlCommand command = new("DELETE FROM Cliente WHERE id = @id", connection);
+            command.Parameters.AddWithValue("@id", id);
+            command.ExecuteNonQuery();
         }
     }
 }

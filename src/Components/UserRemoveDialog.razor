@@ -1,6 +1,5 @@
 @using MudBlazor
 @inject Valhala.Controller.UI.UIService UIService
-@inject UIService UIService
 
 
 <MudDialog Class="custom-modal">
@@ -36,21 +35,53 @@
 
     private UserRemoveModel user = new UserRemoveModel();
 
-    private void Submit()
+
+    private async Task Submit()
     {
-        bool result = UIService.RemoveUser(user.Id, user.UserType);
-        MudDialog?.Close(DialogResult.Ok(result));
+        try{
+            if (string.IsNullOrEmpty(user.UserType))
+            {
+                Console.WriteLine("User type is not selected or invalid.");
+                return;
+            }
+            Console.WriteLine("User type is selected.");
+            Console.WriteLine("User type: " + user.UserType);
+        
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+
     }
+
+@* private void Submit()
+{
+    if (string.IsNullOrEmpty(user.UserType))
+    {
+        Console.WriteLine("User type is not selected or invalid.");
+        return;
+    }
+    Console.WriteLine("User type is selected.");
+    Console.WriteLine("User type: " + user.UserType);
+
+    int removeOut = UIService.RemoverUser(user.Id, user.UserType);
+    MudDialog?.Close(DialogResult.Ok(removeOut));
+} *@
+
  
 
     public class UserRemoveModel
     {
         public int Id { get; set; }
-        public string? UserType { get; set; }
+        public string? UserType { get; set; }= "Funcionario";
     }
+
         public static class UserTypes
     {
-        public const string Funcionario = "Funcionário";
+        public const string Funcionario = "Funcionario";
         public const string Gestor = "Gestor";
         public const string Fornecedor = "Fornecedor";
         public const string Cliente = "Cliente";

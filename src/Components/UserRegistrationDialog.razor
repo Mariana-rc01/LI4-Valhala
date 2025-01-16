@@ -1,7 +1,12 @@
 @using MudBlazor
+@inject Valhala.Controller.UI.UIService UIService
+@using Microsoft.AspNetCore.Components.Authorization
 
-@inject UIService UIService
-
+@using Valhala.Controller.UI
+@using Valhala.Authentication
+@inject NavigationManager NavManager
+@inject IJSRuntime js
+@inject AuthenticationStateProvider AuthStateProvider
 
 <MudDialog Class="custom-modal">
     <TitleContent>
@@ -45,34 +50,64 @@
 
     public static class UserTypes
     {
-        public const string Funcionario = "Funcionário";
+        public const string Funcionario = "Funcionario";
         public const string Gestor = "Gestor";
         public const string Fornecedor = "Fornecedor";
         public const string Cliente = "Cliente";
     }
 
-
     private MudDialogInstance? MudDialog { get; set; }
 
     private UserRegistrationModel user = new UserRegistrationModel();
 
-    
-    private void Submit()
+    private async Task Submit()
     {
-        try{
-            if(user.Password != user.ConfirmPassword)
-            {
-                throw new Exception("Passwords não coincidem");
-            }
-        }
-        catch(Exception e)
+        try
         {
-            
-            return;
-        }
+            // Validate inputs
+            if (string.IsNullOrEmpty(user.Name))
+            {
+                await ShowErrorMessage("O nome do utilizador é obrigatório.");
+                return;
+            }
 
-        int registerResult= UIService.RegisterUser(user.Id, user.Name, user.Password, user.UserType);
-        MudDialog?.Close(DialogResult.Ok(registerResult));
+            if (string.IsNullOrEmpty(user.Password))
+            {
+                await ShowErrorMessage("A senha do utilizador é obrigatória.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(user.UserType))
+            {
+                await ShowErrorMessage("O tipo de utilizador é obrigatório.");
+                return;
+            }
+
+            // Check if UserType is valid
+            string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor, UserTypes.Cliente };
+            if (!tiposValidos.Contains(user.UserType))
+            {
+                await ShowErrorMessage("Tipo de utilizador inválido.");
+                return;
+            }
+
+            // Call the service to register the user
+            int createOut = await UIService.RegisterUserAsync(user.Id, user.Name, user.Password, user.UserType);
+
+            // Close dialog with result
+            MudDialog?.Close(DialogResult.Ok(createOut));
+        }
+        catch (Exception e)
+        {
+            // Handle unexpected errors
+            await ShowErrorMessage($"Erro ao criar utilizador: {e.Message}");
+        }
+    }
+
+    // Helper method for showing error messages
+    private async Task ShowErrorMessage(string message)
+    {
+        await js.InvokeVoidAsync("alert", message);
     }
 
     public class UserRegistrationModel
@@ -83,6 +118,4 @@
         public string? ConfirmPassword { get; set; }
         public string? UserType { get; set; }
     }
-
-
 }
