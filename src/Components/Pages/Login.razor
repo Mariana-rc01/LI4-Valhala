@@ -124,7 +124,7 @@
         ValhalaAuthStateProvider valhalaAuthStateProvider = (ValhalaAuthStateProvider)AuthStateProvider;
         UserUI userInfo = UIService.GetInformacaoUtilizador(id, UserType);
         await valhalaAuthStateProvider.UpdateAuthenticationState(new UserSession(id, userInfo.GetNome(), userInfo.GetUserType()));
-        NavManager.NavigateTo("/teste", true);
+        NavManager.NavigateTo("/catalog", true);
     }
 
     private void CloseErrorModal()

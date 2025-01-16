@@ -1,0 +1,94 @@
+@page "/produto/{ProdutoID:int}"
+@using MudBlazor
+@using Valhala.Controller.Data
+@using Valhala.Controller.Products
+@inject NavigationManager NavManager
+
+<PageTitle>Detalhes do Produto</PageTitle>
+
+@if (Produto == null)
+{
+    <MudText Typo="Typo.h5" Color="Color.Error">Produto não encontrado.</MudText>
+}
+else
+{
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+        <MudGrid>
+            <!-- Imagem do Produto -->
+            <MudItem xs="12" md="6" Style="display: flex; justify-content: center;">
+                <MudImage Src="@Produto.GetImagem()" Alt="Imagem do produto" 
+                          Style="width: 80%; border-radius: 10px;" />
+            </MudItem>
+            
+            <!-- Detalhes do Produto -->
+            <MudItem xs="12" md="6">
+                <!-- Última palavra em cima -->
+                <MudText Typo="Typo.h1" Class="mb-0" Style="font-size: 45px; font-weight: bold;">
+                    @GetLastWord(Produto.GetNome())
+                </MudText>
+                <!-- Restante do nome -->
+                <MudText Typo="Typo.h2" Style="font-size: 30px;">
+                    @GetRemainingWords(Produto.GetNome())
+                </MudText>
+                <!-- Preço -->
+                <MudText Typo="Typo.h1" Style="font-size: 50px; font-weight: bold;" Class="mt-2">
+                    @($"{(Produto.GetPreco() % 1 == 0 ? Produto.GetPreco().ToString("F0") : Produto.GetPreco())}€")
+                </MudText>
+                
+                <!-- Descrição -->
+                <MudText Typo="Typo.body1" Class="mt-6">
+                    @Produto.GetDescricao()
+                </MudText>
+                
+                <!-- Identificador -->
+                <div style="margin-top: 40px;">
+                    <MudText Typo="Typo.subtitle2" Style="font-size: 12px;">Identificador</MudText>
+                    <div style="
+                        background-color: rgba(13, 5, 27, 0.8); 
+                        color: white; 
+                        text-align: center; 
+                        padding: 5px 10px; 
+                        border-radius: 10px; 
+                        font-size: 12px; 
+                        width: 150px;
+                        margin-top: 5px;">
+                        @Produto.GetID()
+                    </div>
+                </div>
+                
+                <!-- Botão de Montagem -->
+                <MudButton Style="background-color: rgba(56, 163, 165, 0.8); color: white; font-weight: bold; margin-top: 40px; font-size: 18px;" 
+                           Variant="Variant.Filled" OnClick="NavigateToMontagem">
+                    Montagem
+                </MudButton>
+            </MudItem>
+        </MudGrid>
+    </MudContainer>
+}
+
+@code {
+    [Parameter] public int ProdutoID { get; set; }
+    private Produto? Produto { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Produto = ProdutoDAO.GetInstance().Get(ProdutoID);
+    }
+
+    private void NavigateToMontagem()
+    {
+        NavManager.NavigateTo($"/montagem/{ProdutoID}");
+    }
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private string GetRemainingWords(string nome)
+    {
+        var words = nome.Split(' ');
+        return string.Join(' ', words.Take(words.Length - 1));
+    }
+}
