@@ -79,7 +79,9 @@
                 </form>
 
                 <div class="flex justify-center mt-14">
-                    <img src="images/valhala.svg" class="select-none"/>
+                    <button @onclick="NavigateToHome" class="focus:outline-none">
+                        <img src="images/valhala.svg" class="select-none"/>
+                    </button>
                 </div>
             </div>
         </div>
@@ -136,6 +138,11 @@
     private string GetRadioClass(string userType)
     {
         return userType == UserType ? "text-black font-bold" : "text-gray-500";
+    }
+
+    private void NavigateToHome()
+    {
+        NavManager.NavigateTo("/");
     }
 }
 

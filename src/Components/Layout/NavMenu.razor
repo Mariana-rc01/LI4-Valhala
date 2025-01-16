@@ -9,13 +9,14 @@
     <img src="images/valhala.svg" class="select-none" />
 </div>
 
-<MudNavMenu class="pt-12">
-    @foreach (var link in _links)
-    {
-        <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
-    }
+@if (userSession != null)
+{
+    <MudNavMenu class="pt-12">
+        @foreach (var link in _links)
+        {
+            <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
+        }
 
-    @if (userSession != null) {
         <div class="mt-12 pt-8 pb-4">
             <MudMenu Style="width: 100%;">
                 <ActivatorContent>
@@ -37,9 +38,9 @@
                 </ChildContent>
             </MudMenu>
         </div>
-    }
-</MudNavMenu>
-
+    </MudNavMenu>
+}
+else{}
 
 @code {
     class NavLink
@@ -71,7 +72,6 @@
         if (id != null && name != null && role != null)
         {
             userSession = new UserSession(int.Parse(id), name, role);
-
             _links = GetUserLinks(role);
         }
         else
@@ -123,6 +123,6 @@
     private void Logout()
     {
         userSession = null;
-        NavigationManager.NavigateTo("/login", true); // depois redirecionámos para o catálogo
+        NavigationManager.NavigateTo("/login", true); // depois redirecionamos para o login
     }
 }
