@@ -11,6 +11,7 @@
 @using Valhala.Controller.Products
 
 @inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
 
 
 <PageTitle>Catálogo</PageTitle>
@@ -43,6 +44,17 @@
     protected override void OnInitialized()
     {
         Produtos = ProdutoDAO.GetInstance().ListarProdutos();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("eval", @"
+            document.body.style.userSelect = 'none';
+            document.body.style.cursor = 'default';
+            ");
+        }
     }
 
     private void VerDetalhes(int id)
