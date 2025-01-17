@@ -152,5 +152,61 @@ namespace Valhala.Controller.Data {
             }
             return produtos;
         }
+
+        public void Delete(int id)
+        {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.Transaction = transaction;
+
+                            command.CommandText = "DELETE FROM FuncionárioEncomenda WHERE Encomenda_ID IN (SELECT ID FROM Encomenda WHERE Produto = @id)";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            command.CommandText = "DELETE FROM PeçaEtapa WHERE Peca_ID IN (SELECT Peca_ID FROM ProdutoPeça WHERE Produto_ID = @id)";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            command.CommandText = "DELETE FROM ProdutoPeça WHERE Produto_ID = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            command.CommandText = "DELETE FROM Encomenda WHERE Produto = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            command.CommandText = "DELETE FROM Etapa WHERE Produto = @id AND NOT EXISTS (SELECT 1 FROM Encomenda WHERE Etapa = Etapa.ID)";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+
+                            command.CommandText = "DELETE FROM Produto WHERE ID = @id";
+                            command.Parameters.AddWithValue("@id", id);
+                            command.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
     }
 }

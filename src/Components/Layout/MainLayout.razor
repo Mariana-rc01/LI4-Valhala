@@ -1,4 +1,9 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using Valhala.Authentication
+@using Microsoft.AspNetCore.Components
+@inject AuthenticationStateProvider AuthStateProvider
 
 <MudThemeProvider Theme="_themeProvider"/>
 <MudPopoverProvider/>
@@ -6,12 +11,17 @@
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudAppBar Elevation="0">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="DrawerToggle"/>
-    </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen">
-        <NavMenu/>
-    </MudDrawer>
+
+    @if (userSession != null)
+    {
+        <MudAppBar Elevation="0">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="DrawerToggle"/>
+        </MudAppBar>
+        <MudDrawer @bind-Open="@_drawerOpen">
+            <NavMenu/>
+        </MudDrawer>
+    }
+    
     <MudMainContent>
         <div class="px-14 py-6">
             @Body
@@ -22,6 +32,29 @@
 @code {
     private Theme _themeProvider = new Theme();
     private bool _drawerOpen = true;
+
+    private UserSession? userSession;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtém o estado da autenticação e verifica se há uma sessão de usuário
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        // Se a sessão de usuário existir, armazena as informações da sessão
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id), name, role);
+        }
+        else
+        {
+            userSession = null;
+        }
+    }
 
     void DrawerToggle()
     {

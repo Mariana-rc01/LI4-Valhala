@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/catalog"
 @using System.Security.Claims
 @using Valhala.Authentication
 @using Microsoft.AspNetCore.Components.Authorization
@@ -7,14 +7,15 @@
 @using Valhala.Controller.Data
 @using Microsoft.AspNetCore.Components
 @using Valhala.Controller.UI
+@using Valhala.Components.Layout
 @using Valhala.Controller.Products
 
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
+
 <PageTitle>Catálogo</PageTitle>
 
-<h1>Catálogo para o Dionisio meter bonito (Mariana - queria testar a visualização do produto sem login)</h1>
 
 <MudContainer MaxWidth="MaxWidth.Large">
     <MudGrid>
@@ -49,7 +50,6 @@
     {
         if (firstRender)
         {
-
             await JSRuntime.InvokeVoidAsync("eval", @"
             document.body.style.userSelect = 'none';
             document.body.style.cursor = 'default';
