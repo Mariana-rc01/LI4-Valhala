@@ -36,5 +36,9 @@ namespace Valhala.Controller {
         public void discontinuePeca(int id) {
             this.subProducts.discontinuePeca(id);
         }
+
+        public void orderPeca(int id, int quantidade, int gestor) {
+            this.subProducts.orderPeca(id, quantidade, gestor);
+        }
     }
 }

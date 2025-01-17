@@ -25,5 +25,9 @@ namespace Valhala.Controller.Products {
         public void discontinuePeca(int id) {
             this.pecaDAO.Descontinue(id);
         }
+
+        public void orderPeca(int id, int quantidade, int gestor) {
+            this.pecaDAO.PlacePartOrder(id, quantidade, gestor);
+        }
     }
 }

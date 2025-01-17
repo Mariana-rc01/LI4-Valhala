@@ -199,5 +199,28 @@ namespace Valhala.Controller.Data {
             
             }
         }
+
+        public void PlacePartOrder(int id, int quantidade, int gestor) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(@"
+                    INSERT INTO PedidoPeça (ID, Peça, Quantidade, Gestor, Estado)
+                    VALUES (
+                        (SELECT ISNULL(MAX(ID), 0) + 1 FROM PedidoPeça), 
+                        @id, 
+                        @quantidade, 
+                        @gestor,
+                        0
+                    )", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@quantidade", quantidade);
+                    command.Parameters.AddWithValue("@gestor", gestor);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
