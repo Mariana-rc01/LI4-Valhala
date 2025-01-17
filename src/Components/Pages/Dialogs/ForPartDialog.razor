@@ -1,0 +1,52 @@
+@using Valhala.Controller.UI
+@inject UIService UIService
+@inject NavigationManager NavigationManager
+
+<MudDialog  class="p-4">
+    <TitleContent>
+        <MudText Typo="Typo.h5">
+            Peça @part.GetID()
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="flex flex-row gap-8 mt-4">
+            <div class="w-full flex flex-col">
+                <MudField Label="Identificador" Variant="Variant.Text">@part.GetID()</MudField>
+                <MudNumericField @bind-Value="_stock"  Label="Stock" Variant="Variant.Text">@part.GetQuantidade()</MudNumericField >
+                <MudField Label="Fornecedor" Variant="Variant.Text">@part.GetFornecedorNome()</MudField>
+            </div>
+            <div class="w-full outline outline-dashed rounded-lg my-1 p-4">
+                <img class="w-64 h-64" src="@part.GetImagem()" />
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudIconButton Icon="@Icons.Material.Outlined.LocalShipping" Color="Color.Secondary" Variant="Variant.Filled" />
+        <MudButton OnClick="@Submit" Color="Color.Primary" Variant="Variant.Filled">Gravar alterações</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    private MudDialogInstance _MudDialog { get; set; }
+
+    [Parameter]
+    public int partId { get; set; }
+
+    private PecaUI part;
+
+    private int _stock = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        part = UIService.getPeca(partId);
+        _stock = part.GetQuantidade();
+    }
+
+    private void Submit() {
+        UIService.updateStockPeca(partId, _stock);
+        _MudDialog.Close(DialogResult.Ok(true));
+        NavigationManager.NavigateTo("/parts", true);
+    }
+
+    private void Cancel() => _MudDialog.Cancel();
+}

@@ -2,8 +2,13 @@
 
 @using Valhala.Controller.Products
 @using Valhala.Controller.UI
-
+@using Valhala.Components.Pages.Dialogs;
+@using Valhala.Authentication
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IDialogService DialogService
 @inject UIService UIService
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Home</PageTitle>
 
@@ -11,7 +16,7 @@
     Gestão de Peças
 </MudText>
 
-<MudTable Items="@pecas" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6">
+<MudTable Items="@_pecas" T="PecaUI" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6" OnRowClick="OpenEditDialog" RowClass="hover:cursor-pointer">
     <HeaderContent>
         <MudTh></MudTh>
         <MudTh>Identificador</MudTh>
@@ -35,11 +40,30 @@
 
 @code { 
     private bool _loading;
-    private IEnumerable<PecaUI> pecas = new List<PecaUI>();
+    private IEnumerable<PecaUI> _pecas = new List<PecaUI>();
 
     protected override async Task OnInitializedAsync()
     {
-        pecas = UIService.listPecas();
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+
+        // Depending on the role, only display specific parts
+        if(role == "Fornecedor")
+            _pecas = UIService.listPecas().Where(p => p.GetFornecedorNome() == id);
+        else
+            _pecas = UIService.listPecas();
     }
 
+    private void OpenEditDialog(TableRowClickEventArgs<PecaUI> tableRowClickEventArgs)
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large };
+
+        var parameters = new DialogParameters<GesPartDialog> {
+            { "partId", tableRowClickEventArgs.Item.GetID() }
+        };
+
+        DialogService.ShowAsync<GesPartDialog>("Part", parameters, options);
+    }
 }

@@ -18,7 +18,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Peca", connection))
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Peça", connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -37,7 +37,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Peca WHERE ID = @id", connection))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Peça WHERE ID = @id", connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -62,17 +62,19 @@ namespace Valhala.Controller.Data {
             {
                 connection.Open();
                 string sql = @"
-                MERGE INTO Peca
-                USING (SELECT @id AS id, @quantidade AS quantidade, @imagem AS imagem, @fornecedor AS fornecedor) AS values
-                ON Peca.ID = values.id
-                WHEN MATCHED THEN UPDATE
-                    SET Peca.Quantidade = values.quantidade,
-                        Peca.Imagem = values.imagem,
-                        Peca.Fornecedor = values.fornecedor
-                WHEN NOT MATCHED THEN INSERT 
-                    (ID, Quantidade, Imagem, Fornecedor) 
-                    VALUES (values.id, values.quantidade, values.imagem, values.fornecedor);
+                MERGE INTO Peça AS target
+                USING (SELECT @id AS id, @quantidade AS quantidade, @imagem AS imagem, @fornecedor AS fornecedor) AS source
+                ON target.ID = source.id
+                WHEN MATCHED THEN 
+                    UPDATE SET 
+                        Quantidade = source.quantidade,
+                        Imagem = source.imagem,
+                        Fornecedor = source.fornecedor
+                WHEN NOT MATCHED THEN 
+                    INSERT (ID, Quantidade, Imagem, Fornecedor) 
+                    VALUES (source.id, source.quantidade, source.imagem, source.fornecedor);
                 ";
+
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);

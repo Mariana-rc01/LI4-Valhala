@@ -11,5 +11,15 @@ namespace Valhala.Controller.Products {
         public List<Peca> listPecas() {
             return this.pecaDAO.List();
         }
+
+        public Peca getPeca(int id) {
+            return this.pecaDAO.Get(id);
+        }
+
+        public void updateStockPeca(int id, int quantidade) {
+            Peca peca = this.pecaDAO.Get(id);
+            peca.SetQuantidade(quantidade);
+            this.pecaDAO.Put(id, peca); 
+        }
     }
 }
