@@ -32,5 +32,9 @@ namespace Valhala.Controller {
         public void updateStockPeca(int id, int quantidade) {
             this.subProducts.updateStockPeca(id, quantidade);
         }
+
+        public void discontinuePeca(int id) {
+            this.subProducts.discontinuePeca(id);
+        }
     }
 }

@@ -21,5 +21,9 @@ namespace Valhala.Controller.Products {
             peca.SetQuantidade(quantidade);
             this.pecaDAO.Put(id, peca); 
         }
+
+        public void discontinuePeca(int id) {
+            this.pecaDAO.Descontinue(id);
+        }
     }
 }

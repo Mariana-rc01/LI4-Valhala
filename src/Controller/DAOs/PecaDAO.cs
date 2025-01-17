@@ -48,7 +48,7 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // ID
                                 reader.GetInt32(1), // Quantidade
                                 reader.GetString(2),// Imagem
-                                reader.GetInt32(3)  // Fornecedor
+                                reader.IsDBNull(3) ? -1 : reader.GetInt32(3)  // Fornecedor
                             );
                         }
                     }
@@ -102,7 +102,7 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // ID
                                 reader.GetInt32(1), // Quantidade
                                 reader.IsDBNull(2) ? "" : reader.GetString(2),// Imagem
-                                reader.GetInt32(3)  // Fornecedor
+                                reader.IsDBNull(3) ? -1 : reader.GetInt32(3) // Fornecedor
                             ));
                         }
                     }
@@ -173,6 +173,31 @@ namespace Valhala.Controller.Data {
                 }
             }
             return pecas;
+        }
+
+        public void Descontinue(int id) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE Peça SET Fornecedor = NULL WHERE ID = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete(int id) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("DELETE FROM Peça WHERE ID = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            
+            }
         }
     }
 }

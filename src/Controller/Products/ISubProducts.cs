@@ -4,5 +4,7 @@ namespace Valhala.Controller.Products {
         public Peca getPeca(int id);
 
         public void updateStockPeca(int id, int quantidade);
+
+        public void discontinuePeca(int id);
     }
 }
