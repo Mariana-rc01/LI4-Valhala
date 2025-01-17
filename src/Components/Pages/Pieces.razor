@@ -41,6 +41,7 @@
 @code { 
     private bool _loading;
     private IEnumerable<PecaUI> _pecas = new List<PecaUI>();
+    private string _role = ""; 
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,9 +50,11 @@
         var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
         var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
 
+        _role = role;
+
         // Depending on the role, only display specific parts
         if(role == "Fornecedor")
-            _pecas = UIService.listPecas().Where(p => p.GetFornecedorNome() == id);
+            _pecas = UIService.listPecas().Where(p => p.GetFornecedorNome() == name);
         else
             _pecas = UIService.listPecas();
     }
@@ -64,6 +67,10 @@
             { "partId", tableRowClickEventArgs.Item.GetID() }
         };
 
-        DialogService.ShowAsync<GesPartDialog>("Part", parameters, options);
+        if(_role == "Fornecedor") {
+            DialogService.ShowAsync<ForPartDialog>("Part", parameters, options);
+        } else {
+            DialogService.ShowAsync<GesPartDialog>("Part", parameters, options);
+        }
     }
 }

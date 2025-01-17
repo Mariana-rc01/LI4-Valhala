@@ -16,6 +16,7 @@ public class Theme : MudTheme {
             TextPrimary = "#0D051B",
             TextSecondary = "#0D051B",
             DrawerIcon = "#0D051B",
+            Error = "#DE5656"
         };
 
         Typography = new Typography()
