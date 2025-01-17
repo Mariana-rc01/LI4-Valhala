@@ -1,6 +1,6 @@
 @using MudBlazor
 @inject Valhala.Controller.UI.UIService UIService
-
+@inject IJSRuntime js
 
 <MudDialog Class="custom-modal">
     <TitleContent>
@@ -35,56 +35,43 @@
 
     private UserRemoveModel user = new UserRemoveModel();
 
-
     private async Task Submit()
     {
-        try{
+        try
+        {
+            // Validate input
             if (string.IsNullOrEmpty(user.UserType))
             {
-                Console.WriteLine("User type is not selected or invalid.");
+                await ShowErrorMessage("O tipo de utilizador é obrigatório.");
                 return;
             }
-            Console.WriteLine("User type is selected.");
-            Console.WriteLine("User type: " + user.UserType);
-        
 
+            // Call the service to remove the user
+            int result = await UIService.RemoverUser(user.Id, user.UserType);
+            MudDialog?.Close(DialogResult.Ok(result));
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            await ShowErrorMessage($"Erro ao remover utilizador: {e.Message}");
         }
-
-
     }
 
-@* private void Submit()
-{
-    if (string.IsNullOrEmpty(user.UserType))
+    private async Task ShowErrorMessage(string message)
     {
-        Console.WriteLine("User type is not selected or invalid.");
-        return;
+        await js.InvokeVoidAsync("alert", message);
     }
-    Console.WriteLine("User type is selected.");
-    Console.WriteLine("User type: " + user.UserType);
-
-    int removeOut = UIService.RemoverUser(user.Id, user.UserType);
-    MudDialog?.Close(DialogResult.Ok(removeOut));
-} *@
-
- 
 
     public class UserRemoveModel
     {
         public int Id { get; set; }
-        public string? UserType { get; set; }= "Funcionario";
+        public string? UserType { get; set; } = "Funcionario";
     }
 
-        public static class UserTypes
+    public static class UserTypes
     {
         public const string Funcionario = "Funcionario";
         public const string Gestor = "Gestor";
         public const string Fornecedor = "Fornecedor";
         public const string Cliente = "Cliente";
     }
-
 }
