@@ -47,13 +47,12 @@ namespace Valhala.Controller.Data {
         public Funcionario Put(int id, Funcionario funcionario) {
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                string sql = "MERGE INTO Funcionário USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Funcionário.id = values.id WHEN MATCHED THEN UPDATE SET Funcionario.nome = values.nome, Funcionario.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
-                using(SqlCommand command = new SqlCommand(sql, connection)){
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@nome", funcionario.GetNome());
-                    command.Parameters.AddWithValue("@senha", funcionario.GetSenha());
-                    command.ExecuteNonQuery();
-                }
+                string sql = "Insert into Funcionário (id, nome, senha) VALUES (@id, @nome, @senha);";
+                using SqlCommand command = new SqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@nome", funcionario.GetNome());
+                command.Parameters.AddWithValue("@senha", funcionario.GetSenha());
+                command.ExecuteNonQuery();
             }
             return funcionario;
         }

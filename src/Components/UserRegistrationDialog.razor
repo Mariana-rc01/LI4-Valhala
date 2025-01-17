@@ -61,50 +61,46 @@
     private UserRegistrationModel user = new UserRegistrationModel();
 
     private async Task Submit()
+{
+    try
     {
-        try
+        // Validate inputs
+        if (string.IsNullOrEmpty(user.Name))
         {
-            // Validate inputs
-            if (string.IsNullOrEmpty(user.Name))
-            {
-                await ShowErrorMessage("O nome do utilizador é obrigatório.");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(user.Password))
-            {
-                await ShowErrorMessage("A senha do utilizador é obrigatória.");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(user.UserType))
-            {
-                await ShowErrorMessage("O tipo de utilizador é obrigatório.");
-                return;
-            }
-
-            // Check if UserType is valid
-            string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor, UserTypes.Cliente };
-            if (!tiposValidos.Contains(user.UserType))
-            {
-                await ShowErrorMessage("Tipo de utilizador inválido.");
-                return;
-            }
-
-            // Call the service to register the user
-            int createOut = await UIService.RegisterUserAsync(user.Id, user.Name, user.Password, user.UserType);
-
-            // Close dialog with result
-            MudDialog?.Close(DialogResult.Ok(createOut));
+            await ShowErrorMessage("O nome do utilizador é obrigatório.");
+            return;
         }
-        catch (Exception e)
+
+        if (string.IsNullOrEmpty(user.Password))
         {
-            // Handle unexpected errors
-            await ShowErrorMessage($"Erro ao criar utilizador: {e.Message}");
+            await ShowErrorMessage("A senha do utilizador é obrigatória.");
+            return;
         }
+
+        if (string.IsNullOrEmpty(user.UserType))
+        {
+            await ShowErrorMessage("O tipo de utilizador é obrigatório.");
+            return;
+        }
+
+        // Check if UserType is valid
+        string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor, UserTypes.Cliente };
+        if (!tiposValidos.Contains(user.UserType))
+        {
+            await ShowErrorMessage("Tipo de utilizador inválido.");
+            return;
+        }
+
+        // Call the service to register the user
+        int createOut = await UIService.RegisterUserAsync(user.Id, user.Name, user.Password, user.UserType);
+        MudDialog?.Close(DialogResult.Ok(createOut));
     }
-
-    // Helper method for showing error messages
+    catch (Exception e)
+    {
+        // Handle unexpected errors
+        await ShowErrorMessage($"Erro ao criar utilizador: {e.Message}");
+    }
+}
     private async Task ShowErrorMessage(string message)
     {
         await js.InvokeVoidAsync("alert", message);

@@ -165,7 +165,7 @@ namespace Valhala.Controller.Users {
             int resultado = 0;
 
             // Verificar se o tipo de utilizador é válido
-            string[] tiposValidos = { "cliente", "funcionario", "gestor", "fornecedor" };
+            string[] tiposValidos = ["cliente", "funcionario", "gestor", "fornecedor"];
             if (!tiposValidos.Contains(tipo.ToLower())) {
                 throw new ArgumentException("Tipo de utilizador inválido.");
             }

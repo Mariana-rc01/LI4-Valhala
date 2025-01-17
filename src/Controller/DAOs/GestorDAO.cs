@@ -45,15 +45,14 @@ namespace Valhala.Controller.Data {
         }
 
         public Gestor Put(int id, Gestor gestor) {
-            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+            using(SqlConnection connection = new(DAOConfig.GetConnectionString())){
                 connection.Open();
-                string sql = "MERGE INTO Gestor USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Gestor.id = values.id WHEN MATCHED THEN UPDATE SET Gestor.nome = values.nome, Gestor.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
-                using(SqlCommand command = new SqlCommand(sql, connection)){
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@nome", gestor.GetNome());
-                    command.Parameters.AddWithValue("@senha", gestor.GetSenha());
-                    command.ExecuteNonQuery();
-                }
+                string sql = "Insert into Gestor (id, nome, senha) VALUES (@id, @nome, @senha);";
+                using SqlCommand command = new SqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@nome", gestor.GetNome());
+                command.Parameters.AddWithValue("@senha", gestor.GetSenha());
+                command.ExecuteNonQuery();
             }
             return gestor;
         }

@@ -21,13 +21,13 @@
                 {
                     if (subLink.Name == "Registar Utilizador")
                     {
-                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog">
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog" Style="margin-left: 30px;">
                             @subLink.Name
                         </MudButton>
                     }
                     else if (subLink.Name == "Remover Utilizador")
                     {
-                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog">
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog" Style="margin-left: 30px;" >
                             @subLink.Name
                         </MudButton>
                     }
