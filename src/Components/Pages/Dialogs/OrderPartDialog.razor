@@ -1,0 +1,50 @@
+@using Valhala.Controller.UI
+@inject UIService UIService
+@inject NavigationManager NavigationManager
+@using Valhala.Authentication
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+
+<MudDialog class="p-4">
+    <TitleContent>
+        <MudText Typo="Typo.h5">
+            Encomendar Peça @partId
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="flex flex-row gap-8 mt-4 h-20 w-96">
+            <MudNumericField @bind-Value="_stock"  Label="Quantidade a encomendar" Variant="Variant.Text">0</MudNumericField >
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@Submit" Color="Color.Secondary" Variant="Variant.Filled">Encomendar Peça</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    private MudDialogInstance _MudDialog { get; set; }
+
+    [Parameter]
+    public int partId { get; set; }
+
+
+    private int _stock = 0;
+    private int _idGestor = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+        var ges_id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        _idGestor = int.Parse(ges_id);
+    }
+
+    private void Submit() {
+        UIService.orderPeca(partId, _stock, _idGestor);
+        _MudDialog.Close(DialogResult.Ok(true));
+        NavigationManager.NavigateTo("/parts", true);
+    }
+
+    private void Cancel() => _MudDialog.Cancel();
+}

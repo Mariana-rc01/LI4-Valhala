@@ -4,14 +4,14 @@
 @using Microsoft.AspNetCore.Components
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
-
 @inject IDialogService DialogService
 
 <div class="flex w-full justify-center pt-8">
     <img src="images/valhala.svg" class="select-none" />
 </div>
 
-<MudNavMenu class="pt-12">
+<MudNavMenu class="pt-12" Style="display: flex; flex-direction: column; height: 100vh;">
+    <!-- Navigation Links Section -->
     @foreach (var link in _links)
     {
         if (link.SubLinks != null)
@@ -27,7 +27,7 @@
                     }
                     else if (subLink.Name == "Remover Utilizador")
                     {
-                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog" Style="margin-left: 30px;" >
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog" Style="margin-left: 30px;">
                             @subLink.Name
                         </MudButton>
                     }
@@ -37,30 +37,26 @@
         else
         {
             <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
-        } 
+        }
     }
 
-    
-
-    @if (userSession != null) {
-        <div class="mt-12 pt-8 pb-4">
+    @if (userSession != null)
+    {
+        <div class="mb-8" Style="margin-top: auto;">
             <MudMenu Style="width: 100%;">
                 <ActivatorContent>
-                    <MudButton Style="color: black; width: 100%;" StartIcon="@Icons.Material.Filled.AccountCircle">
-                        @userSession.Name
-                    </MudButton>
+                    <div class="flex items-center">
+                        <MudAvatar class="text-white ml-4">
+                            @{ var initials = string.Join("", userSession.Name.Split(" ").Select(word => word[0])); @initials }
+                        </MudAvatar>
+                        <div class="pl-4">
+                            <p class="font-semibold">@userSession.Name</p>
+                            <p class="text-sm">@userSession.Role</p>
+                        </div>
+                    </div>
                 </ActivatorContent>
                 <ChildContent>
-                    <MudMenuItem>
-                        <div class="flex items-center">
-                            <img src="images/avatar.png" alt="User" class="w-12 h-12 rounded-full mr-4" />
-                            <div>
-                                <div style="font-size: 15px; font-weight: bold;">@userSession.Name</div>
-                                <div style="font-size: 10px;">@userSession.Role</div>
-                            </div>
-                        </div>
-                    </MudMenuItem>
-                    <MudMenuItem OnClick="Logout">Terminar Sessão</MudMenuItem>
+                    <MudMenuItem Icon="@Icons.Material.Outlined.Logout" OnClick="Logout">Terminar Sessão</MudMenuItem>
                 </ChildContent>
             </MudMenu>
         </div>

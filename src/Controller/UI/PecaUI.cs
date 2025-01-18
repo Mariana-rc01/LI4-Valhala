@@ -42,6 +42,10 @@ namespace Valhala.Controller.UI{
             }
 
             public string GetFornecedorNome() {
+                if(this.fornecedor == -1) {
+                    return "Sem fornecedor (descontinuado)";
+                }
+                
                 return this.fornecedorDAO.Get(this.fornecedor).GetNome();
             }
     }
