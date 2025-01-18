@@ -1,0 +1,182 @@
+@using MudBlazor
+@inject Valhala.Controller.UI.UIService UIService
+@inject IJSRuntime js
+
+<MudDialog Class="custom-modal">
+    <TitleContent>
+        Remover utilizador
+    </TitleContent>
+    <DialogContent>
+        @if (!isConfirmationOpen)
+        {
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudTextField Label="Identificador" @bind-Value="user.Id" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudSelect T="string" Label="Tipo de utilizador" AnchorOrigin="Origin.BottomCenter"
+                        @bind-Value="user.UserType">
+                        <MudSelectItem Value="@UserTypes.Funcionario">Funcionário</MudSelectItem>
+                        <MudSelectItem Value="@UserTypes.Gestor">Gestor</MudSelectItem>
+                        <MudSelectItem Value="@UserTypes.Fornecedor">Fornecedor</MudSelectItem>
+                        <MudSelectItem Value="@UserTypes.Cliente">Cliente</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="6" Style="display: flex; justify-content: flex-end;">
+                    <DialogActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="OpenConfirmation">
+                            Remover Utilizador
+                        </MudButton>
+                    </DialogActions>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <MudText Typo="Typo.body1">Tem a certeza de que deseja remover este utilizador?</MudText>
+        }
+    </DialogContent>
+    <DialogActions>
+        @if (isConfirmationOpen)
+        {
+            <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="CancelConfirmation">Cancelar</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ConfirmRemoveUser">Confirmar</MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance? MudDialog { get; set; }
+
+    private UserRemoveModel user = new UserRemoveModel();
+    private bool isConfirmationOpen = false;
+
+    private void OpenConfirmation()
+    {
+        isConfirmationOpen = true;
+    }
+
+    private async Task ConfirmRemoveUser()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(user.UserType))
+            {
+                await ShowErrorMessage("O tipo de utilizador é obrigatório.");
+                return;
+            }
+
+            int result = await UIService.RemoverUser(user.Id, user.UserType);
+            MudDialog?.Close(DialogResult.Ok(result));
+        }
+        catch (Exception e)
+        {
+            await ShowErrorMessage($"Erro ao remover utilizador: {e.Message}");
+        }
+    }
+
+    private void CancelConfirmation()
+    {
+        isConfirmationOpen = false;
+    }
+
+    private async Task ShowErrorMessage(string message)
+    {
+        await js.InvokeVoidAsync("alert", message);
+    }
+
+    public class UserRemoveModel
+    {
+        public int Id { get; set; }
+        public string? UserType { get; set; } = "Funcionario";
+    }
+
+    public static class UserTypes
+    {
+        public const string Funcionario = "Funcionario";
+        public const string Gestor = "Gestor";
+        public const string Fornecedor = "Fornecedor";
+        public const string Cliente = "Cliente";
+    }
+}
+
+
+@* @using MudBlazor
+@inject Valhala.Controller.UI.UIService UIService
+@inject IJSRuntime js
+
+<MudDialog Class="custom-modal">
+    <TitleContent>
+        Remover utilizador
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField Label="Identificador" @bind-Value="user.Id" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudSelect T="string" Label="Tipo de utilizador" AnchorOrigin="Origin.BottomCenter"
+                    @bind-Value="user.UserType">
+                    <MudSelectItem Value="@UserTypes.Funcionario">Funcionário</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Gestor">Gestor</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Fornecedor">Fornecedor</MudSelectItem>
+                    <MudSelectItem Value="@UserTypes.Cliente">Cliente</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="6" Style="display: flex; justify-content: flex-end;">
+                <DialogActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Submit">Remover Utilizador</MudButton>
+                </DialogActions>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance? MudDialog { get; set; }
+
+    private UserRemoveModel user = new UserRemoveModel();
+
+    private async Task Submit()
+    {
+        try
+        {
+            // Validate input
+            if (string.IsNullOrEmpty(user.UserType))
+            {
+                await ShowErrorMessage("O tipo de utilizador é obrigatório.");
+                return;
+            }
+
+            // Call the service to remove the user
+            int result = await UIService.RemoverUser(user.Id, user.UserType);
+            Console.WriteLine($"User removed: {result}");
+            MudDialog?.Close(DialogResult.Ok(result));
+        }
+        catch (Exception e)
+        {
+            await ShowErrorMessage($"Erro ao remover utilizador: {e.Message}");
+        }
+    }
+
+    private async Task ShowErrorMessage(string message)
+    {
+        await js.InvokeVoidAsync("alert", message);
+    }
+
+    public class UserRemoveModel
+    {
+        public int Id { get; set; }
+        public string? UserType { get; set; } = "Funcionario";
+    }
+
+    public static class UserTypes
+    {
+        public const string Funcionario = "Funcionario";
+        public const string Gestor = "Gestor";
+        public const string Fornecedor = "Fornecedor";
+        public const string Cliente = "Cliente";
+    }
+} *@

@@ -44,20 +44,33 @@ namespace Valhala.Controller.Data {
             return fornecedor;
         }
 
-        public Fornecedor Put(int id, Fornecedor fornecedor) {
+        // public Fornecedor Put(int id, Fornecedor fornecedor) {
+        //     using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+        //         connection.Open();
+        //         string sql = "MERGE INTO Fornecedor USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Fornecedor.id = values.id WHEN MATCHED THEN UPDATE SET Fornecedor.nome = values.nome, Fornecedor.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
+        //         using(SqlCommand command = new SqlCommand(sql, connection)){
+        //             command.Parameters.AddWithValue("@id", id);
+        //             command.Parameters.AddWithValue("@nome", fornecedor.GetNome());
+        //             command.Parameters.AddWithValue("@senha", fornecedor.GetSenha());
+        //             command.ExecuteNonQuery();
+        //         }
+        //     }
+        //     return fornecedor;
+        // }
+
+        public Fornecedor Put(int id, Fornecedor fornecedor){
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
                 connection.Open();
-                string sql = "MERGE INTO Fornecedor USING (SELECT @id AS id, @nome AS nome, @senha AS senha) AS values ON Fornecedor.id = values.id WHEN MATCHED THEN UPDATE SET Fornecedor.nome = values.nome, Fornecedor.senha = values.senha WHEN NOT MATCHED THEN INSERT (id, nome, senha) VALUES (values.id, values.nome, values.senha);";
-                using(SqlCommand command = new SqlCommand(sql, connection)){
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@nome", fornecedor.GetNome());
-                    command.Parameters.AddWithValue("@senha", fornecedor.GetSenha());
-                    command.ExecuteNonQuery();
-                }
+                string sql ="Insert into Fornecedor (id, nome, senha) VALUES (@id, @nome, @senha)";
+                using SqlCommand command = new SqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@nome", fornecedor.GetNome());
+                command.Parameters.AddWithValue("@senha", fornecedor.GetSenha());
+                command.ExecuteNonQuery();
             }
             return fornecedor;
         }
-
+        
         public bool ExisteFornecedor(int id) {
             bool existe = false;
             using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
@@ -85,6 +98,16 @@ namespace Valhala.Controller.Data {
                 }
             }
             return keys;
+        }
+
+        public void Remove(int id) {
+            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+                connection.Open();
+                using(SqlCommand command = new SqlCommand("DELETE FROM Fornecedor WHERE id = @id", connection)){
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
     }
