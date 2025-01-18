@@ -18,7 +18,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Peca", connection))
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Peça", connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -37,7 +37,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Peca WHERE ID = @id", connection))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Peça WHERE ID = @id", connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -48,7 +48,7 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // ID
                                 reader.GetInt32(1), // Quantidade
                                 reader.GetString(2),// Imagem
-                                reader.GetInt32(3)  // Fornecedor
+                                reader.IsDBNull(3) ? -1 : reader.GetInt32(3)  // Fornecedor
                             );
                         }
                     }
@@ -62,17 +62,19 @@ namespace Valhala.Controller.Data {
             {
                 connection.Open();
                 string sql = @"
-                MERGE INTO Peca
-                USING (SELECT @id AS id, @quantidade AS quantidade, @imagem AS imagem, @fornecedor AS fornecedor) AS values
-                ON Peca.ID = values.id
-                WHEN MATCHED THEN UPDATE
-                    SET Peca.Quantidade = values.quantidade,
-                        Peca.Imagem = values.imagem,
-                        Peca.Fornecedor = values.fornecedor
-                WHEN NOT MATCHED THEN INSERT 
-                    (ID, Quantidade, Imagem, Fornecedor) 
-                    VALUES (values.id, values.quantidade, values.imagem, values.fornecedor);
+                MERGE INTO Peça AS target
+                USING (SELECT @id AS id, @quantidade AS quantidade, @imagem AS imagem, @fornecedor AS fornecedor) AS source
+                ON target.ID = source.id
+                WHEN MATCHED THEN 
+                    UPDATE SET 
+                        Quantidade = source.quantidade,
+                        Imagem = source.imagem,
+                        Fornecedor = source.fornecedor
+                WHEN NOT MATCHED THEN 
+                    INSERT (ID, Quantidade, Imagem, Fornecedor) 
+                    VALUES (source.id, source.quantidade, source.imagem, source.fornecedor);
                 ";
+
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
@@ -100,7 +102,7 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // ID
                                 reader.GetInt32(1), // Quantidade
                                 reader.IsDBNull(2) ? "" : reader.GetString(2),// Imagem
-                                reader.GetInt32(3)  // Fornecedor
+                                reader.IsDBNull(3) ? -1 : reader.GetInt32(3) // Fornecedor
                             ));
                         }
                     }
@@ -171,6 +173,54 @@ namespace Valhala.Controller.Data {
                 }
             }
             return pecas;
+        }
+
+        public void Descontinue(int id) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE Peça SET Fornecedor = NULL WHERE ID = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete(int id) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("DELETE FROM Peça WHERE ID = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            
+            }
+        }
+
+        public void PlacePartOrder(int id, int quantidade, int gestor) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(@"
+                    INSERT INTO PedidoPeça (ID, Peça, Quantidade, Gestor, Estado)
+                    VALUES (
+                        (SELECT ISNULL(MAX(ID), 0) + 1 FROM PedidoPeça), 
+                        @id, 
+                        @quantidade, 
+                        @gestor,
+                        0
+                    )", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@quantidade", quantidade);
+                    command.Parameters.AddWithValue("@gestor", gestor);
+
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

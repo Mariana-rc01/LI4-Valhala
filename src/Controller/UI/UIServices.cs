@@ -25,5 +25,22 @@ namespace Valhala.Controller.UI {
 
             return pecasUI;
         }
+
+        public PecaUI getPeca(int id) {
+            Peca peca = this.valhalaLn.getPeca(id);
+            return new PecaUI(peca);
+        }
+
+        public void updateStockPeca(int id, int quantidade) {
+            this.valhalaLn.updateStockPeca(id, quantidade);
+        }
+
+        public void discontinuePeca(int id) {
+            this.valhalaLn.discontinuePeca(id);
+        }
+
+        public void orderPeca(int id, int quantidade, int gestor) {
+            this.valhalaLn.orderPeca(id, quantidade, gestor);
+        }
     }
 }
