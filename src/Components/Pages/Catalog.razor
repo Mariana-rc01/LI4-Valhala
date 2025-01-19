@@ -38,12 +38,11 @@
 
 @if (IsGestor())
 {
-    <MudFab Icon="@Icons.Material.Filled.Add" 
-            Color="Color.Primary" 
-            Class="mud-fab" 
-            OnClick="NavigateToAddProduct" 
-            Style="position: fixed; bottom: 20px; right: 20px;" />
+    <MudButton Color="Color.Dark" Variant="Variant.Filled" Class="mt-4" OnClick="NavigateToAddProduct">
+        Adicionar Produto
+    </MudButton>
 }
+
 
 @code {
     private List<Produto> Produtos = new List<Produto>();
