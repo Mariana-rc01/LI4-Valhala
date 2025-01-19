@@ -7,61 +7,129 @@
 <PageTitle>Adicionar Produto</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large">
-
-    <!-- Formulários para cada etapa -->
-    <MudStepper ActiveStepIndex="@currentStep">
-        <MudStep StepContent="Dados do Produto" />
-        <MudStep StepContent="Peças" />
-        <MudStep StepContent="Linha de Montagem" />
-    </MudStepper>
-
-    <MudDialog>
-        <MudDialogContent>
-            @switch(currentStep)
-            {
-                case 0:
+    <MudPaper Style="width: 800px">
+        <MudStepper CenterLabels="true" ShowResetButton @bind-CurrentStep="currentStep">
+            <!-- Etapa 1: Produto -->
+            <MudStep Title="Dados do Produto" Completed="@(currentStep > 0)">
                     <MudGrid>
+                        <!-- Imagem -->
+                        <MudItem xs="12" sm="6">
+                            <MudCard>
+                                @if (!string.IsNullOrEmpty(imagePreview))
+                                {
+                                    <MudCardMedia Image="@imagePreview" Alt="Pré-visualização da Imagem" />
+                                }
+                            </MudCard>
+                        </MudItem>
+
+                        <!-- Dados -->
                         <MudItem xs="12" sm="6">
                             <MudTextField @bind-Value="newProductName" Label="Nome do Produto" FullWidth />
                             <MudTextField @bind-Value="newProductPrice" Label="Preço (€)" FullWidth />
                             <MudTextField @bind-Value="newProductDescription" Label="Descrição" FullWidth Multiline />
-                        </MudItem>
-                        <MudItem xs="12" sm="6">
-                            <MudTextField @bind-Value="newProductImage" Label="Caminho da Imagem" FullWidth />
-                            <MudImage Src="@newProductImage" Alt="Imagem do Produto" Style="width: 100%; border: 2px dashed gray;" />
+                            <MudTextField @bind-Value="newProductImage" Label="Path da Imagem" FullWidth />
+                            
+
+                            <MudButton OnClick="PreviewImage" Variant="Variant.Filled" Color="Color.Primary">Pré-visualizar Imagem</MudButton>
                         </MudItem>
                     </MudGrid>
-                    break;
-                case 1:
-                    <MudText Typo="Typo.h6" Class="mb-2">Selecione as Peças</MudText>
-                    <MudSelect T="Peca" @bind-Value="selectedPiece" Label="Peça" Dense="true" FullWidth>
-                        @foreach (var piece in availablePieces)
+            </MudStep>
+
+            <!-- Etapa 2: Peças -->
+            <MudStep Title="Peças" SecondaryText="Escolha as peças" Skippable="true" Completed="@(currentStep > 1)">
+                    <MudText Typo="Typo.h6" Class="mb-2">Selecione as Peças para o Produto</MudText>
+                    
+                    @if (availablePieces.Count > 0)
+                    {
+                        <MudSelect T="int" @bind-Value="selectedPiece" Label="Peça" Dense="true" FullWidth>
+                            @foreach (var piece in availablePieces)
+                            {
+                                <MudSelectItem T="int" Value="piece.GetID()">@piece.GetID()</MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudButton OnClick="AddPieceToProduct" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça ao Produto</MudButton>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Error">Nenhuma peça disponível para seleção.</MudText>
+                    }
+
+                    <MudText Typo="Typo.h6" Class="mt-4">Peças Adicionadas ao Produto:</MudText>
+                    <MudList T="int">
+                        @foreach (var pieceID in productPieceIDs)
                         {
-                            <MudSelectItem T="Peca" Value="piece">@piece.GetID()</MudSelectItem>
+                            <MudListItem T="int">@pieceID</MudListItem>  <!-- Mostrando o ID da peça -->
                         }
-                    </MudSelect>
-                    break;
-                case 2:
-                    <MudText Typo="Typo.h6" Class="mb-2">Configurar Etapas da Linha de Montagem</MudText>
-                    <MudTextField @bind-Value="stepID" Label="ID da Etapa" FullWidth />
-                    <MudTextField @bind-Value="stepImage" Label="Imagem da Etapa" FullWidth />
-                    <MudTextField @bind-Value="stepProductID" Label="ID do Produto na Etapa" FullWidth />
-                    <MudTextField @bind-Value="stepPieces" Label="Peças Usadas na Etapa" FullWidth />
-                    break;
-            }
-        </MudDialogContent>
-        <MudDialogActions>
-            <MudButton OnClick="GoToPreviousStep" Disabled="currentStep == 0">Voltar</MudButton>
-            @if (currentStep < 2)
-            {
-                <MudButton OnClick="GoToNextStep">Próximo</MudButton>
-            }
-            else
-            {
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SaveProduct">Salvar</MudButton>
-            }
-        </MudDialogActions>
-    </MudDialog>
+                    </MudList>
+            </MudStep>
+
+            <!-- Etapa 3: Linha de Montagem -->
+           <MudStep Title="Linha de Montagem" SecondaryText="Configure a montagem" Completed="@(currentStep > 2)">
+                <MudText Typo="Typo.h6" Class="mb-2">Configurar Etapas da Linha de Montagem</MudText>
+
+                <!-- Etapa -->
+                <MudTextField @bind-Value="stepID" Label="ID da Etapa" FullWidth />  <!-- stepID é agora int -->
+
+                <!-- Imagem da etapa -->
+                <MudTextField @bind-Value="stepImagePath" Label="Imagem da Etapa" FullWidth />
+
+                <!-- Mostra a imagem -->
+                @if (!string.IsNullOrEmpty(stepImagePreview))
+                {
+                    <MudCard>
+                        <MudCardMedia Image="@stepImagePreview" Alt="Imagem da Etapa" />
+                    </MudCard>
+                }
+
+                <MudText Typo="Typo.h6" Class="mt-2">Peças para esta Etapa:</MudText>
+                <MudSelect T="int" @bind-Value="selectedStepPieceID" Label="Selecione uma Peça" Dense="true" FullWidth>
+                    @foreach (var pieceID in productPieceIDs)
+                    {
+                        <MudSelectItem T="int" Value="pieceID">@pieceID</MudSelectItem>  <!-- Mostrando o ID da peça -->
+                    }
+                </MudSelect>
+
+                <MudButton OnClick="AddPieceToStep" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça à Etapa</MudButton>
+
+                <MudText Typo="Typo.h6" Class="mt-4">Peças na Etapa:</MudText>
+                <MudList T="int">
+                    @if (stepPiecesMap.ContainsKey(stepID))
+                    {
+                        foreach (var pieceID in stepPiecesMap[stepID])
+                        {
+                            <MudListItem T="int">@pieceID</MudListItem>  <!-- Mostrando o ID da peça -->
+                        }
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Error">Nenhuma peça adicionada a esta etapa.</MudText>
+                    }
+                </MudList>
+
+                <MudButton OnClick="AddStep" Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Adicionar Etapa</MudButton>
+                
+                <!-- Etapas adicionadas com as peças -->
+                @if (stepPiecesMap.Any())
+                {
+                    <MudText Typo="Typo.h6" Class="mt-4">Etapas e suas Peças:</MudText>
+                    <MudList T="int">
+                    @foreach (var step in stepPiecesMap)
+                    {
+                        <MudListItem T="int"> <!-- MudListItem especifica que o tipo é inteiro -->
+                            Etapa @step.Key - Peças: 
+                            @foreach (var pieceID in step.Value)
+                            {
+                                <span>@pieceID </span>
+                            }
+                        </MudListItem>
+                    }
+                </MudList>
+                }
+            </MudStep>
+
+        </MudStepper>
+    </MudPaper>
 </MudContainer>
 
 @code {
@@ -70,68 +138,62 @@
     private decimal newProductPrice;
     private string newProductDescription;
     private string newProductImage;
-    private Peca selectedPiece;
-    private string stepID;
-    private string stepImage;
-    private string stepProductID;
-    private string stepPieces;
+    private int selectedPiece;
+    private int selectedStepPieceID;
+    private int stepID;
+    private string imagePreview;
+    private string stepImagePath;
+    private string stepImagePreview;
+    private List<Peca> availablePieces = new List<Peca>();
+    private List<int> productPieceIDs = new List<int>();
+    private Dictionary<int, List<int>> stepPiecesMap = new Dictionary<int, List<int>>();
+    private List<Etapa> etapas = new List<Etapa>();
 
-    private List<Peca> availablePieces = new List<Peca>(); // Lista de peças pré-existentes
-    private TimelinePosition _position = TimelinePosition.Start;
-    private TimelineOrientation _orientation = TimelineOrientation.Vertical;
-    private bool _reverse;
+    private Etapa selectedStep;
 
     protected override async Task OnInitializedAsync()
     {
-        // Simular busca de peças existentes no sistema
-        availablePieces = PecaDAO.GetInstance().List(); // Substitua pelo seu DAO real
+        availablePieces = PecaDAO.GetInstance().List();
     }
-
-    private void OnOrientationChange(TimelineOrientation value)
+    private void PreviewImage()
     {
-        _orientation = value;
-        switch (value)
+        imagePreview = newProductImage;
+    }
+    private void PreviewStepImage()
+    {
+        stepImagePreview = stepImagePath;
+    }
+    private void AddPieceToProduct()
+    {
+        if (selectedPiece != 0 && !productPieceIDs.Contains(selectedPiece))
         {
-            case TimelineOrientation.Vertical:
-                if (_position is TimelinePosition.Top or TimelinePosition.Bottom)
-                    _position = TimelinePosition.Start;
-                break;
-            case TimelineOrientation.Horizontal:
-                if (_position is TimelinePosition.Start or TimelinePosition.Left or TimelinePosition.Right or TimelinePosition.End)
-                    _position = TimelinePosition.Top;
-                break;
+            productPieceIDs.Add(selectedPiece);
         }
     }
-
-    private void GoToNextStep()
+    private void SelectStep()
     {
-        if (currentStep < 2)
-            currentStep++;
+        selectedStep = etapas.FirstOrDefault(e => e.ID == stepID);
+    }
+    private void AddStep()
+    {
+        if (!stepPiecesMap.ContainsKey(stepID))
+        {
+            stepPiecesMap[stepID] = new List<int>();
+        }
+
+        stepID = 0;
     }
 
-    private void GoToPreviousStep()
+    private void AddPieceToStep()
     {
-        if (currentStep > 0)
-            currentStep--;
+        if (!stepPiecesMap.ContainsKey(stepID))
+        {
+            stepPiecesMap[stepID] = new List<int>();
+        }
+
+        stepPiecesMap[stepID].Add(selectedStepPieceID);
+
+        selectedStepPieceID = 0;
     }
 
-    private void SaveProduct()
-    {
-        // Lógica para salvar o produto, peças e etapa
-        // Exemplo de produto e etapas salvos
-        Produto newProduct = new Produto(newProductName, newProductPrice, newProductDescription, newProductImage);
-        ProdutoDAO.GetInstance().Put(newProduct.GetID(),newProduct); // Substitua com a lógica real para salvar o produto
-
-        // Redireciona para a página de catálogo após salvar
-        NavManager.NavigateTo("/catalog");
-    }
-
-    private bool IsSwitchDisabled()
-    {
-        if (_position == TimelinePosition.Alternate)
-            return false;
-        else
-            _reverse = false;
-        return true;
-    }
 }
