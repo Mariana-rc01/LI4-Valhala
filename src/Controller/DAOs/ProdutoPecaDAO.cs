@@ -13,17 +13,15 @@ namespace Valhala.Controller.Data {
             return _singleton;
         }
 
-        public void AdicionarProdutoPeca(ProdutoPeca produtoPeca) {
-            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+        public void AdicionarProdutoPeca(SqlConnection connection, SqlTransaction transaction, ProdutoPeca produtoPeca)
+        {
+            string sql = "INSERT INTO ProdutoPeça (Peca_ID, Produto_ID) VALUES (@PecaID, @ProdutoID)";
+
+            using (SqlCommand command = new SqlCommand(sql, connection, transaction))
             {
-                connection.Open();
-                string sql = "INSERT INTO Produto_Peça (Peca_ID, Produto_ID) VALUES (@PecaID, @ProdutoID)";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@PecaID", produtoPeca.PecaID);
-                    command.Parameters.AddWithValue("@ProdutoID", produtoPeca.ProdutoID);
-                    command.ExecuteNonQuery();
-                }
+                command.Parameters.AddWithValue("@PecaID", produtoPeca.PecaID);
+                command.Parameters.AddWithValue("@ProdutoID", produtoPeca.ProdutoID);
+                command.ExecuteNonQuery();
             }
         }
 

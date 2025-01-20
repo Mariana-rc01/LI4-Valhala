@@ -5,8 +5,8 @@ public class Theme : MudTheme {
     public Theme() {
         PaletteLight = new PaletteLight()
         {
-            Primary = "#0094d8",
-            Secondary = Colors.Green.Darken2,
+            Primary = "#38A3A5",
+            Secondary = "#505F9D",
             Background = "#F5F5F5",
             AppbarBackground = "#97EFAB",
             DrawerBackground = "#FFF",
@@ -16,6 +16,7 @@ public class Theme : MudTheme {
             TextPrimary = "#0D051B",
             TextSecondary = "#0D051B",
             DrawerIcon = "#0D051B",
+            Error = "#DE5656"
         };
 
         Typography = new Typography()

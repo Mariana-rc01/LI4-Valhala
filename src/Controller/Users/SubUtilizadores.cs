@@ -115,5 +115,104 @@ namespace Valhala.Controller.Users {
 
             return nome;
         }
+
+        public int RemoverUtilizador(int id, string tipo) {
+            int resultado = 0;
+
+            switch (tipo.ToLower())
+            {
+                case "cliente":
+                    if (clienteDAO.ExisteCliente(id))
+                    {
+                        clienteDAO.Remove(id);
+                        resultado = 1;
+                    }
+                    break;
+
+                case "funcionario":
+                    if (funcionarioDAO.ExisteFuncionario(id))
+                    {
+                        funcionarioDAO.Remove(id);
+                        resultado = 1;
+                    }
+                    break;
+
+                case "gestor":
+                    if (gestorDAO.ExisteGestor(id))
+                    {
+                        gestorDAO.Remove(id);
+                        resultado = 1;
+                    }
+                    break;
+
+                case "fornecedor":
+                    if (fornecedorDAO.ExisteFornecedor(id))
+                    {
+                        fornecedorDAO.Remove(id);
+                        resultado = 1;
+                    }
+                    break;
+
+                default:
+                    throw new ArgumentException("Tipo de utilizador inválido.");
+            }
+
+            return resultado;
+        }
+            
+
+        public int RegistarUtilizador(int id, string nome, string senha, string tipo) {
+            int resultado = 0;
+
+            // Verificar se o tipo de utilizador é válido
+            string[] tiposValidos = ["cliente", "funcionario", "gestor", "fornecedor"];
+            if (!tiposValidos.Contains(tipo.ToLower())) {
+                throw new ArgumentException("Tipo de utilizador inválido.");
+            }
+
+            switch (tipo.ToLower())
+            {
+                case "cliente":
+                    if (!clienteDAO.ExisteCliente(id))
+                    {
+                        Cliente cliente = new(id, nome, senha);
+                        clienteDAO.Put(id, cliente);
+                        resultado = 1;
+                    }
+                    break;
+
+                case "funcionario":
+                    if (!funcionarioDAO.ExisteFuncionario(id))
+                    {
+                        Funcionario funcionario = new(id, nome, senha);
+                        funcionarioDAO.Put(id, funcionario);
+                        resultado = 1;
+                    }
+                    break;
+
+                case "gestor":
+                    if (!gestorDAO.ExisteGestor(id))
+                    {
+                        Gestor gestor = new(id, nome, senha);
+                        gestorDAO.Put(id, gestor);
+                        resultado = 1;
+                    }
+                    break;
+
+                case "fornecedor":
+                    if (!fornecedorDAO.ExisteFornecedor(id))
+                    {
+                        Fornecedor fornecedor = new(id, nome, senha);
+                        fornecedorDAO.Put(id, fornecedor);
+                        resultado = 1;
+                    }
+                    break;
+
+                default:
+                    throw new ArgumentException("Tipo de utilizador inválido.");
+            }
+
+            return resultado;
+        }
     }
 }

@@ -99,7 +99,7 @@ CREATE TABLE [Peça] (
     [ID] INT NOT NULL PRIMARY KEY,
     [Quantidade] INT NOT NULL,
     [Imagem] VARCHAR(200) NULL,
-    [Fornecedor] INT NOT NULL,
+    [Fornecedor] INT NULL,
     FOREIGN KEY ([Fornecedor]) REFERENCES [Fornecedor]([ID])
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );

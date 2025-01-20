@@ -4,60 +4,78 @@
 @using Microsoft.AspNetCore.Components
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <div class="flex w-full justify-center pt-8">
     <img src="images/valhala.svg" class="select-none" />
 </div>
 
-@if (userSession != null)
-{
-    <MudNavMenu class="pt-12">
-        @foreach (var link in _links)
+<MudNavMenu class="pt-12" Style="display: flex; flex-direction: column; height: 100vh;">
+    <!-- Navigation Links Section -->
+    @foreach (var link in _links)
+    {
+        if (link.SubLinks != null)
+        {
+            <MudNavGroup Icon="@link.Icon" title="@link.Name" Expanded="true">
+                @foreach (var subLink in link.SubLinks)
+                {
+                    if (subLink.Name == "Registar Utilizador")
+                    {
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog" Style="margin-left: 30px;">
+                            @subLink.Name
+                        </MudButton>
+                    }
+                    else if (subLink.Name == "Remover Utilizador")
+                    {
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog" Style="margin-left: 30px;">
+                            @subLink.Name
+                        </MudButton>
+                    }
+                }
+            </MudNavGroup>
+        }
+        else
         {
             <MudNavLink Href="@link.Href" Icon="@link.Icon">@link.Name</MudNavLink>
         }
+    }
 
-        <div class="mt-12 pt-8 pb-4">
+    @if (userSession != null)
+    {
+        <div class="mb-8" Style="margin-top: auto;">
             <MudMenu Style="width: 100%;">
                 <ActivatorContent>
-                    <MudButton Style="color: black; width: 100%;" StartIcon="@Icons.Material.Filled.AccountCircle">
-                        @userSession.Name
-                    </MudButton>
+                    <div class="flex items-center">
+                        <MudAvatar class="text-white ml-4">
+                            @{ var initials = string.Join("", userSession.Name.Split(" ").Select(word => word[0])); @initials }
+                        </MudAvatar>
+                        <div class="pl-4">
+                            <p class="font-semibold">@userSession.Name</p>
+                            <p class="text-sm">@userSession.Role</p>
+                        </div>
+                    </div>
                 </ActivatorContent>
                 <ChildContent>
-                    <MudMenuItem>
-                        <div class="flex items-center">
-                            <img src="images/avatar.png" alt="User" class="w-12 h-12 rounded-full mr-4" />
-                            <div>
-                                <div style="font-size: 15px; font-weight: bold;">@userSession.Name</div>
-                                <div style="font-size: 10px;">@userSession.Role</div>
-                            </div>
-                        </div>
-                    </MudMenuItem>
-                    <MudMenuItem OnClick="Logout">Terminar Sessão</MudMenuItem>
+                    <MudMenuItem Icon="@Icons.Material.Outlined.Logout" OnClick="Logout">Terminar Sessão</MudMenuItem>
                 </ChildContent>
             </MudMenu>
         </div>
-    </MudNavMenu>
-}
-else{}
+    }
+</MudNavMenu>
+
 
 @code {
     class NavLink
     {
+        
         public required string Name { get; set; }
         public required string Href { get; set; }
         public required string Icon { get; set; }
+        public List<NavLink>? SubLinks { get; set; }
+        public bool Expanded { get; set; } = false;
     }
 
-    private List<NavLink> _links = new List<NavLink>
-    {
-        new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
-        new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
-        new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
-        new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
-    };
-
+    private List<NavLink> _links = new List<NavLink>();
     private UserSession? userSession;
 
     protected override async Task OnInitializedAsync()
@@ -72,7 +90,9 @@ else{}
         if (id != null && name != null && role != null)
         {
             userSession = new UserSession(int.Parse(id), name, role);
+
             _links = GetUserLinks(role);
+
         }
         else
         {
@@ -90,7 +110,11 @@ else{}
                     new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
                     new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
                     new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
-                    new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
+                    new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group, Expanded = true, SubLinks = new List<NavLink>
+                    {
+                        new NavLink { Name = "Registar Utilizador", Href = "/users/register", Icon = Icons.Material.Outlined.PersonAdd },
+                        new NavLink { Name = "Remover Utilizador", Href = "/users/remove", Icon = Icons.Material.Outlined.PersonRemove },
+                    }},
                 };
 
             case "Cliente":
@@ -123,6 +147,20 @@ else{}
     private void Logout()
     {
         userSession = null;
-        NavigationManager.NavigateTo("/login", true); // depois redirecionamos para o login
+        NavigationManager.NavigateTo("/login", true); // depois redirecionámos para o catálogo
     }
+
+    private void OpenUserRegistrationDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
+        DialogService.Show<UserRegistrationDialog>("Styling Example Dialog", options);
+    }
+
+    private void OpenUserRemoveDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, CloseButton = true };
+        DialogService.Show<UserRemoveDialog>("Styling Example Dialog", options);
+    }
+
 }
+

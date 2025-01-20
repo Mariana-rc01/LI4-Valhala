@@ -64,5 +64,10 @@ namespace Valhala.Controller.Users {
         {
             return id.GetHashCode(); // Usa o ID como base para o hash
         }
+
+        public void Remover(int id){
+            ClienteDAO clienteDAO = ClienteDAO.GetInstance();
+            clienteDAO.Remove(id);
+        }
     }
 }

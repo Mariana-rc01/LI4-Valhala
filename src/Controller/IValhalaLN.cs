@@ -9,4 +9,18 @@ public interface IValhalaLN {
 
     public string GetNomeUtilizador(int id, string tipo);
 
+    public int RemoverUtilizador(int id , string tipo);
+
+    public int RegistarUtilizador(int id, string nome, string senha, string tipo);
+
+    // Peças
+    public List<Peca> listPecas();
+
+    public Peca getPeca(int id);
+
+    public void updateStockPeca(int id, int quantidade);
+
+    public void discontinuePeca(int id);
+
+    public void orderPeca(int id, int quantidade, int gestor);
 }
