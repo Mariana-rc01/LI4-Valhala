@@ -13,10 +13,23 @@
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
-
 <PageTitle>Catálogo</PageTitle>
 
-<MudText Typo="Typo.h4">Catálogo</MudText>
+<div class="d-flex justify-content-between align-items-center" style="gap: 1000px;">
+    <MudText Typo="Typo.h4">
+        Catálogo
+    </MudText>
+
+    @if (IsGestor())
+    {
+        <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add"  Size="Size.Small" Variant="Variant.Filled" OnClick="NavigateToAddProduct">
+            Adicionar Produto
+        </MudFab>
+    }
+</div>
+
+
+
 
 <MudPaper Class="white-container" Elevation="3" style="margin-top: 15px;">
     <MudContainer MaxWidth="MaxWidth.Large" style="justify-content: center;">
@@ -57,29 +70,49 @@
 </style>
 
 
+
+
+
 @code {
     private List<Produto> Produtos = new List<Produto>();
-
-    protected override void OnInitialized()
+    private string? UserRole => userSession?.Role;
+    private UserSession? userSession;
+    
+    protected override async Task OnInitializedAsync()
     {
-        Produtos = ProdutoDAO.GetInstance().ListarProdutos();
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id), name, role);
+        }
+        else
+        {
+            userSession = null;
+        }
+
+        if (IsGestor()) {
+            Produtos = ProdutoDAO.GetInstance().ListarProdutos();
+        }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private bool IsGestor() => userSession?.Role == "Gestor";
+
+    private void NavigateToAddProduct()
     {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("eval", @"
-document.body.style.userSelect = 'none';
-document.body.style.cursor = 'default';
-");
-        }
+        NavManager.NavigateTo("/addProduct"); // Redireciona para a página de adicionar produto
     }
 
     private void VerDetalhes(int id)
     {
         NavManager.NavigateTo($"/produto/{id}");
     }
+
 
     private string GetLastWord(string nome)
     {

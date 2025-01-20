@@ -1,0 +1,287 @@
+@page "/addProduct"
+@using System.Security.Claims
+@using Valhala.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@using MudBlazor
+@using Valhala.Controller.Data
+@using Microsoft.AspNetCore.Components
+@using System.Data.SqlClient
+@using Valhala.Controller.UI
+@using Valhala.Components.Layout
+@using Valhala.Controller.Products
+
+@inject NavigationManager NavManager
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Adicionar Produto</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="centered-container">
+    <MudPaper Style="width: 900px;">
+        <MudStepper CenterLabels="true" ShowResetButton @bind-CurrentStep="currentStep">
+            <ChildContent>
+            <!-- Etapa 1: Produto -->
+            <MudStep Title="Dados do Produto" Completed="@(currentStep > 0)">
+                <MudGrid>
+                    <!-- Imagem -->
+                    <MudItem xs="12" sm="6">
+                        <MudCard>
+                            @if (!string.IsNullOrEmpty(imagePreview))
+                            {
+                                <MudCardMedia Image="@imagePreview" Alt="Pré-visualização da Imagem" />
+                            }
+                        </MudCard>
+                    </MudItem>
+
+                    <!-- Dados -->
+                    <MudItem xs="12" sm="6">
+                        <MudTextField @bind-Value="newProductName" Label="Nome do Produto" FullWidth />
+                        <MudTextField @bind-Value="newProductPrice" Label="Preço (€)" FullWidth />
+                        <MudTextField @bind-Value="newProductDescription" Label="Descrição" FullWidth Multiline />
+                        <MudTextField @bind-Value="newProductImage" Label="Path da Imagem" FullWidth />
+                        <MudButton style="margin-top: 20px;" OnClick="PreviewImage" Variant="Variant.Filled" Color="Color.Primary">Pré-visualizar Imagem</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudStep>
+
+            <!-- Etapa 2: Peças -->
+            <MudStep Title="Peças" SecondaryText="Escolha as peças" Skippable="true" Completed="@(currentStep > 1)">
+                <MudText Typo="Typo.h6" Class="mb-2">Selecione as Peças para o Produto</MudText>
+
+                @if (availablePieces.Count > 0)
+                {
+                    <MudSelect T="int" @bind-Value="selectedPiece" Label="Peça" Dense="true" FullWidth style="margin-bottom: 10px;">
+                        @foreach (var piece in availablePieces)
+                        {
+                            <MudSelectItem T="int" Value="piece.GetID()">@piece.GetID()</MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudButton   OnClick="AddPieceToProduct" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça ao Produto</MudButton>
+                }
+                else
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Error">Nenhuma peça disponível para seleção.</MudText>
+                }
+
+                <MudText Typo="Typo.h6" Class="mt-4">Peças Adicionadas ao Produto:</MudText>
+                <MudList T="int">
+                    @foreach (var pieceID in productPieceIDs)
+                    {
+                        <MudListItem T="int">@pieceID</MudListItem>
+                    }
+                </MudList>
+            </MudStep>
+
+            <!-- Etapa 3: Linha de Montagem -->
+            <MudStep Title="Linha de Montagem" SecondaryText="Configure a montagem" Completed="@(currentStep > 2)">
+                <MudText Typo="Typo.h6" Class="mb-2">Configurar Etapas da Linha de Montagem</MudText>
+
+                <!-- Etapa -->
+                <MudTextField @bind-Value="stepID" Label="ID da Etapa" FullWidth />
+                <MudTextField @bind-Value="stepImagePath" Label="Imagem da Etapa" FullWidth />
+
+                <!-- Mostra a imagem -->
+                @if (!string.IsNullOrEmpty(stepImagePreview))
+                {
+                    <MudCard>
+                        <MudCardMedia Image="@stepImagePreview" Alt="Imagem da Etapa" />
+                    </MudCard>
+                }
+
+                <MudText Typo="Typo.h6" Class="mt-2">Peças para esta Etapa:</MudText>
+                <MudSelect T="int" @bind-Value="selectedStepPieceID" Label="Selecione uma Peça" Dense="true" FullWidth>
+                    @foreach (var pieceID in productPieceIDs)
+                    {
+                        <MudSelectItem T="int" Value="pieceID">@pieceID</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <!-- Campo para quantidade -->
+                <MudTextField style="margin-bottom: 10px;" T="int" @bind-Value="selectedPieceQuantity" Label="Quantidade" FullWidth />
+
+                <MudButton  OnClick="AddPecaAEtapa" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça à Etapa</MudButton>
+
+                <MudText Typo="Typo.h6" Class="mt-4">Peças na Etapa:</MudText>
+                <MudList T="object">
+                    @if (stepDataMap.ContainsKey(stepID))
+                    {
+                        foreach (var piece in stepDataMap[stepID].Pieces)
+                        {
+                            <MudListItem T="object">
+                                Peça: @piece.PieceID, Quantidade: @piece.Quantity
+                            </MudListItem>
+                        }
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Color="Color.Error">Nenhuma peça adicionada a esta etapa.</MudText>
+                    }
+                </MudList>
+                <MudButton OnClick="AddEtapa" Variant="Variant.Filled" Color="Color.Primary" Class="mt-2">Adicionar Etapa</MudButton>
+                <!-- Exibir Etapas Adicionadas -->
+                <MudText Typo="Typo.h6" Class="mt-4">Etapas Adicionadas:</MudText>
+                <MudList T="object">
+                    @foreach (var etapa in stepDataMap)
+                    {
+                        <MudListItem>
+                            <MudText><b>Etapa ID:</b> @etapa.Key</MudText>
+                            <MudText><b>Imagem da Etapa:</b> @etapa.Value.ImagePath</MudText>
+                            <MudText><b>Peças:</b></MudText>
+                            <MudList>
+                                @foreach (var piece in etapa.Value.Pieces)
+                                {
+                                    <MudListItem>
+                                        <MudText>Peça ID: @piece.PieceID, Quantidade: @piece.Quantity</MudText>
+                                    </MudListItem>
+                                }
+                            </MudList>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudStep>
+            </ChildContent>
+            <CompletedContent>
+                <MudText Typo="Typo.h6">Produto Adicionado com Sucesso!</MudText>
+                <MudButton OnClick="OnComplete" Variant="Variant.Filled" Color="Color.Primary">Finalizar</MudButton>
+            </CompletedContent>
+        </MudStepper>
+    </MudPaper>
+</MudContainer>
+
+<style>
+    .centered-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+</style>
+
+
+
+@code {
+    private int currentStep = 0;
+
+    // Produto
+    private int newProductID = ProdutoDAO.GetInstance().GetNextAvailableProductID();
+    private string newProductName = string.Empty;
+    private decimal newProductPrice;
+    private string newProductDescription = string.Empty;
+    private string newProductImage = string.Empty;
+    private string imagePreview = string.Empty;
+
+    // Peças
+    private int selectedPiece;
+    private List<int> productPieceIDs = new List<int>();
+
+    // Linha de Montagem
+    private int selectedStepPieceID;
+    private int stepID;
+    private int selectedPieceQuantity = 1;
+    private string stepImagePath = string.Empty;
+    private string stepImagePreview = string.Empty;
+
+    private Dictionary<int, (string ImagePath, List<(int PieceID, int Quantity)> Pieces)> stepDataMap = new();
+    private List<Peca> availablePieces = new List<Peca>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        availablePieces = await Task.Run(() => PecaDAO.GetInstance().List());
+    }
+
+    private void PreviewImage() => imagePreview = newProductImage;
+
+    private void AddPieceToProduct()
+    {
+        if (selectedPiece != 0 && !productPieceIDs.Contains(selectedPiece))
+        {
+            productPieceIDs.Add(selectedPiece);
+        }
+    }
+
+    private void AddEtapa()
+    {
+        if (!stepDataMap.ContainsKey(stepID))
+        {
+            stepDataMap[stepID] = (ImagePath: stepImagePath, Pieces: new List<(int, int)>());
+        }
+
+        stepID = 0;
+        stepImagePath = string.Empty;
+        stepImagePreview = string.Empty;
+    }
+
+    private void AddPecaAEtapa()
+    {
+        if (!stepDataMap.ContainsKey(stepID))
+        {
+            stepDataMap[stepID] = (ImagePath: stepImagePath, Pieces: new List<(int, int)>());
+        }
+
+        stepDataMap[stepID].Pieces.Add((PieceID: selectedStepPieceID, Quantity: selectedPieceQuantity));
+        selectedStepPieceID = 0;
+        selectedPieceQuantity = 1;
+    }
+
+    private async Task OnComplete()
+    {
+        await SaveProductToDatabase();
+    }
+
+    private async Task SaveProductToDatabase()
+    {
+        using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+        {
+            await connection.OpenAsync();
+            SqlTransaction transaction = connection.BeginTransaction();
+
+            try
+            {
+                // Produto
+                Produto produto = new Produto(newProductID, newProductName, newProductPrice, newProductDescription, string.IsNullOrEmpty(newProductImage) ? null : newProductImage);
+                ProdutoDAO produtoDAO = ProdutoDAO.GetInstance();
+                produtoDAO.Put(connection, transaction, newProductID, produto);
+
+                // Adicionar peças do produto
+                foreach (var pieceID in productPieceIDs)
+                {
+                    ProdutoPeca produtoPeca = new ProdutoPeca(pieceID, newProductID);
+                    ProdutoPecaDAO.GetInstance().AdicionarProdutoPeca(connection, transaction, produtoPeca);
+                }
+
+                // Adicionar etapas e suas peças
+                foreach (var etapa in stepDataMap)
+                {
+                    int idEtapa = etapa.Key;
+                    if (etapa.Key < 10)
+                    {
+                        idEtapa = etapa.Key + 10 * newProductID;
+                    }
+                    else
+                    {
+                        idEtapa = etapa.Key + 100 * newProductID;
+                    }
+                    Etapa novaEtapa = new Etapa(idEtapa, string.IsNullOrEmpty(etapa.Value.ImagePath) ? null : etapa.Value.ImagePath, newProductID);
+                    EtapaDAO.GetInstance().AdicionarEtapa(connection, transaction, novaEtapa);
+
+                    foreach (var piece in etapa.Value.Pieces)
+                    {
+                        PecaEtapa pecaEtapa = new PecaEtapa(piece.PieceID, idEtapa, piece.Quantity);
+                        PecaEtapaDAO.GetInstance().AdicionarPecaEtapa(connection, transaction, pecaEtapa);
+                    }
+                }
+
+                transaction.Commit();
+
+                await JSRuntime.InvokeVoidAsync("alert", "Produto adicionado com sucesso!");
+                NavManager.NavigateTo("/catalog");
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                await JSRuntime.InvokeVoidAsync("alert", $"Erro ao adicionar produto: {ex.Message}");
+            }
+        }
+    }
+}
