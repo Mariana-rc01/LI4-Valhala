@@ -13,18 +13,16 @@ namespace Valhala.Controller.Data {
             return _singleton;
         }
 
-        public void AdicionarEtapa(Etapa etapa) {
-            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+        public void AdicionarEtapa(SqlConnection connection, SqlTransaction transaction, Etapa etapa)
+        {
+            string sql = "INSERT INTO Etapa (ID, Imagem, Produto) VALUES (@ID, @Imagem, @ProdutoID)";
+
+            using (SqlCommand command = new SqlCommand(sql, connection, transaction))
             {
-                connection.Open();
-                string sql = "INSERT INTO Etapa (ID, Imagem, Produto) VALUES (@ID, @Imagem, @ProdutoID)";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@ID", etapa.ID);
-                    command.Parameters.AddWithValue("@Imagem", etapa.Imagem);
-                    command.Parameters.AddWithValue("@ProdutoID", etapa.ProdutoID);
-                    command.ExecuteNonQuery();
-                }
+                command.Parameters.AddWithValue("@ID", etapa.ID);
+                command.Parameters.AddWithValue("@Imagem", (object?)etapa.Imagem ?? DBNull.Value);
+                command.Parameters.AddWithValue("@ProdutoID", etapa.ProdutoID);
+                command.ExecuteNonQuery();
             }
         }
 

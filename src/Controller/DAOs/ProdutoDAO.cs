@@ -58,36 +58,37 @@ namespace Valhala.Controller.Data {
             return produto;
         }
 
-        public Produto Put(int id, Produto produto) {
-            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+        public void Put(SqlConnection connection, SqlTransaction transaction, int id, Produto produto)
+        {
+            string sql = @"
+            IF EXISTS (SELECT 1 FROM Produto WHERE ID = @id)
+            BEGIN
+                UPDATE Produto
+                SET Nome = @nome,
+                    Preço = @preco,
+                    Descrição = @descricao,
+                    Imagem = @imagem
+                WHERE ID = @id
+            END
+            ELSE
+            BEGIN
+                INSERT INTO Produto (ID, Nome, Preço, Descrição, Imagem)
+                VALUES (@id, @nome, @preco, @descricao, @imagem)
+            END
+            ";
+
+            using (SqlCommand command = new SqlCommand(sql, connection, transaction))
             {
-                connection.Open();
-                string sql = @"
-                MERGE INTO Produto
-                USING (SELECT @id AS id, @nome AS nome, @preco AS preco, 
-                              @descricao AS descricao, @imagem AS imagem) AS values
-                ON Produto.ID = values.id
-                WHEN MATCHED THEN UPDATE
-                    SET Produto.Nome = values.nome,
-                        Produto.Preco = values.preco,
-                        Produto.Descricao = values.descricao,
-                        Produto.Imagem = values.imagem
-                WHEN NOT MATCHED THEN INSERT 
-                    (ID, Nome, Preco, Descricao, Imagem) 
-                    VALUES (values.id, values.nome, values.preco, values.descricao, values.imagem);
-                ";
-                using (SqlCommand command = new SqlCommand(sql, connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-                    command.Parameters.AddWithValue("@nome", produto.GetNome());
-                    command.Parameters.AddWithValue("@preco", produto.GetPreco());
-                    command.Parameters.AddWithValue("@descricao", produto.GetDescricao());
-                    command.Parameters.AddWithValue("@imagem", produto.GetImagem() ?? (object)DBNull.Value);
-                    command.ExecuteNonQuery();
-                }
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@nome", produto.GetNome());
+                command.Parameters.AddWithValue("@preco", produto.GetPreco());
+                command.Parameters.AddWithValue("@descricao", produto.GetDescricao());
+                command.Parameters.AddWithValue("@imagem", produto.GetImagem() ?? (object)DBNull.Value);
+
+                command.ExecuteNonQuery();
             }
-            return produto;
         }
+
 
         public bool ExisteProduto(int id) {
             bool existe = false;
@@ -151,6 +152,42 @@ namespace Valhala.Controller.Data {
                 }
             }
             return produtos;
+        }
+
+        public List<int> ListAllIDs()
+        {
+            List<int> productIDs = new List<int>();
+
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                string query = "SELECT ID FROM Produto";
+                using (var command = new SqlCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            productIDs.Add(reader.GetInt32(0));
+                        }
+                    }
+                }
+            }
+
+            return productIDs;
+        }
+
+        public int GetNextAvailableProductID()
+        {
+            var allProductIDs = ProdutoDAO.GetInstance().ListAllIDs(); // Pegamos todos os IDs de produtos
+            int nextID = 1;
+
+            while (allProductIDs.Contains(nextID))
+            {
+                nextID++; // Se o ID já existe, procuramos o próximo
+            }
+
+            return nextID; // Retorna o próximo ID disponível
         }
 
         public void Delete(int id)
