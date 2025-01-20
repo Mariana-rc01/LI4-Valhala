@@ -25,7 +25,6 @@ namespace Valhala.Controller {
             return this.subProducts.listPecas();
         }
 
-
         public int RemoverUtilizador(int id, string tipo) {
             return subUtilizadores.RemoverUtilizador(id , tipo);
         }
@@ -47,6 +46,15 @@ namespace Valhala.Controller {
 
         public void orderPeca(int id, int quantidade, int gestor) {
             this.subProducts.orderPeca(id, quantidade, gestor);
+        }
+       
+        // Encomendas
+        public List<Encomenda> listEncomendas() {
+            return this.subProducts.listEncomendas();
+        }
+
+        public List<Encomenda> listEncomendasCliente(int idCliente) {
+            return this.subProducts.listEncomendasCliente(idCliente);
         }
     }
 }

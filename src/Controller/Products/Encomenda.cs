@@ -6,14 +6,14 @@ namespace Valhala.Controller.Products {
         private int id;
         private int estado;
         private DateTime dataCriacao;
-        private DateTime dataEntrega;
+        private DateTime? dataEntrega;
         private int cliente;
         private int produto;
         private int etapa;
 
         private static int _contadorEncomendas = EncomendaDAO.Size();
 
-        public Encomenda(int id, int estado, DateTime dataCriacao, DateTime dataEntrega, int cliente, int produto, int etapa){
+        public Encomenda(int id, int estado, DateTime dataCriacao, DateTime? dataEntrega, int cliente, int produto, int etapa){
             this.id = id;
             this.estado = estado;
             this.dataCriacao = dataCriacao;
@@ -43,7 +43,7 @@ namespace Valhala.Controller.Products {
             return this.dataCriacao;
         }
 
-        public DateTime GetDataEntrega(){
+        public DateTime? GetDataEntrega(){
             return this.dataEntrega;
         }
 

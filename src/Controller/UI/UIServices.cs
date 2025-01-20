@@ -43,7 +43,6 @@ namespace Valhala.Controller.UI
             return await Task.Run(() => valhalaLn.RegistarUtilizador(id, nome, password, userType));
         }
 
-
         public PecaUI getPeca(int id) {
             Peca peca = this.valhalaLn.getPeca(id);
             return new PecaUI(peca);
@@ -60,7 +59,29 @@ namespace Valhala.Controller.UI
         public void orderPeca(int id, int quantidade, int gestor) {
             this.valhalaLn.orderPeca(id, quantidade, gestor);
         }
+      
+        public List<EncomendaUI> listEncomendas() {
+            List<Encomenda> encomendas = this.valhalaLn.listEncomendas();
+            List<EncomendaUI> encomendasUI = new List<EncomendaUI>();
+
+            for (int i = encomendas.Count - 1; i >= 0; i--) {
+                Encomenda encomenda = encomendas[i];
+                encomendasUI.Add(new EncomendaUI(encomenda));
+            }
+
+            return encomendasUI;
+        }
+
+        public List<EncomendaUI> listEncomendasCliente(int idCliente) {
+            List<Encomenda> encomendas = this.valhalaLn.listEncomendasCliente(idCliente);
+            List<EncomendaUI> encomendasUI = new List<EncomendaUI>();
+
+            for (int i = encomendas.Count - 1; i >= 0; i--) {
+                Encomenda encomenda = encomendas[i];
+                encomendasUI.Add(new EncomendaUI(encomenda));
+            }
+
+            return encomendasUI;
+        }
     }
-
-
 }
