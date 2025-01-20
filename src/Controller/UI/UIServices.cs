@@ -25,5 +25,30 @@ namespace Valhala.Controller.UI {
 
             return pecasUI;
         }
+
+        public List<EncomendaUI> listEncomendas() {
+            List<Encomenda> encomendas = this.valhalaLn.listEncomendas();
+            List<EncomendaUI> encomendasUI = new List<EncomendaUI>();
+
+            for (int i = encomendas.Count - 1; i >= 0; i--) {
+                Encomenda encomenda = encomendas[i];
+                encomendasUI.Add(new EncomendaUI(encomenda));
+            }
+
+            return encomendasUI;
+        }
+
+        public List<EncomendaUI> listEncomendasCliente(int idCliente) {
+            List<Encomenda> encomendas = this.valhalaLn.listEncomendasCliente(idCliente);
+            List<EncomendaUI> encomendasUI = new List<EncomendaUI>();
+
+            for (int i = encomendas.Count - 1; i >= 0; i--) {
+                Encomenda encomenda = encomendas[i];
+                encomendasUI.Add(new EncomendaUI(encomenda));
+            }
+
+            return encomendasUI;
+        }
+
     }
 }

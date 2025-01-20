@@ -25,5 +25,12 @@ namespace Valhala.Controller {
           return this.subProducts.listPecas();
       }
 
+      public List<Encomenda> listEncomendas() {
+          return this.subProducts.listEncomendas();
+      }
+
+      public List<Encomenda> listEncomendasCliente(int idCliente) {
+          return this.subProducts.listEncomendasCliente(idCliente);
+      }
     }
 }

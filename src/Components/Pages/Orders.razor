@@ -1,0 +1,105 @@
+@page "/orders"
+
+@using Valhala.Controller.Products
+@using Valhala.Controller.UI
+@using Microsoft.AspNetCore.Components
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JSRuntime
+@using MudBlazor
+@using System.Security.Claims
+@using Valhala.Controller.Data
+@inject NavigationManager NavManager
+@using Valhala.Authentication
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject UIService UIService
+
+<PageTitle>Home</PageTitle>
+
+<MudText Typo="Typo.h1">
+    Encomendas
+</MudText>
+
+<MudTable Items="@encomendas" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6">
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Identificador</MudTh>
+        <MudTh>Data de Criação</MudTh>
+        <MudTh>Data de Entrega</MudTh>
+        @if(!IsCliente()){
+            <MudTh>Cliente</MudTh>
+        }
+        <MudTh>Estado</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="">
+            @if(@context.GetProdutoImagem() != ""){
+
+                <img class="w-16 h-16" src=@context.GetProdutoImagem() />
+            }
+        </MudTd>
+        <MudTd DataLabel="Identificador">@context.GetID()</MudTd>
+        <MudTd DataLabel="Data de Criação">@context.GetDataCriacao().Date.ToString("MM/dd/yyyy")</MudTd>
+        @if(@context.GetDataEntrega().Date.ToString("MM/dd/yyyy") != "01/01/2030"){ //solução muito sketchy temporária para quando era suposto ser null, ou seja, por entregar - data arbitrária/default
+            <MudTd DataLabel="Data de Entrega">@context.GetDataEntrega().Date.ToString("MM/dd/yyyy")</MudTd>
+        } else{
+            <MudTd DataLabel="Data de Entrega">Por entregar</MudTd>
+        }
+        @if(!IsCliente()){
+            <MudTd DataLabel="Cliente">@context.GetClienteNome()</MudTd>
+        }
+        <MudTd DataLabel="Estado">
+            @if(@context.GetEstado() == 0){
+                <MudButton Variant="Variant.Filled" Style="background-color: rgba(222, 86, 86, 0.9); color: white; font-weight: medium; font-size: 15px; width: 170px; height: 40px; border-radius: 25px;">PROCESSAMENTO</MudButton>
+            } else if(@context.GetEstado() == 1) {
+                <MudButton Variant="Variant.Filled" Style="background-color: rgba(255, 202, 75, 0.8); color: white; font-weight: medium; font-size: 15px; width: 170px; height: 40px; border-radius: 25px;">MONTAGEM</MudButton>
+            } else if(@context.GetEstado() == 2) {
+                <MudButton Variant="Variant.Filled" Style="background-color: rgba(56, 163, 165, 0.8); color: white; font-weight: medium; font-size: 15px; width: 170px; height: 40px; border-radius: 25px;">ENTREGUE</MudButton>
+            }
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+            <MudTablePager HideRowsPerPage="@true"  />
+    </PagerContent>
+</MudTable>
+
+
+@code { 
+    private bool _loading;
+    private IEnumerable<EncomendaUI> encomendas = new List<EncomendaUI>();
+    private string? UserRole => userSession?.Role;
+    private UserSession? userSession;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id), name, role);
+        }
+        else
+        {
+            userSession = null;
+        }
+
+        if(UserRole == "Gestor" || UserRole == "Funcionario"){
+            encomendas = UIService.listEncomendas();
+        } else if(UserRole == "Cliente"){
+            encomendas = UIService.listEncomendasCliente(int.Parse(id));
+        }
+    }
+
+    private bool IsFuncionario() => userSession?.Role == "Funcionario";
+
+    private bool IsGestor() => userSession?.Role == "Gestor";
+
+    private bool IsCliente() => userSession?.Role == "Cliente";
+
+}

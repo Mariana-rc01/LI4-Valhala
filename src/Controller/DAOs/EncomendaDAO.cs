@@ -46,7 +46,7 @@ namespace Valhala.Controller.Data {
                         {
                             encomenda = new Encomenda(
                                 reader.GetInt32(0), // id
-                                reader.GetInt32(1), // estado
+                                reader.GetByte(1), // estado
                                 reader.GetDateTime(2), // dataCriacao
                                 reader.GetDateTime(3), // dataEntrega
                                 reader.GetInt32(4), // cliente
@@ -97,6 +97,33 @@ namespace Valhala.Controller.Data {
             return encomenda;
         }
 
+        public List<Encomenda> List() {
+            List<Encomenda> encomendas = new List<Encomenda>();
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Encomenda", connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            encomendas.Add(new Encomenda(
+                                reader.GetInt32(0), // id
+                                reader.GetByte(1), // estado
+                                reader.GetDateTime(2), // dataCriacao
+                                reader.GetDateTime(3), // dataEntrega
+                                reader.GetInt32(4), // cliente
+                                reader.GetInt32(5), // produto
+                                reader.GetInt32(6)  // etapa
+                            ));
+                        }
+                    }
+                }
+            }
+            return encomendas;
+        }
+
         public bool ExisteEncomenda(int id) {
             bool existe = false;
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
@@ -136,21 +163,21 @@ namespace Valhala.Controller.Data {
             return keys;
         }
 
-        public List<Encomenda> ListarEncomendasCliente(int idCliente) {
+        public List<Encomenda> ListEncomendasCliente(int idCliente) {
             List<Encomenda> encomendas = new List<Encomenda>();
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Encomenda WHERE idCliente = @idCliente", connection))
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Encomenda WHERE Cliente = @cliente", connection))
                 {
-                    command.Parameters.AddWithValue("@idCliente", idCliente);
+                    command.Parameters.AddWithValue("@cliente", idCliente);
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             encomendas.Add(new Encomenda(
                                 reader.GetInt32(0), // id
-                                reader.GetInt32(1), // estado
+                                reader.GetByte(1), // estado
                                 reader.GetDateTime(2), // dataCriacao
                                 reader.GetDateTime(3), // dataEntrega
                                 reader.GetInt32(4), // cliente
