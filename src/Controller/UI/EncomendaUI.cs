@@ -6,13 +6,13 @@ namespace Valhala.Controller.UI{
             private int id;
             private int estado;
             private DateTime dataCriacao;
-            private DateTime dataEntrega;
+            private DateTime? dataEntrega;
             private int cliente;
             private int produto;
             private ProdutoDAO produtoDAO;
             private ClienteDAO clienteDAO;
 
-            public EncomendaUI(int id, int estado, DateTime dataCriacao, DateTime dataEntrega, int cliente, int produto) {
+            public EncomendaUI(int id, int estado, DateTime dataCriacao, DateTime? dataEntrega, int cliente, int produto) {
                 this.id = id;
                 this.estado = estado;
                 this.dataCriacao = dataCriacao;
@@ -46,7 +46,7 @@ namespace Valhala.Controller.UI{
                 return this.dataCriacao;
             }
 
-            public DateTime GetDataEntrega() {
+            public DateTime? GetDataEntrega() {
                 return this.dataEntrega;
             }
 

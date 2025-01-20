@@ -41,8 +41,8 @@
         </MudTd>
         <MudTd DataLabel="Identificador">@context.GetID()</MudTd>
         <MudTd DataLabel="Data de Criação">@context.GetDataCriacao().Date.ToString("MM/dd/yyyy")</MudTd>
-        @if(@context.GetDataEntrega().Date.ToString("MM/dd/yyyy") != "01/01/2030"){ //solução muito sketchy temporária para quando era suposto ser null, ou seja, por entregar - data arbitrária/default
-            <MudTd DataLabel="Data de Entrega">@context.GetDataEntrega().Date.ToString("MM/dd/yyyy")</MudTd>
+        @if(@context.GetDataEntrega() != null){
+            <MudTd DataLabel="Data de Entrega">@context.GetDataEntrega().Value.Date.ToString("MM/dd/yyyy")</MudTd>
         } else{
             <MudTd DataLabel="Data de Entrega">Por entregar</MudTd>
         }

@@ -112,7 +112,7 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // id
                                 reader.GetByte(1), // estado
                                 reader.GetDateTime(2), // dataCriacao
-                                reader.GetDateTime(3), // dataEntrega
+                                reader.IsDBNull(3) ? null : reader.GetDateTime(3), // dataEntrega
                                 reader.GetInt32(4), // cliente
                                 reader.GetInt32(5), // produto
                                 reader.GetInt32(6)  // etapa
@@ -179,7 +179,7 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // id
                                 reader.GetByte(1), // estado
                                 reader.GetDateTime(2), // dataCriacao
-                                reader.GetDateTime(3), // dataEntrega
+                                reader.IsDBNull(3) ? null : reader.GetDateTime(3), // dataEntrega
                                 reader.GetInt32(4), // cliente
                                 reader.GetInt32(5), // produto
                                 reader.GetInt32(6)  // etapa
