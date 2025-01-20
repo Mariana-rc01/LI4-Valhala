@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @using System.Security.Claims
 @using Valhala.Authentication
 @using Microsoft.AspNetCore.Components.Authorization
@@ -7,39 +8,101 @@
 @using Valhala.Controller.Data
 @using Microsoft.AspNetCore.Components
 @using Valhala.Controller.UI
+@using Valhala.Components.Layout
 @using Valhala.Controller.Products
 
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
+
 <PageTitle>Catálogo</PageTitle>
 
-<h1>Catálogo para o Dionisio meter bonito (Mariana - queria testar a visualização do produto sem login)</h1>
+<!-- Scroll container to enable scroll-snap -->
+@if (UserRole == null)
+{
+    <div class="scroll-container" style="display: flex; flex-direction: column;">
+        
+        <div class="relative"
+            style="flex: 0 0 auto; height: 100vh; position: relative; background-image: url('images/background.svg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+          
+            <!-- Valhala Image -->
+            <img src="images/valhala.svg" style="position: absolute; top: 15px; left: 20px;" class="select-none" />
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    <MudGrid>
-        @foreach (var produto in Produtos)
-        {
-            <MudItem xs="12" sm="6" md="4">
-                <MudCard>
-                    <MudCardMedia Image="@produto.GetImagem()" Alt="Imagem do produto" Height="200"/>
-                    <MudCardContent>
-                        <MudText Typo="Typo.h6">@produto.GetNome()</MudText>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => VerDetalhes(produto.GetID())">
-                            Ver Detalhes
-                        </MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-        }
-    </MudGrid>
-</MudContainer>
+            <!-- MudFab Button -->
+            <div style="position: absolute; top: 20px; right: 20px;">
+                <MudButton Variant="Variant.Text" Style="margin-right: 15px;" Color="Color.Tertiary"
+                    OnClick="ScrollToCatalogo">
+                    Catálogo
+                </MudButton>
+                <MudFab Color="Color.Primary" Variant="Variant.Filled" Label="Login" OnClick="Login" />
+            </div>
+
+            <div style="position: absolute; top: 45%; left: 32%; transform: translate(-50%, -50%); text-align: center;">
+                <img src="images/letras.svg" style="width: 75%;" />
+            </div>
+        </div>
+
+        <!-- Catálogo Section with an ID for scrolling -->
+        <div id="catalogo-section" style="margin-top: 35px;">
+            <MudText Typo="Typo.h4">
+                Catálogo
+            </MudText>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <MudText>
+                    A nossa seleção de produtos, repletos de qualidade, estética e conforto.
+                </MudText>
+
+                <MudFab style="margin-left: 650px;" Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add"
+                    Size="Size.Small" Variant="Variant.Filled" OnClick="NavigateToAddProduct">
+                    Adicionar Produto
+                </MudFab>
+            </div>
+
+            <MudPaper Class="white-container" Elevation="3"
+                style="margin-top: 45px; background-color: #e4f6f6; border-radius: 10px;">
+
+                <MudContainer MaxWidth="MaxWidth.Large" style="justify-content: center;">
+                    <MudGrid>
+                        @foreach (var produto in Produtos)
+                        {
+                            <MudItem xs="12" sm="6" md="3">
+                                <MudCard Outlined="false" border="0" Elevation="0"
+                                    Style="width: 200px; text-align: center; bottom-align:center ; border: 0; background-color: #e4f6f6;">
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <MudImage Src="@produto.GetImagem()" Height="250" Width="250"
+                                            Style="border: 2px solid #ccc; border-radius: 8px;" />
+                                    </div>
+                                    <MudCardContent>
+                                        <MudText Typo="Typo.h6">@GetLastWord(produto.GetNome())</MudText>
+                                        <MudText Typo="Typo.body2">@GetFirstWord(produto.GetNome())</MudText>
+                                        <MudText Typo="Typo.body2">@produto.GetPreco() €</MudText>
+                                    </MudCardContent>
+                                    <MudCardActions Style="justify-content: center;">
+                                        <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                                            OnClick="() => VerDetalhes(produto.GetID())">
+                                            Ver Detalhes
+                                        </MudButton>
+                                    </MudCardActions>
+                                </MudCard>
+                            </MudItem>
+                        }
+                    </MudGrid>
+
+                    using Microsoft.AspNetCore.Identity;
+                </MudContainer>
+            </MudPaper>
+        </div>
+
+    </div>
+}
 
 @code {
     private List<Produto> Produtos = new List<Produto>();
 
+    private string? UserRole => userSession?.Role;
+
+    private UserSession userSession;
     protected override void OnInitialized()
     {
         Produtos = ProdutoDAO.GetInstance().ListarProdutos();
@@ -49,16 +112,90 @@
     {
         if (firstRender)
         {
-
             await JSRuntime.InvokeVoidAsync("eval", @"
-            document.body.style.userSelect = 'none';
-            document.body.style.cursor = 'default';
-            ");
+document.body.style.userSelect = 'none';
+document.body.style.cursor = 'default';
+");
         }
     }
 
     private void VerDetalhes(int id)
     {
         NavManager.NavigateTo($"/produto/{id}");
+    }
+
+    private void Login()
+    {
+        NavManager.NavigateTo("/login");
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id), name, role);
+        }
+        else
+        {
+            userSession = null;
+        }
+
+        if (IsGestor())
+        {
+            Produtos = ProdutoDAO.GetInstance().ListarProdutos();
+        }
+    }
+
+    private bool IsGestor() => userSession?.Role == "Gestor";
+
+    private void NavigateToAddProduct()
+    {
+        NavManager.NavigateTo("/addProduct"); // Redireciona para a página de adicionar produto
+    }
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private string GetFirstWord(string nome)
+    {
+        var words = nome.Split(' ');
+
+        var name = words.FirstOrDefault() ?? nome;
+        switch (name)
+        {
+            case "Cadeira":
+                return "Cadeira";
+            case "Mesa":
+                return "Mesa";
+            case "Estante":
+                return "Estante";
+            case "Banco":
+                return "Banco";
+            case "Estrutura":
+                return "Cama";
+            default:
+                return nome;
+        }
+    }
+
+    private async Task ScrollToCatalogo()
+    {
+        await JSRuntime.InvokeVoidAsync("eval", @"
+document.getElementById('catalogo-section').scrollIntoView({
+behavior: 'smooth',
+block: 'start'
+});
+");
     }
 }
