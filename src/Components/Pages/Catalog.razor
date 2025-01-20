@@ -15,33 +15,62 @@
 
 <PageTitle>Catálogo</PageTitle>
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    <MudGrid>
-        @foreach (var produto in Produtos)
-        {
-            <MudItem xs="12" sm="6" md="4">
-                <MudCard>
-                    <MudCardMedia Image="@produto.GetImagem()" Alt="Imagem do produto" Height="200" />
-                    <MudCardContent>
-                        <MudText Typo="Typo.h6">@produto.GetNome()</MudText>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="async () => VerDetalhes(produto.GetID())">
-                            Ver Detalhes
-                        </MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
-        }
-    </MudGrid>
-</MudContainer>
+<div class="d-flex justify-content-between align-items-center" style="gap: 1000px;">
+    <MudText Typo="Typo.h4">
+        Catálogo
+    </MudText>
 
-@if (IsGestor())
-{
-    <MudButton Color="Color.Dark" Variant="Variant.Filled" Class="mt-4" OnClick="NavigateToAddProduct">
-        Adicionar Produto
-    </MudButton>
-}
+    @if (IsGestor())
+    {
+        <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add"  Size="Size.Small" Variant="Variant.Filled" OnClick="NavigateToAddProduct">
+            Adicionar Produto
+        </MudFab>
+    }
+</div>
+
+
+
+
+<MudPaper Class="white-container" Elevation="3" style="margin-top: 15px;">
+    <MudContainer MaxWidth="MaxWidth.Large" style="justify-content: center;">
+        <MudGrid>
+            @foreach (var produto in Produtos)
+            {
+                <MudItem xs="12" sm="6" md="3">
+                    <MudCard Style="width: 200px; text-align: center; bottom-align:center ;">
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <MudImage Src="@produto.GetImagem()" Height="250" Width="250"
+                                Style="border: 2px solid #ccc; border-radius: 8px;" />
+                        </div>
+                        <MudCardContent>
+                            <MudText Typo="Typo.h6">@GetLastWord(produto.GetNome())</MudText>
+                            <MudText Typo="Typo.body2">@GetFirstWord(produto.GetNome())</MudText>
+                            <MudText Typo="Typo.body2">@produto.GetPreco() €</MudText>
+                        </MudCardContent>
+                        <MudCardActions Style="justify-content: center;">
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                                OnClick="() => VerDetalhes(produto.GetID())">
+                                Ver Detalhes
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+
+    </MudContainer>
+</MudPaper>
+
+<style>
+    .white-container {
+        background-color: white;
+        padding: 16px;
+        border-radius: 8px;
+    }
+</style>
+
+
+
 
 
 @code {
@@ -82,5 +111,34 @@
     private void VerDetalhes(int id)
     {
         NavManager.NavigateTo($"/produto/{id}");
+    }
+
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private string GetFirstWord(string nome)
+    {
+        var words = nome.Split(' ');
+
+        var name = words.FirstOrDefault() ?? nome;
+        switch (name)
+        {
+            case "Cadeira":
+                return "Cadeira";
+            case "Mesa":
+                return "Mesa";
+            case "Estante":
+                return "Estante";
+            case "Banco":
+                return "Banco";
+            case "Estrutura":
+                return "Cama";
+            default:
+                return nome;
+        }
     }
 }

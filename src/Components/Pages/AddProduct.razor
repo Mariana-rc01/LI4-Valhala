@@ -17,7 +17,7 @@
 <PageTitle>Adicionar Produto</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="centered-container">
-    <MudPaper Style="width: 800px">
+    <MudPaper Style="width: 900px;">
         <MudStepper CenterLabels="true" ShowResetButton @bind-CurrentStep="currentStep">
             <ChildContent>
             <!-- Etapa 1: Produto -->
@@ -39,7 +39,7 @@
                         <MudTextField @bind-Value="newProductPrice" Label="Preço (€)" FullWidth />
                         <MudTextField @bind-Value="newProductDescription" Label="Descrição" FullWidth Multiline />
                         <MudTextField @bind-Value="newProductImage" Label="Path da Imagem" FullWidth />
-                        <MudButton OnClick="PreviewImage" Variant="Variant.Filled" Color="Color.Primary">Pré-visualizar Imagem</MudButton>
+                        <MudButton style="margin-top: 20px;" OnClick="PreviewImage" Variant="Variant.Filled" Color="Color.Primary">Pré-visualizar Imagem</MudButton>
                     </MudItem>
                 </MudGrid>
             </MudStep>
@@ -50,14 +50,14 @@
 
                 @if (availablePieces.Count > 0)
                 {
-                    <MudSelect T="int" @bind-Value="selectedPiece" Label="Peça" Dense="true" FullWidth>
+                    <MudSelect T="int" @bind-Value="selectedPiece" Label="Peça" Dense="true" FullWidth style="margin-bottom: 10px;">
                         @foreach (var piece in availablePieces)
                         {
                             <MudSelectItem T="int" Value="piece.GetID()">@piece.GetID()</MudSelectItem>
                         }
                     </MudSelect>
 
-                    <MudButton OnClick="AddPieceToProduct" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça ao Produto</MudButton>
+                    <MudButton   OnClick="AddPieceToProduct" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça ao Produto</MudButton>
                 }
                 else
                 {
@@ -98,9 +98,9 @@
                 </MudSelect>
 
                 <!-- Campo para quantidade -->
-                <MudTextField T="int" @bind-Value="selectedPieceQuantity" Label="Quantidade" FullWidth />
+                <MudTextField style="margin-bottom: 10px;" T="int" @bind-Value="selectedPieceQuantity" Label="Quantidade" FullWidth />
 
-                <MudButton OnClick="AddPecaAEtapa" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça à Etapa</MudButton>
+                <MudButton  OnClick="AddPecaAEtapa" Variant="Variant.Filled" Color="Color.Secondary" Class="mt-2">Adicionar Peça à Etapa</MudButton>
 
                 <MudText Typo="Typo.h6" Class="mt-4">Peças na Etapa:</MudText>
                 <MudList T="object">
@@ -148,6 +148,17 @@
         </MudStepper>
     </MudPaper>
 </MudContainer>
+
+<style>
+    .centered-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+</style>
+
+
 
 @code {
     private int currentStep = 0;
