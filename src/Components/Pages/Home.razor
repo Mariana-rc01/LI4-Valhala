@@ -10,8 +10,12 @@
 @using Valhala.Controller.UI
 @using Valhala.Components.Layout
 @using Valhala.Controller.Products
+@layout HomeLayout
 
+@inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
+@inject IJSRuntime js
+@inject UIService UIService
 @inject IJSRuntime JSRuntime
 
 
@@ -43,7 +47,7 @@
         </div>
 
         <!-- Catálogo Section with an ID for scrolling -->
-        <div id="catalogo-section" style="margin-top: 35px;">
+        <div id="catalogo-section" style="margin-top: 35px;" class="px-15 py-7">
             <MudText Typo="Typo.h4">
                 Catálogo
             </MudText>
@@ -88,8 +92,6 @@
                             </MudItem>
                         }
                     </MudGrid>
-
-                    using Microsoft.AspNetCore.Identity;
                 </MudContainer>
             </MudPaper>
         </div>
