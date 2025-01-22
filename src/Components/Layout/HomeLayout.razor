@@ -1,7 +1,14 @@
 @inherits LayoutComponentBase
 
+<MudThemeProvider Theme="_themeProvider"/>
+<MudLayout>
 <div class="home-layout">
     <div class="content">
-        @Body
+            @Body
     </div>
 </div>
+</MudLayout>
+
+@code {
+    private Theme _themeProvider = new Theme();
+}
