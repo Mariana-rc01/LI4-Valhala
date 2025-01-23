@@ -9,6 +9,7 @@ namespace Valhala.Controller.Products {
         private decimal preco;
         private string descricao;
         private string imagem;
+        private ProdutoDAO produtoDAO;
 
         private static int _contadorProdutos = ProdutoDAO.Size();
 
@@ -18,6 +19,7 @@ namespace Valhala.Controller.Products {
             this.preco = preco;
             this.descricao = descricao;
             this.imagem = imagem;
+            this.produtoDAO = ProdutoDAO.GetInstance();
         }
 
         public Produto(string nome, decimal preco, string descricao, string imagem) {
@@ -26,6 +28,7 @@ namespace Valhala.Controller.Products {
             this.preco = preco;
             this.descricao = descricao;
             this.imagem = imagem;
+            this.produtoDAO = ProdutoDAO.GetInstance();
         }
 
         public int GetID() {
@@ -62,6 +65,10 @@ namespace Valhala.Controller.Products {
 
         public void SetImagem(string imagem) {
             this.imagem = imagem;
+        }
+
+        public int GetVendas() {
+            return produtoDAO.GetVendas(this.id);
         }
 
         public override string ToString() {

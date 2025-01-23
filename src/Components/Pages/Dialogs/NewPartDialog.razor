@@ -1,0 +1,47 @@
+@using Valhala.Controller.UI
+@inject UIService UIService
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
+<MudDialog class="p-4">
+    <TitleContent>
+        <MudText Typo="Typo.h5">
+            Nova Peça
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="flex flex-row gap-8 mt-4">
+            <div class="w-full flex flex-col">
+                <MudNumericField @bind-Value="id" Label="Identificador" Variant="Variant.Text"></MudNumericField>
+                <MudNumericField @bind-Value="_stock"  Label="Stock" Variant="Variant.Text"></MudNumericField >
+                <MudField Label="Fornecedor" Variant="Variant.Text"></MudField>
+            </div>
+            <div class="w-full outline outline-dashed rounded-lg my-1 p-4">
+                <img class="w-64 h-64" src="" />
+            </div>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="@Submit" Color="Color.Primary" Variant="Variant.Filled">Gravar nova peça</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    private MudDialogInstance _MudDialog { get; set; }
+
+    [Parameter]
+    public int id { get; set; }
+    private int _stock = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
+    private void Submit() {
+        _MudDialog.Close(DialogResult.Ok(true));
+        NavigationManager.NavigateTo("/parts", true);
+    }
+
+    private void Cancel() => _MudDialog.Cancel();
+
+}

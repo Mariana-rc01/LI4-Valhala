@@ -1,5 +1,6 @@
 @page "/parts"
 
+@using MudBlazor
 @using Valhala.Controller.Products
 @using Valhala.Controller.UI
 @using Valhala.Components.Pages.Dialogs;
@@ -12,9 +13,14 @@
 
 <PageTitle>Home</PageTitle>
 
-<MudText Typo="Typo.h1">
-    Gestão de Peças
-</MudText>
+<div class="flex flex-row justify-between">
+    <MudText Typo="Typo.h1">
+        Gestão de Peças
+    </MudText>
+    <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Filled" OnClick="NewPeca">
+        Adicionar Produto
+    </MudFab>
+</div>
 
 <MudTable Items="@_pecas" T="PecaUI" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6" OnRowClick="OpenEditDialog" RowClass="hover:cursor-pointer">
     <HeaderContent>
@@ -72,5 +78,15 @@
         } else {
             DialogService.ShowAsync<GesPartDialog>("Part", parameters, options);
         }
+    }
+
+    private void NewPeca(){
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large };
+
+        var parameters = new DialogParameters<GesPartDialog> {
+            { "id", 0 }
+        };
+
+        DialogService.ShowAsync<NewPartDialog>("Part", parameters, options);
     }
 }
