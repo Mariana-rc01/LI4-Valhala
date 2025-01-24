@@ -1,7 +1,10 @@
 @using Valhala.Controller.UI
+@using Valhala.Controller.Users
 @inject UIService UIService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@using Microsoft.AspNetCore.Components.Forms
+@inject IWebHostEnvironment WebHostEnvironment
 
 <MudDialog class="p-4">
     <TitleContent>
@@ -13,11 +16,20 @@
         <div class="flex flex-row gap-8 mt-4">
             <div class="w-full flex flex-col">
                 <MudNumericField @bind-Value="id" Label="Identificador" Variant="Variant.Text"></MudNumericField>
-                <MudNumericField @bind-Value="_stock"  Label="Stock" Variant="Variant.Text"></MudNumericField >
-                <MudField Label="Fornecedor" Variant="Variant.Text"></MudField>
+                <MudNumericField @bind-Value="_stock" Label="Stock" Variant="Variant.Text"></MudNumericField>
+                <MudSelect @bind-Value="_fornecedor" Label="Fornecedor" Variant="Variant.Text">
+                    @foreach (var fornecedor in _fornecedores)
+                    {
+                        <MudSelectItem Value="@fornecedor.GetID()">
+                            @fornecedor.GetNome()
+                        </MudSelectItem>
+                    }
+                </MudSelect>
             </div>
             <div class="w-full outline outline-dashed rounded-lg my-1 p-4">
-                <img class="w-64 h-64" src="" />
+                <img class="w-64 h-64" src="@ImagePreview" />
+                <InputFile OnChange="@HandleFileSelected" />
+                <p class="text-center mt-2">Escolha uma imagem (SVG) só depois de escolher o identificador.</p>
             </div>
         </div>
     </DialogContent>
@@ -25,6 +37,7 @@
         <MudButton OnClick="@Submit" Color="Color.Primary" Variant="Variant.Filled">Gravar nova peça</MudButton>
     </DialogActions>
 </MudDialog>
+
 @code {
     [CascadingParameter]
     private MudDialogInstance _MudDialog { get; set; }
@@ -32,16 +45,44 @@
     [Parameter]
     public int id { get; set; }
     private int _stock = 0;
+    private int _fornecedor = 0;
+
+    private List<Fornecedor> _fornecedores;
+
+    private string ImagePreview { get; set; } = "";
 
     protected override async Task OnInitializedAsync()
     {
+        _fornecedores = UIService.listFornecedores();
     }
 
-    private void Submit() {
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file.ContentType == "image/svg+xml") // Ensure only SVG files are accepted
+        {
+            var uploadsPath = Path.Combine(WebHostEnvironment.WebRootPath, "uploads", "parts");
+            Directory.CreateDirectory(uploadsPath);
+
+            var filePath = Path.Combine(uploadsPath, $"{id}.svg");
+            using var stream = file.OpenReadStream(); // Safely get the file content stream
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            await stream.CopyToAsync(fileStream);
+
+            ImagePreview = $"/uploads/parts/{id}.svg"; // Update the image preview
+        }
+        else
+        {
+            await DialogService.ShowMessageBox("Erro", "Apenas imagens SVG são suportadas.");
+        }
+    }
+
+    private void Submit()
+    {
         _MudDialog.Close(DialogResult.Ok(true));
+        UIService.addPeca(id, _stock, _fornecedor);
         NavigationManager.NavigateTo("/parts", true);
     }
 
     private void Cancel() => _MudDialog.Cancel();
-
 }

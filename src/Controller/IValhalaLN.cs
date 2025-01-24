@@ -23,4 +23,8 @@ public interface IValhalaLN {
     public void discontinuePeca(int id);
 
     public void orderPeca(int id, int quantidade, int gestor);
+
+    // Fornecedores
+
+    public List<Fornecedor> listFornecedores();
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 
 using Valhala.Controller;
 using Valhala.Controller.Products;
+using Valhala.Controller.Users;
 namespace Valhala.Controller.UI
 {
     public class UIService
@@ -59,6 +60,10 @@ namespace Valhala.Controller.UI
         public void orderPeca(int id, int quantidade, int gestor) {
             this.valhalaLn.orderPeca(id, quantidade, gestor);
         }
+
+        public void addPeca(int id, int quantidade, int fornecedor) {
+            this.valhalaLn.addPeca(id, quantidade, fornecedor);
+        }
       
         public List<EncomendaUI> listEncomendas() {
             List<Encomenda> encomendas = this.valhalaLn.listEncomendas();
@@ -82,6 +87,10 @@ namespace Valhala.Controller.UI
             }
 
             return encomendasUI;
+        }
+
+        public List<Fornecedor> listFornecedores() {
+            return this.valhalaLn.listFornecedores();
         }
     }
 }

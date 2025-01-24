@@ -32,6 +32,21 @@ namespace Valhala.Controller.Data {
             return size;
         }
 
+        public void Insert(int id, int quantidade, int fornecedor) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("INSERT INTO Peça (ID, Quantidade, Fornecedor, Imagem) VALUES (@id, @quantidade, @fornecedor, @imagem)", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@quantidade", quantidade);
+                    command.Parameters.AddWithValue("@fornecedor", fornecedor);
+                    command.Parameters.AddWithValue("@imagem", $"/uploads/parts/{id}.svg");
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public Peca? Get(int id) {
             Peca? peca = null;
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
