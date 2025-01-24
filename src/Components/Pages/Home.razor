@@ -22,8 +22,6 @@
 <PageTitle>Catálogo</PageTitle>
 
 <!-- Scroll container to enable scroll-snap -->
-@if (UserRole == null)
-{
     <div class="scroll-container" style="display: flex; flex-direction: column;">
         
         <div class="relative bg-[#0d051b]" 
@@ -55,7 +53,6 @@
                 <MudText>
                     A nossa seleção de produtos, repletos de qualidade, estética e conforto.
                 </MudText>
-
                 <MudMenu>
                     <ActivatorContent>
                         <MudButton Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowDropDown" Size="Size.Medium" Variant="Variant.Filled" Class="rounded-full">
@@ -107,7 +104,6 @@
         </div>
 
     </div>
-}
 
 @code {
     private List<Produto> Produtos = new List<Produto>();
@@ -140,8 +136,8 @@ document.body.style.cursor = 'default';
     {
         NavManager.NavigateTo("/login");
     }
-
-        private void OrderCatalog(string order){
+      
+    private void OrderCatalog(string order){
         switch(order){
             case "pa":
                 Produtos = Produtos.OrderBy(p => p.GetPreco()).ToList();
@@ -158,8 +154,7 @@ document.body.style.cursor = 'default';
         }
     }
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync(){
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 
@@ -176,19 +171,7 @@ document.body.style.cursor = 'default';
             userSession = null;
         }
 
-        if (IsGestor())
-        {
-            Produtos = ProdutoDAO.GetInstance().ListarProdutos();
-        }
     }
-
-    private bool IsGestor() => userSession?.Role == "Gestor";
-
-    private void NavigateToAddProduct()
-    {
-        NavManager.NavigateTo("/addProduct"); // Redireciona para a página de adicionar produto
-    }
-
     private string GetLastWord(string nome)
     {
         var words = nome.Split(' ');

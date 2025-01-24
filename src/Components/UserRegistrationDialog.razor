@@ -32,7 +32,6 @@
                     <MudSelectItem Value="@UserTypes.Funcionario">Funcionário</MudSelectItem>
                     <MudSelectItem Value="@UserTypes.Gestor">Gestor</MudSelectItem>
                     <MudSelectItem Value="@UserTypes.Fornecedor">Fornecedor</MudSelectItem>
-                    <MudSelectItem Value="@UserTypes.Cliente">Cliente</MudSelectItem>
                 </MudSelect>
 
             </MudItem>
@@ -53,7 +52,6 @@
         public const string Funcionario = "Funcionario";
         public const string Gestor = "Gestor";
         public const string Fornecedor = "Fornecedor";
-        public const string Cliente = "Cliente";
     }
 
     private MudDialogInstance? MudDialog { get; set; }
@@ -84,7 +82,7 @@
         }
 
         // Check if UserType is valid
-        string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor, UserTypes.Cliente };
+        string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor};
         if (!tiposValidos.Contains(user.UserType))
         {
             await ShowErrorMessage("Tipo de utilizador inválido.");

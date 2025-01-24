@@ -111,9 +111,9 @@
             userSession = null;
         }
 
+        Produtos = ProdutoDAO.GetInstance().ListarProdutos();
         if (IsGestor())
         {
-            Produtos = ProdutoDAO.GetInstance().ListarProdutos();
         }
     }
 
