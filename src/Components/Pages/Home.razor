@@ -22,8 +22,6 @@
 <PageTitle>Catálogo</PageTitle>
 
 <!-- Scroll container to enable scroll-snap -->
-@if (UserRole == null)
-{
     <div class="scroll-container" style="display: flex; flex-direction: column;">
         
         <div class="relative bg-[#0d051b]" 
@@ -56,11 +54,6 @@
                 <MudText>
                     A nossa seleção de produtos, repletos de qualidade, estética e conforto.
                 </MudText>
-
-                <MudFab style="margin-left: 650px;" Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add"
-                    Size="Size.Small" Variant="Variant.Filled" OnClick="NavigateToAddProduct">
-                    Adicionar Produto
-                </MudFab>
             </div>
 
             <MudPaper Class="white-container" Elevation="3"
@@ -97,7 +90,6 @@
         </div>
 
     </div>
-}
 
 @code {
     private List<Produto> Produtos = new List<Produto>();
@@ -130,8 +122,6 @@ document.body.style.cursor = 'default';
     {
         NavManager.NavigateTo("/login");
     }
-
-
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
@@ -150,19 +140,7 @@ document.body.style.cursor = 'default';
             userSession = null;
         }
 
-        if (IsGestor())
-        {
-            Produtos = ProdutoDAO.GetInstance().ListarProdutos();
-        }
     }
-
-    private bool IsGestor() => userSession?.Role == "Gestor";
-
-    private void NavigateToAddProduct()
-    {
-        NavManager.NavigateTo("/addProduct"); // Redireciona para a página de adicionar produto
-    }
-
     private string GetLastWord(string nome)
     {
         var words = nome.Split(' ');

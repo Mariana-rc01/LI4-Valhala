@@ -75,5 +75,10 @@ namespace Valhala.Authentication {
             
             return userSessionStorageResult.Value;
         }
+
+        // Remove a sessão do armazenamento protegido
+        public async Task RemoveUserSession() {
+            await _sessionStorage.DeleteAsync("UserSession");
+        }
     }
 }

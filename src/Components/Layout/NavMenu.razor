@@ -144,10 +144,10 @@
         }
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        userSession = null;
-        NavigationManager.NavigateTo("/", true); // depois redirecionámos para o catálogo
+        await ((ValhalaAuthStateProvider)AuthStateProvider).RemoveUserSession();
+        NavigationManager.NavigateTo("/", true);
     }
 
     private void OpenUserRegistrationDialog()
