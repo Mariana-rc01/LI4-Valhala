@@ -16,12 +16,12 @@ INSERT INTO Cliente (ID, Nome, Senha) VALUES
 (10, 'Mariana Alves', 'cliente10');
 
 -- Tabela Produto
-INSERT INTO Produto (ID, Nome, [Preço], Descrição, [Imagem]) VALUES
-(1, 'Cadeira LISABO', 55, 'Uma expressão artesanal que é tão confortável como robusta para se adequar até aos membros mais irrequietos da família. Ideal para todas as atividades à roda da mesa como comer, fazer jogos, desenhar e fazer os trabalhos de casa.', 'images/products/cadeira.png'),
-(2, 'Estrutura da cama MALM', 159, 'Um design simples com chapa de madeira maciça. Posicione a cama com ou sem a cabeceira encostada à parede. Se precisar de espaço para guardar a roupa de cama, acrescente caixas de arrumação para cama MALM com rodízios.', 'images/products/cama.png'),
-(3, 'Estante KALLAX', 50, 'Na vertical ou na horizontal: a gama KALLAX adapta-se ao seu gosto, espaço e orçamento. Personalize a estante com acessórios e caixas de acordo com as suas necessidades.', 'images/products/estante.png'),
-(4, 'Mesa de centro LACK', 24, 'As mesas LACK têm uma construção única em papel que as torna leves, fáceis de deslocar e estáveis ao mesmo tempo. Para melhorar ainda mais a sua disposição, também mantemos o preço baixo.', 'images/products/mesa.png'),
-(5, 'Banco com arrumação PERJOHAN', 30, 'Este banco multifuncional pode ser usado como assento, mesa de apoio ou mesa de cabeceira. O espaço de arrumação por baixo permite manter revistas ou acessórios de fácil alcance. Além disso, a pega recortada torna-o fácil de deslocar.', 'images/products/banco.png');
+INSERT INTO Produto (ID, Nome, [Preço], Descrição, [Imagem], [Desenho]) VALUES
+(1, 'Cadeira LISABO', 55, 'Uma expressão artesanal que é tão confortável como robusta para se adequar até aos membros mais irrequietos da família. Ideal para todas as atividades à roda da mesa como comer, fazer jogos, desenhar e fazer os trabalhos de casa.', 'images/products/cadeira.png', "images/products/d_cadeira.svg"),
+(2, 'Estrutura da cama MALM', 159, 'Um design simples com chapa de madeira maciça. Posicione a cama com ou sem a cabeceira encostada à parede. Se precisar de espaço para guardar a roupa de cama, acrescente caixas de arrumação para cama MALM com rodízios.', 'images/products/cama.png', "images/products/d_cama.svg"),
+(3, 'Estante KALLAX', 50, 'Na vertical ou na horizontal: a gama KALLAX adapta-se ao seu gosto, espaço e orçamento. Personalize a estante com acessórios e caixas de acordo com as suas necessidades.', 'images/products/estante.png', "images/products/d_estante.svg"),
+(4, 'Mesa de centro LACK', 24, 'As mesas LACK têm uma construção única em papel que as torna leves, fáceis de deslocar e estáveis ao mesmo tempo. Para melhorar ainda mais a sua disposição, também mantemos o preço baixo.', 'images/products/mesa.png', "images/products/d_mesa.svg"),
+(5, 'Banco com arrumação PERJOHAN', 30, 'Este banco multifuncional pode ser usado como assento, mesa de apoio ou mesa de cabeceira. O espaço de arrumação por baixo permite manter revistas ou acessórios de fácil alcance. Além disso, a pega recortada torna-o fácil de deslocar.', 'images/products/banco.png', "images/products/d_banco.svg");
 
 -- Tabela Etapa
 INSERT INTO Etapa (ID, [Imagem], Produto) VALUES

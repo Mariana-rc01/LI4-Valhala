@@ -1,0 +1,103 @@
+@page "/montagem/{orderId:int}"
+
+@using Valhala.Controller.Products
+@using Valhala.Controller.UI
+@using Microsoft.AspNetCore.Components
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JSRuntime
+@using MudBlazor
+@using System.Security.Claims
+@using Valhala.Controller.Data
+@inject NavigationManager NavManager
+@using Valhala.Authentication
+@using Valhala.Components.Pages.Dialogs
+@inject IDialogService DialogService
+@inject UIService UIService
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject UIService UIService
+
+<PageTitle>Catálogo</PageTitle>
+
+<div class="flex justify-between items-left flex-column w-full">
+    <MudText Typo="Typo.h4">
+        Linha de Montagem @GetLastWord(order.GetProdutoNome())
+    </MudText>
+        <MudPaper Style="width: 1350px">
+            <div class="flex flex-row gap-8 mt-5">
+                @if(@order.GetProdutoDesenho() != ""){
+
+                    <MudItem xs="12" md="6" Style="display: flex; justify-content: center;">
+                        <MudImage Src="@order.GetProdutoDesenho()" Style="width: 60%; border-radius: 10px;"> </MudImage>
+                    </MudItem>
+                }
+            <div class="w-full flex flex-col">
+                <MudText Typo="Typo.h1" Label="Nome do Produto">@GetLastWord(order.GetProdutoNome())</MudText>
+                <MudText Typo="Typo.h5" Label="Peças">Peças necessárias para a montagem:</MudText>
+            </div>
+        </MudPaper>
+    </div>
+</div>
+
+
+@code { 
+    [Parameter]
+    public int orderId { get; set; }
+    
+    private EncomendaUI order;
+
+    private bool _loading;
+    private IEnumerable<EncomendaUI> _encomendas = new List<EncomendaUI>();
+    private IEnumerable<PecaUI> _pecas = new List<PecaUI>();
+    private string? UserRole => userSession?.Role;
+    private UserSession? userSession;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = UIService.getEncomenda(orderId);
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (id != null && name != null && role != null)
+        {
+            userSession = new UserSession(int.Parse(id), name, role);
+        }
+        else
+        {
+            userSession = null;
+        }
+
+        _pecas = UIService.listPecasEncomenda(@order.GetProduto());
+
+        if(UserRole == "Gestor" || UserRole == "Funcionario"){
+            _encomendas = UIService.listEncomendas();
+        } else if(UserRole == "Cliente"){
+            _encomendas = UIService.listEncomendasCliente(int.Parse(id));
+        }
+    }
+
+    private bool IsFuncionario() => userSession?.Role == "Funcionario";
+
+    private bool IsGestor() => userSession?.Role == "Gestor";
+
+    private bool IsCliente() => userSession?.Role == "Cliente";
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private void startAssembly(){
+        /*<MudStepper CenterLabels="true" ShowResetButton>
+            <MudStep Title=""></MudStep>
+            <MudStep Title=""></MudStep>
+            <MudStep Title=""></MudStep>
+        </MudStepper>*/
+    }
+}

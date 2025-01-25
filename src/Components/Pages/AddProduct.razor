@@ -170,6 +170,8 @@
     private string newProductDescription = string.Empty;
     private string newProductImage = string.Empty;
     private string imagePreview = string.Empty;
+    private string newProductDrawing = string.Empty;
+    private string drawingPreview = string.Empty;
 
     // Peças
     private int selectedPiece;
@@ -239,7 +241,7 @@
             try
             {
                 // Produto
-                Produto produto = new Produto(newProductID, newProductName, newProductPrice, newProductDescription, string.IsNullOrEmpty(newProductImage) ? null : newProductImage);
+                Produto produto = new Produto(newProductID, newProductName, newProductPrice, newProductDescription, string.IsNullOrEmpty(newProductImage) ? null : newProductImage, string.IsNullOrEmpty(newProductDrawing) ? null : newProductDrawing);
                 ProdutoDAO produtoDAO = ProdutoDAO.GetInstance();
                 produtoDAO.Put(connection, transaction, newProductID, produto);
 

@@ -56,5 +56,13 @@ namespace Valhala.Controller {
         public List<Encomenda> listEncomendasCliente(int idCliente) {
             return this.subProducts.listEncomendasCliente(idCliente);
         }
+
+        public Encomenda getEncomenda(int id){
+            return this.subProducts.getEncomenda(id);
+        }
+
+        public List<int> listPecasEncomenda(int idProdutoEnc) {
+            return this.subProducts.listPecasEncomenda(idProdutoEnc);
+        }
     }
 }

@@ -4,10 +4,12 @@ namespace Valhala.Controller.Products {
     public class SubProducts : ISubProducts {
         private PecaDAO pecaDAO;
         private EncomendaDAO encomendaDAO;
+        private ProdutoPecaDAO produtoPecaDAO;
 
         public SubProducts() {
             this.pecaDAO = PecaDAO.GetInstance();
             this.encomendaDAO = EncomendaDAO.GetInstance();
+            this.produtoPecaDAO = ProdutoPecaDAO.GetInstance();
         }
 
         public List<Peca> listPecas() {
@@ -38,6 +40,14 @@ namespace Valhala.Controller.Products {
 
         public List<Encomenda> listEncomendasCliente(int idCliente) {
             return this.encomendaDAO.ListEncomendasCliente(idCliente);
+        }
+
+        public Encomenda getEncomenda(int id) {
+            return this.encomendaDAO.Get(id);
+        }
+
+        public List<int> listPecasEncomenda(int idProdutoEnc) {
+            return this.produtoPecaDAO.ObterPecasPorProduto(idProdutoEnc);
         }
     }
 }

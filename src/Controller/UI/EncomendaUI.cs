@@ -65,5 +65,13 @@ namespace Valhala.Controller.UI{
             public string GetProdutoImagem() {
                 return this.produtoDAO.Get(this.produto).GetImagem();
             }
+
+            public string GetProdutoNome() {
+                return this.produtoDAO.Get(this.produto).GetNome();
+            }
+
+            public string GetProdutoDesenho() {
+                return this.produtoDAO.Get(this.produto).GetDesenho();
+            }
     }
 }

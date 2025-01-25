@@ -23,4 +23,14 @@ public interface IValhalaLN {
     public void discontinuePeca(int id);
 
     public void orderPeca(int id, int quantidade, int gestor);
+
+    // Encomendas
+
+    public List<Encomenda> listEncomendas();
+
+    public List<Encomenda> listEncomendasCliente(int idCliente);
+
+    public Encomenda getEncomenda(int id);
+
+    public List<int> listPecasEncomenda(int idProdutoEnc);
 }
