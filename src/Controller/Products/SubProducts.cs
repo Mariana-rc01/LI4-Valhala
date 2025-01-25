@@ -32,6 +32,10 @@ namespace Valhala.Controller.Products {
             this.pecaDAO.PlacePartOrder(id, quantidade, gestor);
         }
 
+        public void addPeca(int id, int quantidade, int fornecedor) {
+            this.pecaDAO.Insert(id, quantidade, fornecedor);
+        }
+
         public List<Encomenda> listEncomendas() {
             return this.encomendaDAO.List();
         }

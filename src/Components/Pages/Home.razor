@@ -28,15 +28,14 @@
             style="flex: 0 0 auto; height: 100vh; position: relative; background-image: url('images/background.svg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
           
             <!-- Valhala Image -->
-            <img src="images/valhala.svg" style="position: absolute; top: 15px; left: 20px;" class="select-none" />
+            <img src="images/valhala.svg" style="position: absolute; top: 20px; left: 50px;" class="select-none" />
 
             <!-- MudFab Button -->
-            <div style="position: absolute; top: 20px; right: 20px;">
-                <MudButton Variant="Variant.Text" Style="margin-right: 15px;" Color="Color.Tertiary"
-                    OnClick="ScrollToCatalogo">
+            <div style="position: absolute; top: 20px; right: 20px;" class="flex flex-row items-center gap-12">
+                <p class="text-white font-semibold hover:cursor-pointer" @onclick="ScrollToCatalogo">
                     Catálogo
-                </MudButton>
-                <MudFab Color="Color.Primary" Variant="Variant.Filled" Label="Login" OnClick="Login" />
+                </p>
+                <MudFab Color="Color.Success" class="px-6" Variant="Variant.Filled" Label="Log in" OnClick="Login" />
             </div>
 
             <div style="position: absolute; top: 45%; left: 32%; transform: translate(-50%, -50%); text-align: center;">
@@ -54,9 +53,30 @@
                 <MudText>
                     A nossa seleção de produtos, repletos de qualidade, estética e conforto.
                 </MudText>
+                <MudMenu>
+                    <ActivatorContent>
+                        <MudButton Color="Color.Primary" EndIcon="@Icons.Material.Filled.ArrowDropDown" Size="Size.Medium" Variant="Variant.Filled" Class="rounded-full">
+                            Ordenar Catálogo
+                        </MudButton>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("pa"))">
+                            Preço ascendente
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("pd"))">
+                            Preço descendente
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("pp"))">
+                            Popularidade
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("a"))">
+                            Ordem alfabética
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
             </div>
 
-            <MudPaper Class="white-container" Elevation="3"
+            <MudPaper class="py-24" Elevation="0"
                 style="margin-top: 45px; background-color: #e4f6f6; border-radius: 10px;">
 
                 <MudContainer MaxWidth="MaxWidth.Large" style="justify-content: center;">
@@ -65,22 +85,16 @@
                         {
                             <MudItem xs="12" sm="6" md="3">
                                 <MudCard Outlined="false" border="0" Elevation="0"
-                                    Style="width: 200px; text-align: center; bottom-align:center ; border: 0; background-color: #e4f6f6;">
-                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                    Style="width: 200px; text-align: center; bottom-align:center ; border: 0; background-color: #e4f6f6;" @onclick="() => VerDetalhes(produto.GetID())" class="hover:cursor-pointer">
+                                    <div style="display: flex; justify-content: center; align-items: center;" class="bg-[#ffffff] rounded-lg">
                                         <MudImage Src="@produto.GetImagem()" Height="250" Width="250"
-                                            Style="border: 2px solid #ccc; border-radius: 8px;" />
+                                            Style="border: 2px solid #ccc; border-radius: 8px;" class="p-4" />
                                     </div>
                                     <MudCardContent>
-                                        <MudText Typo="Typo.h6">@GetLastWord(produto.GetNome())</MudText>
+                                        <MudText Typo="Typo.h6" class="font-semibold">@GetLastWord(produto.GetNome())</MudText>
                                         <MudText Typo="Typo.body2">@GetFirstWord(produto.GetNome())</MudText>
-                                        <MudText Typo="Typo.body2">@produto.GetPreco() €</MudText>
+                                        <MudText Typo="Typo.body2" class="font-bold text-xl">@produto.GetPreco() €</MudText>
                                     </MudCardContent>
-                                    <MudCardActions Style="justify-content: center;">
-                                        <MudButton Color="Color.Primary" Variant="Variant.Filled"
-                                            OnClick="() => VerDetalhes(produto.GetID())">
-                                            Ver Detalhes
-                                        </MudButton>
-                                    </MudCardActions>
                                 </MudCard>
                             </MudItem>
                         }
@@ -122,8 +136,25 @@ document.body.style.cursor = 'default';
     {
         NavManager.NavigateTo("/login");
     }
-    protected override async Task OnInitializedAsync()
-    {
+      
+    private void OrderCatalog(string order){
+        switch(order){
+            case "pa":
+                Produtos = Produtos.OrderBy(p => p.GetPreco()).ToList();
+                break;
+            case "pd":
+                Produtos = Produtos.OrderByDescending(p => p.GetPreco()).ToList();
+                break;
+            case "pp":
+                Produtos = Produtos.OrderByDescending(p => p.GetVendas()).ToList();
+                break;
+            case "a":
+                Produtos = Produtos.OrderBy(p => p.GetNome()).ToList();
+                break;
+        }
+    }
+
+    protected override async Task OnInitializedAsync(){
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         var claimsPrincipal = authState.User;
 

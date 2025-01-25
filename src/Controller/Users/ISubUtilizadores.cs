@@ -9,5 +9,7 @@ namespace Valhala.Controller.Users {
         public int RemoverUtilizador(int id, string tipo);
 
         public int RegistarUtilizador(int id, string nome, string senha, string tipo);
+
+        public List<Fornecedor> listFornecedores(); 
     }
 }
