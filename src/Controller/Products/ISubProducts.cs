@@ -10,6 +10,8 @@ namespace Valhala.Controller.Products {
 
         public void orderPeca(int id, int quantidade, int gestor);
 
+        public void addPeca(int id, int quantidade, int fornecedor);
+
         public List<Encomenda> listEncomendas();
       
         public List<Encomenda> listEncomendasCliente(int idCliente);

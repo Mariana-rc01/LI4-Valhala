@@ -99,7 +99,6 @@
                     
                     <div style="display: flex; gap: 20px;">
                         <MudButton Class="no-border" Variant="Variant.Text" @onclick="NavigateToCatalog">Catálogo</MudButton>
-                        <MudButton Class="no-border" Variant="Variant.Text" @onclick="NavigateToAboutUs">Sobre Nós</MudButton>
                         <MudButton Style="border-radius: 20px; background-color: rgba(128, 237, 153, 0.8); color: white; width: 100px; font-weight: bold;" @onclick="NavigateToLogin">Log In</MudButton>
                     </div>
                 </div>
@@ -291,12 +290,14 @@
 
     private void NavigateToCatalog()
     {
-        NavManager.NavigateTo("/catalog");
-    }
-
-    private void NavigateToAboutUs()
-    {
-        NavManager.NavigateTo("/aboutus");
+        if (UserRole == null)
+        {
+            NavManager.NavigateTo("/");
+        }
+        else
+        {
+            NavManager.NavigateTo("/catalog");
+        }
     }
 
     private void NavigateToLogin()

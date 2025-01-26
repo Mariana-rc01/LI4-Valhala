@@ -32,7 +32,6 @@
                     <MudSelectItem Value="@UserTypes.Funcionario">Funcionário</MudSelectItem>
                     <MudSelectItem Value="@UserTypes.Gestor">Gestor</MudSelectItem>
                     <MudSelectItem Value="@UserTypes.Fornecedor">Fornecedor</MudSelectItem>
-                    <MudSelectItem Value="@UserTypes.Cliente">Cliente</MudSelectItem>
                 </MudSelect>
 
             </MudItem>
@@ -46,6 +45,17 @@
     </DialogContent>
 </MudDialog>
 
+<MudDialog @bind-IsOpen="isErrorDialogOpen">
+    <TitleContent>
+        Registar novo utilizador
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.body1" Color="Color.Error">
+            @errorMessage
+        </MudText>
+    </DialogContent>
+</MudDialog>
+
 @code {
 
     public static class UserTypes
@@ -53,57 +63,89 @@
         public const string Funcionario = "Funcionario";
         public const string Gestor = "Gestor";
         public const string Fornecedor = "Fornecedor";
-        public const string Cliente = "Cliente";
     }
 
     private MudDialogInstance? MudDialog { get; set; }
 
     private UserRegistrationModel user = new UserRegistrationModel();
 
+    private bool isErrorDialogOpen = false;
+    private string errorMessage = "";
+
     private async Task Submit()
-{
-    try
     {
-        // Validate inputs
-        if (string.IsNullOrEmpty(user.Name))
+        try
         {
-            await ShowErrorMessage("O nome do utilizador é obrigatório.");
-            return;
-        }
+            // Validate inputs
+            if (string.IsNullOrEmpty(user.Name))
+            {
+                await ShowErrorMessage("O nome do utilizador é obrigatório.");
+                return;
+            }
 
-        if (string.IsNullOrEmpty(user.Password))
+            if (string.IsNullOrEmpty(user.Password))
+            {
+                await ShowErrorMessage("A senha do utilizador é obrigatória.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(user.UserType))
+            {
+                await ShowErrorMessage("O tipo de utilizador é obrigatório.");
+                return;
+            }
+
+            if (!IsPasswordValid(user.Password))
+            {
+                    await ShowErrorMessage("A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.");
+                    return;
+            }
+
+            // Check if password and confirm password match
+            if (user.Password != user.ConfirmPassword)
+            {
+                    await ShowErrorMessage("A confirmação da senha não corresponde.");
+                    return;
+            }
+
+            // Check if UserType is valid
+            string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor};
+            if (!tiposValidos.Contains(user.UserType))
+            {
+                await ShowErrorMessage("Tipo de utilizador inválido.");
+                return;
+            }
+
+            // Call the service to register the user
+            int createOut = await UIService.RegisterUserAsync(user.Id, user.Name, user.Password, user.UserType);
+            MudDialog?.Close(DialogResult.Ok(createOut));
+        }
+        catch (Exception e)
         {
-            await ShowErrorMessage("A senha do utilizador é obrigatória.");
-            return;
+            // Handle unexpected errors
+            await ShowErrorMessage($"Erro ao criar utilizador: {e.Message}");
         }
-
-        if (string.IsNullOrEmpty(user.UserType))
-        {
-            await ShowErrorMessage("O tipo de utilizador é obrigatório.");
-            return;
-        }
-
-        // Check if UserType is valid
-        string[] tiposValidos = { UserTypes.Funcionario, UserTypes.Gestor, UserTypes.Fornecedor, UserTypes.Cliente };
-        if (!tiposValidos.Contains(user.UserType))
-        {
-            await ShowErrorMessage("Tipo de utilizador inválido.");
-            return;
-        }
-
-        // Call the service to register the user
-        int createOut = await UIService.RegisterUserAsync(user.Id, user.Name, user.Password, user.UserType);
-        MudDialog?.Close(DialogResult.Ok(createOut));
     }
-    catch (Exception e)
-    {
-        // Handle unexpected errors
-        await ShowErrorMessage($"Erro ao criar utilizador: {e.Message}");
-    }
-}
     private async Task ShowErrorMessage(string message)
     {
-        await js.InvokeVoidAsync("alert", message);
+        errorMessage = message;
+        isErrorDialogOpen = true;  // Abre a janela modal de erro
+    }
+
+    private void CloseErrorDialog()
+    {
+        isErrorDialogOpen = false;  // Fecha a janela modal de erro
+    }
+    private bool IsPasswordValid(string password)
+    {
+        if (password.Length < 8) return false;
+
+        bool hasUpper = password.Any(char.IsUpper);
+        bool hasLower = password.Any(char.IsLower);
+        bool hasDigit = password.Any(char.IsDigit);
+        bool hasSpecialChar = password.Any(ch => !char.IsLetterOrDigit(ch));
+
+        return hasUpper && hasLower && hasDigit && hasSpecialChar;
     }
 
     public class UserRegistrationModel

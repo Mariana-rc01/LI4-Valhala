@@ -214,5 +214,9 @@ namespace Valhala.Controller.Users {
 
             return resultado;
         }
+
+        public List<Fornecedor> listFornecedores() {
+            return fornecedorDAO.GetAll();
+        }
     }
 }

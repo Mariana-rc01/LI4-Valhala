@@ -16,18 +16,18 @@
     {
         if (link.SubLinks != null)
         {
-            <MudNavGroup Icon="@link.Icon" title="@link.Name" Expanded="true">
+            <MudNavGroup Icon="@link.Icon" title="@link.Name" Expanded="false">
                 @foreach (var subLink in link.SubLinks)
                 {
                     if (subLink.Name == "Registar Utilizador")
                     {
-                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog" Style="margin-left: 30px;">
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRegistrationDialog" class="w-full">
                             @subLink.Name
                         </MudButton>
                     }
                     else if (subLink.Name == "Remover Utilizador")
                     {
-                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog" Style="margin-left: 30px;">
+                        <MudButton StartIcon="@subLink.Icon" @onclick="OpenUserRemoveDialog" class="w-full">
                             @subLink.Name
                         </MudButton>
                     }
@@ -144,10 +144,10 @@
         }
     }
 
-    private void Logout()
+    private async Task Logout()
     {
-        userSession = null;
-        NavigationManager.NavigateTo("/", true); // depois redirecionámos para o catálogo
+        await ((ValhalaAuthStateProvider)AuthStateProvider).RemoveUserSession();
+        NavigationManager.NavigateTo("/", true);
     }
 
     private void OpenUserRegistrationDialog()

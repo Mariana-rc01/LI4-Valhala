@@ -47,6 +47,10 @@ namespace Valhala.Controller {
         public void orderPeca(int id, int quantidade, int gestor) {
             this.subProducts.orderPeca(id, quantidade, gestor);
         }
+
+        public void addPeca(int id, int quantidade, int fornecedor) {
+            this.subProducts.addPeca(id, quantidade, fornecedor);
+        }
        
         // Encomendas
         public List<Encomenda> listEncomendas() {
@@ -63,6 +67,12 @@ namespace Valhala.Controller {
 
         public List<int> listPecasEncomenda(int idProdutoEnc) {
             return this.subProducts.listPecasEncomenda(idProdutoEnc);
+        }
+
+        // Fornecedores
+
+        public List<Fornecedor> listFornecedores() {
+            return this.subUtilizadores.listFornecedores();
         }
     }
 }

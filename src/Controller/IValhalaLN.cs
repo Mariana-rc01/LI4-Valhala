@@ -33,4 +33,8 @@ public interface IValhalaLN {
     public Encomenda getEncomenda(int id);
 
     public List<int> listPecasEncomenda(int idProdutoEnc);
+
+    // Fornecedores
+
+    public List<Fornecedor> listFornecedores();
 }

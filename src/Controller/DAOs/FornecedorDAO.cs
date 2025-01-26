@@ -110,5 +110,20 @@ namespace Valhala.Controller.Data {
             }
         }
 
+        public List<Fornecedor> GetAll() {
+            List<Fornecedor> fornecedores = new List<Fornecedor>();
+            using(SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString())){
+                connection.Open();
+                using(SqlCommand command = new SqlCommand("SELECT * FROM Fornecedor", connection)){
+                    using(SqlDataReader reader = command.ExecuteReader()){
+                        while(reader.Read()){
+                            fornecedores.Add(new Fornecedor(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
+                        }
+                    }
+                }
+            }
+            return fornecedores;
+        }
+
     }
 }

@@ -13,8 +13,6 @@
 @inject NavigationManager NavManager
 @inject IJSRuntime JSRuntime
 
-
-
 @if (UserRole != null)
 {
     <PageTitle>Catálogo</PageTitle>
@@ -25,39 +23,52 @@
         </MudText>
 
         @if (IsGestor())
-        {
-            <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Filled"
-                OnClick="NavigateToAddProduct">
-                Adicionar Produto
-            </MudFab>
+        {   <div class="flex flex-row gap-4">
+                <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Filled"
+                    OnClick="NavigateToAddProduct">
+                    Adicionar Produto
+                </MudFab>
+                <MudMenu>
+                    <ActivatorContent>
+                        <MudButton Color="Color.Dark" EndIcon="@Icons.Material.Filled.ArrowDropDown" Size="Size.Medium" Variant="Variant.Filled" Class="rounded-full">
+                            Ordenar
+                        </MudButton>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("pa"))">
+                            Preço ascendente
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("pd"))">
+                            Preço descendente
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("pp"))">
+                            Popularidade
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="@(() => OrderCatalog("a"))">
+                            Ordem alfabética
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+            </div>
         }
     </div>
 
-
-
-
-    <MudPaper Class="white-container" Elevation="3" style="margin-top: 15px;">
+    <MudPaper class="mt-16" Elevation="3">
         <MudContainer MaxWidth="MaxWidth.Large" style="justify-content: center;">
-            <MudGrid>
+            <MudGrid class="pt-8">
                 @foreach (var produto in Produtos)
                 {
                     <MudItem xs="12" sm="6" md="3">
-                        <MudCard Elevation="0" Style="width: 200px; text-align: center; bottom-align:center ;">
+                        <MudCard class="hover:cursor-pointer" Elevation="0" Style="width: 200px; text-align: center; bottom-align:center ;" @onclick="() => VerDetalhes(produto.GetID())">
                             <div style="display: flex; justify-content: center; align-items: center;">
                                 <MudImage Src="@produto.GetImagem()" Height="250" Width="250"
-                                    Style="border: 2px solid #ccc; border-radius: 8px;" />
+                                    Style="border: 1px solid #0D051B; border-radius: 8px;" />
                             </div>
                             <MudCardContent>
-                                <MudText Typo="Typo.h6">@GetLastWord(produto.GetNome())</MudText>
+                                <MudText Typo="Typo.h6" class="font-semibold">@GetLastWord(produto.GetNome())</MudText>
                                 <MudText Typo="Typo.body2">@GetFirstWord(produto.GetNome())</MudText>
-                                <MudText Typo="Typo.body2">@produto.GetPreco() €</MudText>
+                                <MudText Typo="Typo.body2" class="font-bold text-xl">@produto.GetPreco() €</MudText>
                             </MudCardContent>
-                            <MudCardActions Style="justify-content: center;">
-                                <MudButton Color="Color.Primary" Variant="Variant.Filled"
-                                    OnClick="() => VerDetalhes(produto.GetID())">
-                                    Ver Detalhes
-                                </MudButton>
-                            </MudCardActions>
                         </MudCard>
                     </MudItem>
                 }
@@ -74,8 +85,6 @@
         border-radius: 8px;
     }
 </style>
-
-
 
 
 
@@ -102,9 +111,9 @@
             userSession = null;
         }
 
+        Produtos = ProdutoDAO.GetInstance().ListarProdutos();
         if (IsGestor())
         {
-            Produtos = ProdutoDAO.GetInstance().ListarProdutos();
         }
     }
 
@@ -125,6 +134,23 @@
     {
         var words = nome.Split(' ');
         return words.LastOrDefault() ?? nome;
+    }
+
+    private void OrderCatalog(string order){
+        switch(order){
+            case "pa":
+                Produtos = Produtos.OrderBy(p => p.GetPreco()).ToList();
+                break;
+            case "pd":
+                Produtos = Produtos.OrderByDescending(p => p.GetPreco()).ToList();
+                break;
+            case "pp":
+                Produtos = Produtos.OrderByDescending(p => p.GetVendas()).ToList();
+                break;
+            case "a":
+                Produtos = Produtos.OrderBy(p => p.GetNome()).ToList();
+                break;
+        }
     }
 
     private string GetFirstWord(string nome)
