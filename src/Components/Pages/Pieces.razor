@@ -17,9 +17,11 @@
     <MudText Typo="Typo.h1">
         Gestão de Peças
     </MudText>
-    <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Filled" OnClick="NewPeca">
-        Adicionar Produto
-    </MudFab>
+    @if(_role == "Fornecedor"){
+        <MudFab Color="Color.Dark" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Filled" OnClick="NewPeca">
+            Adicionar Peça
+        </MudFab>
+    }
 </div>
 
 <MudTable Items="@_pecas" T="PecaUI" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6" OnRowClick="OpenEditDialog" RowClass="hover:cursor-pointer">
@@ -48,6 +50,7 @@
     private bool _loading;
     private IEnumerable<PecaUI> _pecas = new List<PecaUI>();
     private string _role = ""; 
+    private int fornecedor = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,6 +58,8 @@
         var claimsPrincipal = authState.User;
         var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
         var name = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Name)?.Value;
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        fornecedor = int.Parse(id ?? "0");
 
         _role = role;
 
@@ -84,7 +89,8 @@
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large };
 
         var parameters = new DialogParameters<GesPartDialog> {
-            { "id", 0 }
+            { "id", 0 },
+            { "fornecedor", fornecedor }
         };
 
         DialogService.ShowAsync<NewPartDialog>("Part", parameters, options);
