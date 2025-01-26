@@ -17,7 +17,7 @@
             <div class="w-full flex flex-col">
                 <MudNumericField @bind-Value="id" Label="Identificador" Variant="Variant.Text"></MudNumericField>
                 <MudNumericField @bind-Value="_stock" Label="Stock" Variant="Variant.Text"></MudNumericField>
-                <MudSelect @bind-Value="_fornecedor" Label="Fornecedor" Variant="Variant.Text">
+                <MudSelect @bind-Value="fornecedor" Label="Fornecedor" Variant="Variant.Text" Disabled="true">
                     @foreach (var fornecedor in _fornecedores)
                     {
                         <MudSelectItem Value="@fornecedor.GetID()">
@@ -45,7 +45,9 @@
     [Parameter]
     public int id { get; set; }
     private int _stock = 0;
-    private int _fornecedor = 0;
+
+    [Parameter]
+    public int fornecedor { get; set; }
 
     private List<Fornecedor> _fornecedores;
 
@@ -80,7 +82,7 @@
     private void Submit()
     {
         _MudDialog.Close(DialogResult.Ok(true));
-        UIService.addPeca(id, _stock, _fornecedor);
+        UIService.addPeca(id, _stock, fornecedor);
         NavigationManager.NavigateTo("/parts", true);
     }
 

@@ -8,7 +8,7 @@
   (name: "João Lobo", number: "a104356"), 
   (name: "Mariana Rocha", number: "a90817"),
   (name: "Rita Camacho", number: "a104439")), 
-  "Novembro, 2024")
+  "Fevereiro, 2025")
 
 #set page(numbering: "i", number-align: center)
 #counter(page).update(1)
@@ -1780,7 +1780,7 @@ A aplicação desenvolvida é uma solução integrada para gestão de processos 
 
 A *verificação de stock de peças* é uma funcionalidade essencial para assegurar o controlo e a disponibilidade dos itens na plataforma. Esta tarefa é realizada pelo gestor através da página de gestão de peças, onde todas as peças registadas no sistema são apresentadas de forma organizada numa tabela paginada.
 
-A tabela contém diversas colunas relevantes, sendo que uma delas exibe o stock atual de cada peça. Essa disposição facilita a visualização rápida e clara do inventário, permitindo ao gestor identificar facilmente itens com baixo stock ou excesso de unidades, respeitando o *requisito funcional nº 1 -Verificação de stock de peças*.
+A tabela contém diversas colunas relevantes, sendo que uma delas exibe o stock atual de cada peça. Esta disposição facilita a visualização rápida e clara do inventário, permitindo ao gestor identificar facilmente itens com baixo stock ou excesso de unidades, respeitando o *requisito funcional nº 1 -Verificação de stock de peças*.
 
 #figure(
   caption: "Tabela de Peças",
@@ -1924,15 +1924,39 @@ A funcionalidade de *Encomenda de peças*, associada ao *requisito funcional nº
   image("images/UI/encomendarpeca.png", width: 50%)
 )
 
-Essa abordagem step-by-step torna o processo intuitivo, minimizando erros e agilizando o fluxo de trabalho. Além disso, a funcionalidade foi projetada para oferecer uma experiência clara e eficiente, contribuindo para a reposição de stock de forma alinhada às necessidades operacionais da empresa.
+Esta abordagem step-by-step torna o processo intuitivo, minimizando erros e agilizando o fluxo de trabalho. Além disso, a funcionalidade foi projetada para oferecer uma experiência clara e eficiente, contribuindo para a reposição de stock de forma alinhada às necessidades operacionais da empresa.
 
-=== Gestão de Encomendas pelo Fornecedor - Lobo
+=== Atualização Manual de _Stock_ - Lobo Done
 
+A funcionalidade de *Atualização Manual de _Stock_* é essencial para garantir a precisão e a integridade dos dados de _stock_ na plataforma. Esta funcionalidade permite que os gestores atualizem manualmente a quantidade disponível de peças, refletindo alterações reais no inventário, atendendo ao *requisito funcional nº 11 - Atualização Manual de _Stock_*.
 
+1. Um gestor pode aceder à página de gestão de peças e selecionar uma peça específica para visualizar as informações detalhadas. Nesta janela, o gestor tem a opção de atualizar o _stock_ manualmente, inserindo a quantidade correta disponível e gravando a sua alteração através de um botão dedicado.
 
-=== Atualização Manual de _Stock_ - Lobo
+#figure(
+  caption: "Atualizar stock de Peça",
+  kind: image,
+  image("images/UI/stockpeca.png", width: 50%)
+)
 
-=== Registo e atualização de peças pelo Fornecedor - Lobo
+=== Registo e atualização de peças pelo Fornecedor - Lobo Done
+
+A funcionalidade de *Registo e atualização de peças pelo Fornecedor* é essencial para garantir a integridade e a atualização das peças na plataforma. Esta funcionalidade permite que os fornecedores registem novas peças, e atualizem a informação de peças existentes, contribuindo para a gestão eficiente do inventário.
+
+O processo de registo e atualização de peças é realizado através de um formulário intuitivo, que inclui os seguintes campos:
+
+- Identificador da Peça: Um código único atribuído a cada peça, utilizado para identificação e rastreabilidade.
+
+- Stock Atual: Quantidade disponível da peça no _stock_, permitindo ao fornecedor inicializar o _stock_ da nova peça.
+
+- Fornecedor: Pré-definido com o nome do fornecedor, garantindo a associação correta da peça ao fornecedor responsável.
+
+- Imagem: Uma representação visual da peça, facilitando a identificação e a gestão visual do _stock_.
+
+#figure(
+  caption: "Janela de nova Peça",
+  kind: image,
+  image("images/UI/novapeca.png", width: 50%)
+)
 
 === Registo na aplicação dos Novos Fornecedores e Funcionários - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
 
@@ -2018,6 +2042,8 @@ O sistema oferece várias opções de ordenação, como preço, popularidade, no
   image("images/UI/opcoesordenar.png", width: 30%)
 )
 
+Esta abordagem step-by-step torna o processo intuitivo, minimizando erros e agilizando o fluxo de trabalho. Além disso, a funcionalidade foi projetada para oferecer uma experiência clara e eficiente, contribuindo para a reposição de stock de forma alinhada às necessidades operacionais da empresa.
+
 === Iniciar Sessão - Mariana Done
 
 O requisito *Iniciar Sessão* implementa a funcionalidade que permite aos utilizadores se autenticarem no sistema de forma segura e eficiente. Este processo é essencial para identificar o tipo de utilizador e conceder acesso às funcionalidades e permissões adequadas do perfil.
@@ -2093,7 +2119,9 @@ Todos os requisitos funcionais foram implementados com base nos seguintes crité
 
 4. Conectividade entre Camadas: A lógica de _backend_ garante a integração perfeita entre os dados inseridos na _interface_ e as operações da base de dados. Isso assegura que todos os componentes trabalhem em harmonia para atingir os objetivos.
 
-=== Verificação de _stock de peças_ - Lobo
+=== Verificação de _stock de peças_ - Lobo Done
+
+A funcionalidade de verificação de stock de peças foi projetada para assegurar uma gestão precisa e ágil do inventário, atendendo às necessidades do processo produtivo e da gestão logística. Com uma interface intuitiva e acessível, esta funcionalidade permite aos gestores verificar rapidamente a disponibilidade de peças críticas, reduzindo o risco de interrupções no fluxo de trabalho.
 
 === Registo do processo de montagem - Rita
 
@@ -2129,13 +2157,17 @@ O design sequencial desta funcionalidade não só melhora a navegação no catá
 
 === Visualização das encomendas - Rita
 
-=== Encomendas de peças - Lobo
+=== Encomendas de peças - Lobo Done
 
-=== Gestão de Encomendas pelo Fornecedor - Lobo
+A funcionalidade de encomendas de peças destaca-se pela sua eficiência e integração com os processos de gestão de inventário, garantindo um fluxo contínuo de reposição e reduzindo a possibilidade de atrasos no abastecimento. Com uma interface intuitiva e simplificada, os gestores podem criar, acompanhar e gerir encomendas de forma ágil, economizando tempo e aumentando a produtividade.
 
-=== Atualização Manual de _Stock_ - Lobo
+=== Atualização Manual de _Stock_ - Lobo Done
 
-=== Registo e atualização de peças pelo Fornecedor - Lobo
+A funcionalidade de atualização manual de stock oferece aos gestores um controlo direto e preciso sobre os níveis de inventário, permitindo intervenções rápidas sempre que necessário. Esta funcionalidade é particularmente útil para ajustes pontuais, correções ou atualizações que não dependem de processos automáticos, assegurando que os dados refletem a realidade do armazém em tempo real.
+
+=== Registo e atualização de peças pelo Fornecedor - Lobo Done
+
+A funcionalidade de registo e atualização de peças pelo fornecedor foi concebida para simplificar e agilizar a comunicação e o alinhamento entre os fornecedores e a gestão de inventário. Este recurso permite que os fornecedores registem novas peças e atualizem a sua informação diretamente no sistema, mantendo os dados sempre precisos e atualizados.
 
 === Registo na aplicação dos Novos Fornecedores e Funcionários - Dionísio
 
@@ -2154,7 +2186,9 @@ A funcionalidade de visualização de produtos oferece uma interface intuitiva, 
 
 Do ponto de vista técnico, a aplicação garante um carregamento rápido e eficiente, com imagens otimizadas para uma navegação ágil. Funcionalidades como a visualização do número de encomendas e a possibilidade de eliminar produtos contribuem para uma gestão eficaz do catálogo, refletindo um compromisso com a qualidade e a experiência do utilizador.
 
-=== Ordenar catálogo - Lobo
+=== Ordenar catálogo - Lobo Done
+
+A funcionalidade de ordenação do catálogo foi projetada para oferecer aos utilizadores uma experiência de navegação otimizada e personalizada, permitindo que os produtos sejam visualizados de forma organizada e relevante para diferentes contextos. Com esta ferramenta, é possível ordenar os itens do catálogo com base em diversos critérios, como nome, preço, popularidade, data de adição ou outros atributos configuráveis.
 
 === Iniciar Sessão - Mariana Done
 
