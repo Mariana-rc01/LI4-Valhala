@@ -1776,7 +1776,17 @@ Após a criação da estrutura da aplicação, procedeu-se a implementação dos
 
 A aplicação desenvolvida é uma solução integrada para gestão de processos de montagem, encomendas e _stock_, com funcionalidades personalizadas para diferentes tipos de utilizadores: gestores, funcionários, clientes e fornecedores. Apresenta uma interface intuitiva, acessível a partir de diferentes dispositivos, e uma arquitetura robusta, que suporta tanto operações internas quanto integração com sistemas externos.
 
-=== Verificação de _stock de peças_ - Lobo
+=== Verificação de stock de peças - Lobo Done
+
+A *verificação de stock de peças* é uma funcionalidade essencial para assegurar o controlo e a disponibilidade dos itens na plataforma. Esta tarefa é realizada pelo gestor através da página de gestão de peças, onde todas as peças registadas no sistema são apresentadas de forma organizada numa tabela paginada.
+
+A tabela contém diversas colunas relevantes, sendo que uma delas exibe o stock atual de cada peça. Essa disposição facilita a visualização rápida e clara do inventário, permitindo ao gestor identificar facilmente itens com baixo stock ou excesso de unidades, respeitando o *requisito funcional nº 1 -Verificação de stock de peças*.
+
+#figure(
+  caption: "Tabela de Peças",
+  kind: image,
+  image("images/UI/stockpecas.png", width: 90%)
+)
 
 === Registo do processo de montagem - Rita
 
@@ -1893,9 +1903,32 @@ Paginação ou Rolagem Infinita: Para melhorar a performance e experiência de n
 
 === Visualização das encomendas - Rita
 
-=== Encomendas de peças - Lobo
+=== Encomendas de peças - Lobo Done
+
+A funcionalidade de *Encomenda de peças*, associada ao *requisito funcional nº 9 - Encomendas de peças*, permite ao gestor realizar pedidos de reposição de forma prática e eficiente, diretamente a partir da tabela de peças na página de gestão.
+
+
+1. Ao selecionar uma peça na tabela, uma janela é exibida contendo informações detalhadas sobre a peça, como identificador, stock atual e fornecedor. Nesta janela, o gestor tem acesso ao botão Encomendar, representado por um ícone de uma carrinha.
+
+#figure(
+  caption: "Janela de peça",
+  kind: image,
+  image("images/UI/infopeca.png", width: 50%)
+)
+
+2. Ao pressionar o botão de encomenda, é aberta uma nova janela para o gestor definir a quantidade de peças a serem encomendadas e confirmar a ação.
+
+#figure(
+  caption: "Encomendar Peça",
+  kind: image,
+  image("images/UI/encomendarpeca.png", width: 50%)
+)
+
+Essa abordagem step-by-step torna o processo intuitivo, minimizando erros e agilizando o fluxo de trabalho. Além disso, a funcionalidade foi projetada para oferecer uma experiência clara e eficiente, contribuindo para a reposição de stock de forma alinhada às necessidades operacionais da empresa.
 
 === Gestão de Encomendas pelo Fornecedor - Lobo
+
+
 
 === Atualização Manual de _Stock_ - Lobo
 
@@ -1963,7 +1996,27 @@ Para os gestores e funcionários, o sistema permite visualizar o número de enco
   image("images/UI/verprodutoGestor.png", width: 90%)
 )
 
-=== Ordenar catálogo - Lobo
+=== Ordenar catálogo - Lobo Done
+
+A funcionalidade de *Ordenar Catálogo* foi desenvolvida para permitir que os utilizadores organizem os produtos disponíveis de acordo com critérios específicos, como preço, popularidade, nome, entre outros. Esta funcionalidade é essencial para melhorar a experiência do utilizador, permitindo uma navegação mais eficiente e personalizada. Foi especificada no *requisito funcional nº 16 - Ordenar Catálogo*.
+
+1. Botão de Ordenação
+O sistema apresenta um botão de ordenação no catálogo, que permite ao utilizador selecionar a opção desejada. O botão é destacado e de fácil acesso, garantindo que o utilizador possa ordenar os produtos de forma rápida e intuitiva.
+
+#figure(
+  caption: "Catálogo de produtos",
+  kind: image,
+  image("images/UI/ordenarcatalogo.png", width: 90%)
+)
+
+2. Opções de Ordenação
+O sistema oferece várias opções de ordenação, como preço, popularidade, nome, entre outros. O utilizador pode selecionar a opção desejada a partir de um menu suspenso, que exibe as alternativas disponíveis de forma clara e organizada.
+
+#figure(
+  caption: "Opções de ordenação de produtos",
+  kind: image,
+  image("images/UI/opcoesordenar.png", width: 30%)
+)
 
 === Iniciar Sessão - Mariana Done
 
