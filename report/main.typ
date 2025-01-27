@@ -1778,13 +1778,13 @@ Após a criação da estrutura da aplicação, procedeu-se a implementação dos
 2. Criação da interface correspondente, garantindo a integração com o _backend_.
 3. Testes individuais para cada requisito.
 
-== Apresentação da aplicação e explicação dos serviços implementados - Cada um escreve os que fez
+== Apresentação da aplicação e explicação dos serviços implementados
 
 /*>>> Apresentação da estrutura da aplicação desenvolvida e de cada um dos seus serviços, ilustrando um ou dois processos que tenham sido implementados.*/
 
 A aplicação desenvolvida é uma solução integrada para gestão de processos de montagem, encomendas e _stock_, com funcionalidades personalizadas para diferentes tipos de utilizadores: gestores, funcionários, clientes e fornecedores. Apresenta uma interface intuitiva, acessível a partir de diferentes dispositivos, e uma arquitetura robusta, que suporta tanto operações internas quanto integração com sistemas externos.
 
-=== Verificação de stock de peças - Lobo Done
+=== Verificação de stock de peças
 
 A *verificação de stock de peças* é uma funcionalidade essencial para assegurar o controlo e a disponibilidade dos itens na plataforma. Esta tarefa é realizada pelo gestor através da página de gestão de peças, onde todas as peças registadas no sistema são apresentadas de forma organizada numa tabela paginada.
 
@@ -1796,17 +1796,49 @@ A tabela contém diversas colunas relevantes, sendo que uma delas exibe o stock 
   image("images/UI/stockpecas.png", width: 90%)
 )
 
-=== Registo do processo de montagem - Rita
+=== Registo do processo de montagem
 
-=== Visualização do processo de montagem - Rita
+O *registo do processo de montagem* é uma funcionalidade imprescindível para garantir o avanço da montagem dos produtos pertencentes a encomendas, sendo a função principal da plataforma. Esta tarefa é realizada pelo funcionário e/ou gestor através da página de encomendas inicialmente, selecionando na listagem uma encomenda em montagem. A partir daí, surge uma pequena janela que revela mais detalhes sobre a mesma, encontrando-se também um botão que encaminhará o fornecedor ou gestor para o registo real da montagem da encomenda selecionada. Este registo é realizado com o avanço nos passos de montagem, logo apenas se avançará quando o passo anterior se encontrar concluído.
 
-=== Gestão do catálogo de produtos - Mariana Done
+A linha de montagem possui uma página inicial, onde é visualizado o produto a montar e as peças necessárias para tal. A partir daí, é possível iniciar a montagem (se todas as peças se encontrarem disponíveis) e/ou visualizar os passos já realizados, em qual nos encontramos atualmente, e por quantos passos é composta a montagem. Todos os passos são ilustrados por uma imagem explicativa, onde visualmente é percetível a ação necessária para concluir o mesmo. Assim, é respeitado o *requisito funcional nº2 - Registo do processo de montagem*.
+
+#figure(
+  caption: "Registo do Processo de Montagem - Detalhes da Encomenda",
+  kind: image,
+  image("images/UI/registo_processo_montagem_1.png", width: 90%)
+)
+
+#figure(
+  caption: "Registo do Processo de Montagem - Passos da Linha de Montagem",
+  kind: image,
+  image("images/UI/registo_processo_montagem_2.png", width: 90%)
+)
+
+=== Visualização do processo de montagem
+
+A *visualização do processo de montagem* é uma função importante para garantir a eficiência e transparência da montagem dos produtos, permitindo que os clientes a visualizem para conhecer melhor os produtos encomendados, podendo perceber quais etapas serão realizadas pelos funcionários até receber o produto final. Também os funcionários e gestores poderão usufruir desta funcionalidade, permitindo ver todos os passos delicadamente antes de iniciar uma montagem relativa ao mesmo. Esta tarefa é realizada pelo cliente, funcionário e gestor, através da página de catálogo inicialmente, selecionando especificamente um produto. A partir daí, nos detalhes do produto, encontra-se também um botão que encaminhará o mesmo para a visualização do processo de montagem, onde poderá visitar todas as etapas da mesma com atenção. A visualização do progresso de montagem também acontece no serviço exatamente antes mencionado, durante a montagem de uma encomenda real.
+
+A visualização da linha de montagem possui uma página inicial, onde é revelado o produto a montar e as peças necessárias para tal. A partir daí, é possível visualizar os passos constituintes da linha de montagem, sendo permitido o avanço e recuo dos mesmos, já que não altera uma linha de montagem real. Todos os passos são ilustrados por uma imagem explicativa, onde visualmente é percetível a ação necessária para concluir o mesmo. Então, é respeitado o *requisito funcional nº3 - Visualizar progresso de montagem de uma encomenda*.
+
+#figure(
+  caption: "Visualização do Processo de Montagem - Página Inicial",
+  kind: image,
+  image("images/UI/visualizacao_montagem_1.png", width: 90%)
+)
+
+#figure(
+  caption: "Visualização do Processo de Montagem - Passos da Linha de Montagem",
+  kind: image,
+  image("images/UI/visualizacao_montagem_2.png", width: 90%)
+)
+
+=== Gestão do catálogo de produtos
 
 A gestão eficiente do catálogo de produtos é uma função essencial para garantir a organização e atualização contínua dos itens disponíveis na empresa. No contexto da plataforma, o gestor tem um papel fundamental, sendo este responsável por manter o catálogo atualizado, bem como gerir os produtos disponíveis para os utilizadores.
 
 De seguida, é detalhado como o gestor pode realizar essas tarefas de forma intuitiva e eficaz, garantindo a manutenção do catálogo sempre em conformidade com as necessidades do negócio, conforme estabelecido no *requisito funcional nº 4 - Gestão do catálogo de produtos*.
 
-==== Adicionar Produto - M Done
+==== Adicionar Produto
 
 O requisito *Adicionar Produto* desempenha um papel fundamental no sistema ao permitir que gestores adicionem novos produtos à base de dados. Esta funcionalidade foi projetada para ser intuitiva e eficiente, proporcionando um processo passo a passo que organiza a tarefa de forma clara e lógica.
 
@@ -1853,7 +1885,7 @@ O terceiro passo envolve a configuração das etapas da linha de montagem, inclu
   image("images/UI/addprodutopt5.png", width: 90%)
 )
 
-==== Remover Produto - M Done
+==== Remover Produto
 
 A funcionalidade de remover um produto permite aos gestores eliminarem um produto da plataforma. O objetivo é garantir que os produtos sejam removidos,com o propósuto de manter o catálogo atualizado e em conformidade com os processos da empresa Valhala.
 
@@ -1877,7 +1909,7 @@ Após a remoção do produto, o utilizador é reedirecionado para o catálogo.
   image("images/UI/eliminarproduto.png", width: 90%)
 )
 
-=== Autenticação com o Sistema Externo de Compras - Mariana Done
+=== Autenticação com o Sistema Externo de Compras
 
 A autenticação dos clientes é realizada da mesma forma que a dos restantes utilizadores, ou seja, com as credenciais habituais de início de sessão (nome de utilizador e palavra-passe). A diferença é que os clientes que já possuem contas no sistema externo de compras e as suas credenciais são as mesmas utilizadas nesse sistema.
 
@@ -1885,7 +1917,7 @@ O sistema externo de compras envia a informação necessária para autenticar o 
 
 Este processo de integração garante uma transição suave para o cliente, mantendo a consistência e segurança dos dados sem a necessidade de um sistema de autenticação duplicado, cumprindo com o *requisito funcional nº 5 - Autenticação com o Sistema Externo de Compras*.
 
-=== Regras de Senha - Mariana Done
+=== Regras de Senha
 
 O requisito Regras de Senha é uma parte fundamental do sistema, tem como objetivo garantir que as senhas dos utilizadores correspondem a requisitos de complexidade e fortalecem a segurança da plataforma. A funcionalidade exige que a senha tenha, no mínimo, 8 caracteres e contenha uma combinação de pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
 
@@ -1897,7 +1929,7 @@ A validação dessas regras ocorre automaticamente durante o processo de criaç�
   image("images/UI/regrasSenha.png", width: 90%)
 )
 
-=== Visualização do Catálogo - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
+=== Visualização do Catálogo
 
 A funcionalidade de *Visualização do Catálogo* foi concebida para proporcionar aos utilizadores, sejam eles gestores, clientes ou outros, uma interface clara, interativa e informativa para explorar os produtos disponíveis. Esta funcionalidade não diferencia as experiências de navegação entre utilizadores autenticados e não autenticados, com o objetivo de garantir uma navegação eficiente e detalhada. Conforme descrito no *requisito funcional n.º 7 - Visualizar Catálogo*, "o sistema deve permitir que o catálogo de produtos seja acessível a qualquer utilizador, mesmo que este não esteja autenticado no sistema".
 
@@ -1921,9 +1953,19 @@ Paginação ou Rolagem Infinita: Para melhorar a performance e experiência de n
 )
 
 
-=== Visualização das encomendas - Rita
+=== Visualização das encomendas
 
-=== Encomendas de peças - Lobo Done
+A *visualização das encomendas* foi desenvolvida para facilitar o acesso a todas as encomendas realizadas, permitindo assim garantir que o seu desenvolvimento é assegurado, procedendo ao processamento e à montagem dos produtos encomendados, bem como arquivar todas as encomendas entregues. Esta tarefa é pelo funcionário e/ou gestor, através da página de encomendas, onde todas as encomendas registadas no sistema são apresentadas de forma organizada numa tabela paginada. A listagem pode também ser acedida pelo cliente, embora apenas tenha acesso às suas próprias encomendas.
+
+A tabela contém diversas colunas relevantes, sendo que uma delas exibe o estado atual de cada encomenda. Esta disposição facilita a visualização rápida e clara das encomendas, permitindo ao funcionário e ao gestor identificar rapidamente as encomendas com mais urgência (em montagem ou em processamento, encomendadas há mais tempo), respeitando o *requisito funcional nº 8 -Visualização das encomendas*.
+
+#figure(
+  caption: "Visualização das Encomendas",
+  kind: image,
+  image("images/UI/catalogocomlogin.png", width: 90%)
+)
+
+=== Encomendas de peças
 
 A funcionalidade de *Encomenda de peças*, associada ao *requisito funcional nº 9 - Encomendas de peças*, permite ao gestor realizar pedidos de reposição de forma prática e eficiente, diretamente a partir da tabela de peças na página de gestão.
 
@@ -1946,7 +1988,7 @@ A funcionalidade de *Encomenda de peças*, associada ao *requisito funcional nº
 
 Esta abordagem step-by-step torna o processo intuitivo, minimizando erros e agilizando o fluxo de trabalho. Além disso, a funcionalidade foi projetada para oferecer uma experiência clara e eficiente, contribuindo para a reposição de stock de forma alinhada às necessidades operacionais da empresa.
 
-=== Atualização Manual de _Stock_ - Lobo Done
+=== Atualização Manual de _Stock_
 
 A funcionalidade de *Atualização Manual de _Stock_* é essencial para garantir a precisão e a integridade dos dados de _stock_ na plataforma. Esta funcionalidade permite que os gestores atualizem manualmente a quantidade disponível de peças, refletindo alterações reais no inventário, atendendo ao *requisito funcional nº 11 - Atualização Manual de _Stock_*.
 
@@ -1958,7 +2000,7 @@ A funcionalidade de *Atualização Manual de _Stock_* é essencial para garantir
   image("images/UI/stockpeca.png", width: 50%)
 )
 
-=== Gestão de Encomendas de Peças - Mariana Done
+=== Gestão de Encomendas de Peças
 
 A funcionalidade de *Gestão de Encomendas de Peças* foi desenvolvida com o objetivo de otimizar o controlo e monitorização dos pedidos de peças dentro do sistema. O processo do pedido é composto por vários estados, permitindo que os utilizadores interajam com os pedidos de forma eficiente e com visibilidade em tempo real sobre o seu progresso. O fluxo é intuitivo, facilitando tanto para os fornecedores quanto para os gestores, isto garante uma gestão eficaz dos pedidos de peças.
 
@@ -1990,7 +2032,7 @@ A interação com a base de dados é feita de forma eficiente, garantindo que os
   image("images/UI/pedidoFornecedor.png", width: 90%)
 )
 
-=== Registo e atualização de peças pelo Fornecedor - Lobo Done
+=== Registo e atualização de peças pelo Fornecedor
 
 A funcionalidade de *Registo e atualização de peças pelo Fornecedor* é essencial para garantir a integridade e a atualização das peças na plataforma. Esta funcionalidade permite que os fornecedores registem novas peças, e atualizem a informação de peças existentes, contribuindo para a gestão eficiente do inventário.
 
@@ -2010,7 +2052,7 @@ O processo de registo e atualização de peças é realizado através de um form
   image("images/UI/novapeca.png", width: 50%)
 )
 
-=== Registo na aplicação dos Novos Fornecedores e Funcionários - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
+=== Registo na aplicação dos Novos Fornecedores e Funcionários
 
 
 A funcionalidade de  *Registo na Aplicação de Novos Fornecedores e Funcionários* é essencial para a gestão eficiente de utilizadores no sistema. Esta funcionalidade foi projetada para ser simples e intuitiva, garantindo que as informações necessárias sejam recolhidas de forma clara, ao mesmo tempo que assegura a segurança e a consistência dos dados inseridos. Tal como é definido no *requisito funcional nº 13 - Registo na Aplicação de Novos Fornecedores e Funcionários*.
@@ -2032,7 +2074,7 @@ O processo de registo é realizado preenchendo um formulário que inclui os segu
 
 Esta funcionalidade garante que os novos utilizadores, sejam fornecedores ou funcionários, sejam registados de forma padronizada e segura, permitindo a gestão eficiente de acessos e operações. Além disso, a validação automática dos dados durante o preenchimento do formulário reduz erros, promovendo uma experiência de registo ágil e confiável.
 
-=== Remoção na aplicação dos antigos Fornecedores e Funcionários - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
+=== Remoção na aplicação dos antigos Fornecedores e Funcionários
 
 
 A funcionalidade de *Remoção na Aplicação dos Antigos Fornecedores e Funcionários* foi desenvolvida para facilitar a gestão do sistema, permitindo que utilizadores desatualizados ou que já não fazem parte da organização sejam removidos de forma rápida e segura.Tal como é definido no *requisito funcional nº 14 - Remoção na Aplicação dos Antigos Fornecedores e Funcionários* .
@@ -2052,7 +2094,7 @@ O processo de remoção requer apenas a introdução de dois campos essenciais:
 
 Com base nesses dados, o sistema executa a remoção do utilizador, garantindo a integridade da base de dados e a manutenção de um ambiente organizado. Esta funcionalidade é simples, eficiente e segura, contribuindo para uma gestão eficaz dos recursos humanos e fornecedores no sistema.
 
-=== Visualizar Produto - Mariana Done
+=== Visualizar Produto
 
 A gestão eficaz do catálogo de produtos é uma componente essencial para a operação eficiente da empresa, garantindo a disponibilidade, organização e atualização contínua dos produtos para os utilizadores.
 
@@ -2086,7 +2128,7 @@ Para os gestores e funcionários, o sistema permite visualizar o número de enco
   image("images/UI/verprodutoGestor.png", width: 90%)
 )
 
-=== Ordenar catálogo - Lobo Done
+=== Ordenar catálogo
 
 A funcionalidade de *Ordenar Catálogo* foi desenvolvida para permitir que os utilizadores organizem os produtos disponíveis de acordo com critérios específicos, como preço, popularidade, nome, entre outros. Esta funcionalidade é essencial para melhorar a experiência do utilizador, permitindo uma navegação mais eficiente e personalizada. Foi especificada no *requisito funcional nº 16 - Ordenar Catálogo*.
 
@@ -2110,7 +2152,7 @@ O sistema oferece várias opções de ordenação, como preço, popularidade, no
 
 Esta abordagem step-by-step torna o processo intuitivo, minimizando erros e agilizando o fluxo de trabalho. Além disso, a funcionalidade foi projetada para oferecer uma experiência clara e eficiente, contribuindo para a reposição de stock de forma alinhada às necessidades operacionais da empresa.
 
-=== Iniciar Sessão - Mariana Done
+=== Iniciar Sessão
 
 O requisito *Iniciar Sessão* implementa a funcionalidade que permite aos utilizadores se autenticarem no sistema de forma segura e eficiente. Este processo é essencial para identificar o tipo de utilizador e conceder acesso às funcionalidades e permissões adequadas do perfil.
 
@@ -2147,7 +2189,7 @@ Caso o utilizador introduza credenciais incorretas ou caso falte alguma informa�
 Após a autenticação ser realizada corretamente, o utilizador é redirecionado para a página principal do sistema, onde tem acesso às funcionalidades relacionadas com o seu perfil.
 
 
-=== Terminar Sessão - Mariana Done
+=== Terminar Sessão
 
 O requisito *Terminar Sessão* permite que o utilizador encerre a sua sessão de forma segura e ordenada, de modo a garantir que o acesso ao sistema é encerrado corretamente. Esta operação está disponível no menu de navegação personalizado a cada tipo de utilizador autenticado.
 
@@ -2185,90 +2227,96 @@ Todos os requisitos funcionais foram implementados com base nos seguintes crité
 
 4. Conectividade entre Camadas: A lógica de _backend_ garante a integração perfeita entre os dados inseridos na _interface_ e as operações da base de dados. Isso assegura que todos os componentes trabalhem em harmonia para atingir os objetivos.
 
-=== Verificação de _stock de peças_ - Lobo Done
+=== Verificação de _stock de peças_
 
 A funcionalidade de verificação de stock de peças foi projetada para assegurar uma gestão precisa e ágil do inventário, atendendo às necessidades do processo produtivo e da gestão logística. Com uma interface intuitiva e acessível, esta funcionalidade permite aos gestores verificar rapidamente a disponibilidade de peças críticas, reduzindo o risco de interrupções no fluxo de trabalho.
 
-=== Registo do processo de montagem - Rita
+=== Registo do processo de montagem
 
-=== Visualização do processo de montagem - Rita
+A funcionalidade de registo do processo de montagem é realçada pela sua importância na aplicação, sendo um ponto fulcral na mesma. Esta foi projetada para assegurar uma montagem sequencial, sem falhas e conflitos, permitindo a gestão eficiente de encomendas e respetivas montagens, atendendo assim à necessidade da linha de montagem ser produtiva e eficaz. A interface, intuitiva e simples, oferece eficiência e acessibilidade aos funcionários e gestores de acompanhar e atualizar a montagem rapidamente, beneficiando assim o fluxo de trabalho e conquistando o maior objetivo da empresa Valhala. 
 
-=== Gestão do catálogo de produtos - Mariana Done
+=== Visualização do processo de montagem
 
-==== Adicionar Produto - M Done
+Esta funcionalidade é fortemente caracterizada pela sua relevância na área de trabalho da empresa, pois permite que todos visualizem os passos constituintes da montagem de qualquer produto em detalhe, a qualquer momento, podendo avançar e recuar nos passos. Esta funcionalidade revela a transparência de Valhala no seu trabalho, já que qualquer um, desde que suficientemente curioso, poderá encontrar os passos que permitem entregar um certo produto final aos clientes. A interface, semelhante à das linhas de montagem reais, é bastante intuitiva e apelativa, permitindo assim demonstrar o trabalho realizado e perceber o que é feito até obter um dado produto final.
+
+=== Gestão do catálogo de produtos
+
+==== Adicionar Produto
 
 Esta funcionalidade destaca-se pela sua robustez e flexibilidade, pois permite a gestão eficiente do catálogo de produtos, o que reduz o esforço manual e aumenta a precisão na inserção dos dados.
 
 Adicionalmente, a configuração detalhada das etapas da linha de montagem contribui para a organização do processo produtivo. O fluxo sequencial proporciona uma experiência positiva.
 
-==== Remover Produto - M Done
+==== Remover Produto
 
 A funcionalidade de remover produtos oferece benefícios significativos na gestão do catálogo de produtos, pois permite que os gestores mantenham a plataforma constantemente atualizada e organizada. A capacidade de eliminar produtos desatualizados facilita a manutenção de um ambiente dinâmico, onde apenas os itens relevantes estão disponíveis para os utilizadores.
 
 Além disso, a funcionalidade é projetada com segurança e usabilidade em mente. A confirmação antes da sua exclusão evita que os produtos sejam removidos acidentalmente, garantindo que a decisão de remoção seja realizada com cuidado. Apenas os gestores é que têm permissão para realizar esta ação, o que garante o controlo adequado do processo e reduz o risco de erros. A interface intuitiva e a resposta visual claro tornam o processo simples e seguro, proporcionando uma experiência de gestão tranquila e sem complicações.
 
-=== Autenticação com o Sistema Externo de Compras - Mariana Done
+=== Autenticação com o Sistema Externo de Compras
 
 A autenticação com o sistema externo de compras foi implementada de forma transparente e eficiente, permitindo que os clientes utilizem as credenciais já existentes no sistema externo para aceder à plataforma. O processo de início de sessão é rápido, sem exigir a criação de novas credenciais, o que simplifica a experiência do utilizador. A integração foi otimizada para garantir baixa latência na validação das credenciais, mantendo a segurança dos dados e proporcionando uma navegação natural e sem interrupções.
 
-=== Regras de Senha - Mariana Done
+=== Regras de Senha
 
 A aplicação garante uma validação eficiente das senhas e assegura que os utilizadores cumprem com os requisitos de complexidade durante o processo de registo. A verificação ocorre em tempo real, imediatamente após o utilizador inserir a senha, sem causar atrasos perceptíveis na _interface_. O sistema valida se a senha contém pelo menos 8 caracteres, além de exigir uma combinação de letras maiúsculas, minúsculas, números e caracteres especiais. Com isso, a aplicação assegura que os requisitos de segurança são cumpridos, proporcionando uma experiência fluida e sem comprometer o desempenho do sistema.
 
-=== Visualização do Catálogo - Dionísio
+=== Visualização do Catálogo
 
 Esta funcionalidade destaca-se pela sua robustez e flexibilidade, oferecendo uma interface intuitiva e informativa que possibilita aos utilizadores explorarem o catálogo de produtos de forma eficiente. Ao diferenciar as experiências entre utilizadores autenticados e não autenticados, o sistema garante que cada perfil acede apenas às informações e funcionalidades mais relevantes para as suas necessidades.
 
 O design sequencial desta funcionalidade não só melhora a navegação no catálogo, como também assegura que os dados são apresentados de forma otimizada, sem comprometer o desempenho do sistema. Esta combinação de organização, usabilidade e monitorização demonstra um claro compromisso com a excelência operacional e com a oferta de uma experiência do utilizador superior.
 
-=== Visualização das encomendas - Rita
+=== Visualização das encomendas
 
-=== Encomendas de peças - Lobo Done
+A funcionalidade de visualização das encomendas destaca-se pela sua utilidade e relevância para os funcionários e gestores, visto que permite obter informações detalhadas sobre as encomendas registadas no sistema, o que é essencial para o seu processamento e montagem, realizados por estes. A interface é bastante simples e organizada, possibilitando a obtenção rápida de informação relativa a encomendas, facilitando o trabalho principal de Valhala e o seu acompanhamento. É possível, assim, acompanhar eficazmente todas as encomendas, atribuir prioridades e entregar mais rapidamente produtos finais aos clientes.
+
+=== Encomendas de peças
 
 A funcionalidade de encomendas de peças destaca-se pela sua eficiência e integração com os processos de gestão de inventário, garantindo um fluxo contínuo de reposição e reduzindo a possibilidade de atrasos no abastecimento. Com uma interface intuitiva e simplificada, os gestores podem criar, acompanhar e gerir encomendas de forma ágil, economizando tempo e aumentando a produtividade.
 
-=== Atualização Manual de _Stock_ - Lobo Done
+=== Atualização Manual de _Stock_
 
 A funcionalidade de atualização manual de stock oferece aos gestores um controlo direto e preciso sobre os níveis de inventário, permitindo intervenções rápidas sempre que necessário. Esta funcionalidade é particularmente útil para ajustes pontuais, correções ou atualizações que não dependem de processos automáticos, assegurando que os dados refletem a realidade do armazém em tempo real.
 
-=== Gestão de Encomendas de Peças - Mariana Done
+=== Gestão de Encomendas de Peças
 
 A funcionalidade de *Gestão de Encomendas de Peças* foi bem implementada e oferece uma experiência fluida e eficiente. A tabela exibe os pedidos de forma clara e responsiva. O processo de atualização do estado, como marcar pedidos como enviados ou entregues, é simples e reflete as mudanças em tempo real, garantindo que os utilizadores tenham visibilidade imediata. Além disso, a aplicação adapta as ações disponíveis conforme o papel do utilizador, com funcionalidades específicas para gestores e fornecedores, o que facilita a gestão e aumenta a segurança.
 
 Em termos de desempenho, a aplicação é estável e rápida, sem falhas notáveis. As operações de atualização são realizadas sem interrupções, proporcionando uma experiência de utilizador agradável e sem complexidade. A interface é intuitiva e fácil de navegar, tornando a gestão dos pedidos eficiente e simples.
 
-=== Registo e atualização de peças pelo Fornecedor - Lobo Done
+=== Registo e atualização de peças pelo Fornecedor
 
 A funcionalidade de registo e atualização de peças pelo fornecedor foi concebida para simplificar e agilizar a comunicação e o alinhamento entre os fornecedores e a gestão de inventário. Este recurso permite que os fornecedores registem novas peças e atualizem a sua informação diretamente no sistema, mantendo os dados sempre precisos e atualizados.
 
-=== Registo na aplicação dos Novos Fornecedores e Funcionários - Dionísio
+=== Registo na aplicação dos Novos Fornecedores e Funcionários
 
 Esta funcionalidade é essencial para o registo eficiente e seguro de novos fornecedores e funcionários, simplificando o processo de inserção de dados e garantindo a precisão no sistema. A estrutura clara e a validação dos campos asseguram que as informações sejam corretamente registradas, proporcionando uma experiência intuitiva e sem erros.
 
 O sistema foi desenvolvido para ser escalável, permitindo futuras expansões sem afetar a integridade das funcionalidades existentes. A integração entre a interface e o backend garante que as operações sejam realizadas de forma fluida e eficiente, refletindo diretamente nas bases de dados.
 
-=== Remoção na aplicação dos antigos Fornecedores e Funcionários - Dionísio
+=== Remoção na aplicação dos antigos Fornecedores e Funcionários
 
 A funcionalidade de remoção de antigos fornecedores e funcionários é projetada para ser simples e eficiente, permitindo a exclusão rápida de utilizadores desnecessários no sistema. A interface clara e a solicitação dos dados essenciais, como ID e cargo, garantem que o processo seja preciso e sem erros.  
 O sistema é altamente escalável, permitindo ajustes ou adições futuras sem comprometer a integridade da aplicação. A integração entre a interface e o backend assegura que todas as remoções sejam refletidas de forma consistente e precisa na base de dados, mantendo o desempenho da aplicação.
 
-=== Visualizar produto - Mariana Done
+=== Visualizar produto
 
 A funcionalidade de visualização de produtos oferece uma interface intuitiva, apresentando informações de forma clara e eficiente. A distinção entre utilizadores autenticados e não autenticados melhora a experiência, proporcionando um acesso personalizado às funcionalidades relevantes. A navegação é fluida e otimizada, sem comprometer o desempenho do sistema.
 
 Do ponto de vista técnico, a aplicação garante um carregamento rápido e eficiente, com imagens otimizadas para uma navegação ágil. Funcionalidades como a visualização do número de encomendas e a possibilidade de eliminar produtos contribuem para uma gestão eficaz do catálogo, refletindo um compromisso com a qualidade e a experiência do utilizador.
 
-=== Ordenar catálogo - Lobo Done
+=== Ordenar catálogo
 
 A funcionalidade de ordenação do catálogo foi projetada para oferecer aos utilizadores uma experiência de navegação otimizada e personalizada, permitindo que os produtos sejam visualizados de forma organizada e relevante para diferentes contextos. Com esta ferramenta, é possível ordenar os itens do catálogo com base em diversos critérios, como nome, preço, popularidade, data de adição ou outros atributos configuráveis.
 
-=== Iniciar Sessão - Mariana Done
+=== Iniciar Sessão
 
 Este início de sessão evidencia-se pela sua eficácia e adaptabilidade, proporciona uma experiência segura e personalizada para os seus utilizadores. Com uma interface simplificada e mensagens claras, o sistema facilita o processo de autenticação e assegura que cada utilizador acede apenas às funcionalidades e dados relevantes.
 
 A implementação dá prioridade a eficiência e segurança, pois verifica as credenciais de forma rápida e garante a proteção dos dados. O _design_ do fluxo de _login_ é otimizado para minimizar erros, destaca-se o equilíbrio entre desempenho técnico e experiência do utilizador.
 
-=== Terminar Sessão - Mariana Done
+=== Terminar Sessão
 
 A funcionalidade de "Terminar Sessão" é eficiente e direta, permite aos utilizadores encerrar as suas sessões de forma rápida e segura. A opção encontra-se integrada de forma intuitiva no menu de navegação, ajustando-se a diferentes tipos de utilizador e garante que todos os dados da sessão são removidos de forma adequada, mantendo a proteção das informações do utilizador.
 
