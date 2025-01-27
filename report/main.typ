@@ -647,7 +647,7 @@ Este requisito foi identificado durante uma reunião com o Sr. Odin.
 
 *Especificação dos requisitos do sistema:*
 
-14.1 O sistema pede ao gestor o ID único e password do fornecedor ou trabalhador que pretende remover.
+14.1 O sistema pede ao gestor o ID único e o cargo do utilizador que pretendende (fornecedor ou trabalhador) que pretende remover.
 
 14.2 O sistema elimina os dados do ex-fornecedor ou ex-trabalhador.
 
@@ -1035,7 +1035,7 @@ Este caso de uso foi descrito com base no *requisito funcional nº 13 - Registo 
 
 ==== Remover da aplicação antigo Fornecedor ou Funcionário
 
-Este caso de uso foi descrito com base no *requisito funcional nº 14 - Remoção na aplicação dos Novos Fornecedores e Funcionários*.
+Este caso de uso foi descrito com base no *requisito funcional nº 14 - Remoção na aplicação dos antigos Fornecedores e Funcionários*.
 #figure(
   caption: "Caso de Uso 22 - Remover da aplicação antigo Fornecedor ou Funcionário",
   kind: image,
@@ -1899,7 +1899,7 @@ A validação dessas regras ocorre automaticamente durante o processo de criaç�
 
 === Visualização do Catálogo - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
 
-A funcionalidade de *Visualização do Catálogo* foi desenvolvida para oferecer aos utilizadores, sejam eles gestores, clientes entre outros, uma interface clara, interativa e informativa para explorar os produtos disponíveis. A funcionalidade diferencia as experiências de navegação entre utilizadores autenticados e não autenticados. O objetivo é proporcionar uma navegação eficiente e detalhada.
+A funcionalidade de *Visualização do Catálogo* foi concebida para proporcionar aos utilizadores, sejam eles gestores, clientes ou outros, uma interface clara, interativa e informativa para explorar os produtos disponíveis. Esta funcionalidade não diferencia as experiências de navegação entre utilizadores autenticados e não autenticados, com o objetivo de garantir uma navegação eficiente e detalhada. Conforme descrito no *requisito funcional n.º 7 - Visualizar Catálogo*, "o sistema deve permitir que o catálogo de produtos seja acessível a qualquer utilizador, mesmo que este não esteja autenticado no sistema".
 
 Nesta etapa, os produtos são apresentados em uma listagem geral com as seguintes funcionalidades principais:
 
@@ -1907,6 +1907,18 @@ Filtros Avançados: Os utilizadores podem filtrar os produtos por categorias, pr
 
 Visualização Resumida: Cada produto é apresentado com uma miniatura da imagem, nome, preço e um botão para mais detalhes.
 Paginação ou Rolagem Infinita: Para melhorar a performance e experiência de navegação, os produtos são carregados em lotes.
+
+#figure(
+  caption: "Visualização do Catálogo sem login",
+  kind: image,
+  image("images/UI/catalogosemlogin.png", width: 90%)
+)
+
+#figure(
+  caption: "Visualização do Catálogo com login",
+  kind: image,
+  image("images/UI/catalogocomlogin.png", width: 90%)
+)
 
 
 === Visualização das encomendas - Rita
@@ -2001,7 +2013,7 @@ O processo de registo e atualização de peças é realizado através de um form
 === Registo na aplicação dos Novos Fornecedores e Funcionários - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
 
 
-A funcionalidade de  *Registo na Aplicação de Novos Fornecedores e Funcionários* é essencial para a gestão eficiente de utilizadores no sistema. Esta funcionalidade foi projetada para ser simples e intuitiva, garantindo que as informações necessárias sejam recolhidas de forma clara, ao mesmo tempo que assegura a segurança e a consistência dos dados inseridos.
+A funcionalidade de  *Registo na Aplicação de Novos Fornecedores e Funcionários* é essencial para a gestão eficiente de utilizadores no sistema. Esta funcionalidade foi projetada para ser simples e intuitiva, garantindo que as informações necessárias sejam recolhidas de forma clara, ao mesmo tempo que assegura a segurança e a consistência dos dados inseridos. Tal como é definido no *requisito funcional nº 13 - Registo na Aplicação de Novos Fornecedores e Funcionários*.
 
 O processo de registo é realizado preenchendo um formulário que inclui os seguintes campos obrigatórios:
 
@@ -2012,17 +2024,31 @@ O processo de registo é realizado preenchendo um formulário que inclui os segu
 - Cargo: Definição da função ou posição do utilizador no sistema, como fornecedor, funcionário, gestor, entre outros. Este campo é crucial para configurar permissões e acessos personalizados.
 - ID do Utilizador: Um identificador único atribuído ao utilizador, utilizado para fins de organização, rastreabilidade e integração com outros módulos do sistema.
 
+#figure(
+  caption: "Registo de Novo Utilizador",
+  kind: image,
+  image("images/UI/novoutlizador.png", width: 60%)
+)
+
 Esta funcionalidade garante que os novos utilizadores, sejam fornecedores ou funcionários, sejam registados de forma padronizada e segura, permitindo a gestão eficiente de acessos e operações. Além disso, a validação automática dos dados durante o preenchimento do formulário reduz erros, promovendo uma experiência de registo ágil e confiável.
 
 === Remoção na aplicação dos antigos Fornecedores e Funcionários - Dionísio Done - falta imagem e não fazes referência ao requisito que está a ser cumprido
 
 
-A funcionalidade de *Remoção na Aplicação dos Antigos Fornecedores e Funcionários* foi desenvolvida para facilitar a gestão do sistema, permitindo que utilizadores desatualizados ou que já não fazem parte da organização sejam removidos de forma rápida e segura.
+A funcionalidade de *Remoção na Aplicação dos Antigos Fornecedores e Funcionários* foi desenvolvida para facilitar a gestão do sistema, permitindo que utilizadores desatualizados ou que já não fazem parte da organização sejam removidos de forma rápida e segura.Tal como é definido no *requisito funcional nº 14 - Remoção na Aplicação dos Antigos Fornecedores e Funcionários* .
+
 
 O processo de remoção requer apenas a introdução de dois campos essenciais:
 
 - ID do Utilizador: Identificador único que garante a seleção exata do utilizador a ser removido. Este campo elimina quaisquer ambiguidades no processo de exclusão.
 - Cargo: Definição da função do utilizador no sistema (como fornecedor, funcionário, gestor, etc.), assegurando que as permissões e funções associadas ao cargo são também devidamente atualizadas ou removidas.
+
+#figure(
+  caption: "Remoção de Utilizador",
+  kind: image,
+  image("images/UI/removerutilizador.png", width: 60%)
+)
+
 
 Com base nesses dados, o sistema executa a remoção do utilizador, garantindo a integridade da base de dados e a manutenção de um ambiente organizado. Esta funcionalidade é simples, eficiente e segura, contribuindo para uma gestão eficaz dos recursos humanos e fornecedores no sistema.
 
