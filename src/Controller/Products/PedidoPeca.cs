@@ -26,6 +26,42 @@ namespace Valhala.Controller.Products {
             return ID == pedido.ID;
         }
 
+        public int GetID() {
+            return ID;
+        }
+
+        public int GetQuantidade() {
+            return Quantidade;
+        }
+
+        public byte GetEstado() {
+            return Estado;
+        }
+
+        public int GetPecaID() {
+            return PecaID;
+        }
+
+        public int GetGestorID() {
+            return GestorID;
+        }
+
+        public void SetID(int id) {
+            ID = id;
+        }
+
+        public void SetQuantidade(int quantidade) {
+            Quantidade = quantidade;
+        }
+
+        public void SetEstado(byte estado) {
+            Estado = estado;
+        }
+
+        public void SetPecaID(int pecaID) {
+            PecaID = pecaID;
+        }
+
         public override int GetHashCode() {
             return ID.GetHashCode();
         }
