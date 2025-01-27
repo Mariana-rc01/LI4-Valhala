@@ -1911,13 +1911,13 @@ Paginação ou Rolagem Infinita: Para melhorar a performance e experiência de n
 #figure(
   caption: "Visualização do Catálogo sem login",
   kind: image,
-
+  image("images/UI/catalogosemlogin.png", width: 90%)
 )
 
 #figure(
   caption: "Visualização do Catálogo com login",
   kind: image,
-
+  image("images/UI/catalogocomlogin.png", width: 90%)
 )
 
 
@@ -2027,6 +2027,7 @@ O processo de registo é realizado preenchendo um formulário que inclui os segu
 #figure(
   caption: "Registo de Novo Utilizador",
   kind: image,
+  image("images/UI/novoutlizador.png", width: 60%)
 )
 
 Esta funcionalidade garante que os novos utilizadores, sejam fornecedores ou funcionários, sejam registados de forma padronizada e segura, permitindo a gestão eficiente de acessos e operações. Além disso, a validação automática dos dados durante o preenchimento do formulário reduz erros, promovendo uma experiência de registo ágil e confiável.
@@ -2045,7 +2046,7 @@ O processo de remoção requer apenas a introdução de dois campos essenciais:
 #figure(
   caption: "Remoção de Utilizador",
   kind: image,
-
+  image("images/UI/removerutilizador.png", width: 60%)
 )
 
 
