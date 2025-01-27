@@ -72,6 +72,39 @@ namespace Valhala.Controller.Data {
             return peca;
         }
 
+        public int GetStock(int id) {
+            int stock = 0;
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT Quantidade FROM Peça WHERE ID = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            stock = reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return stock;
+        }
+
+        public void UpdateStock(int id, int quantidade) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE Peça SET Quantidade = @quantidade WHERE ID = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@quantidade", quantidade);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public Peca Put(int id, Peca peca) {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {

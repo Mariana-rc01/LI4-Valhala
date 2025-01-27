@@ -48,10 +48,10 @@ namespace Valhala.Controller.Data {
                                 reader.GetInt32(0), // id
                                 reader.GetByte(1), // estado
                                 reader.GetDateTime(2), // dataCriacao
-                                reader.GetDateTime(3), // dataEntrega
+                                reader.IsDBNull(3) ? null : reader.GetDateTime(3), // dataEntrega
                                 reader.GetInt32(4), // cliente
                                 reader.GetInt32(5), // produto
-                                reader.GetInt32(6)  // etapa
+                                reader.IsDBNull(6) ? null : reader.GetInt32(6)  // etapa
                             );
                         }
                     }
@@ -97,6 +97,34 @@ namespace Valhala.Controller.Data {
             return encomenda;
         }
 
+        public void Update(int id, Encomenda encomenda) {
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                string sql = @"
+                UPDATE Encomenda
+                SET Estado = @estado,
+                    [Data de Criação] = @dataCriacao,
+                    [Data de Entrega] = @dataEntrega,
+                    [Cliente] = @cliente,
+                    [Produto] = @produto,
+                    [Etapa] = @etapa
+                WHERE id = @id;
+                ";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Parameters.AddWithValue("@estado", encomenda.GetEstado());
+                    command.Parameters.AddWithValue("@dataCriacao", encomenda.GetDataCriacao());
+                    command.Parameters.AddWithValue("@dataEntrega", encomenda.GetDataEntrega() ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@cliente", encomenda.GetCliente());
+                    command.Parameters.AddWithValue("@produto", encomenda.GetProduto());
+                    command.Parameters.AddWithValue("@etapa", encomenda.GetEtapa() ?? (object)DBNull.Value);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
         public List<Encomenda> List() {
             List<Encomenda> encomendas = new List<Encomenda>();
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
@@ -115,7 +143,7 @@ namespace Valhala.Controller.Data {
                                 reader.IsDBNull(3) ? null : reader.GetDateTime(3), // dataEntrega
                                 reader.GetInt32(4), // cliente
                                 reader.GetInt32(5), // produto
-                                reader.GetInt32(6)  // etapa
+                                reader.IsDBNull(6) ? null : reader.GetInt32(6)  // etapa
                             ));
                         }
                     }
@@ -209,6 +237,30 @@ namespace Valhala.Controller.Data {
                 }
             }
             return count;
+        }
+
+        public List<(Peca, int)> GetNeededParts(int encomendaID) {
+            List<(Peca, int)> pecas = new List<(Peca, int)>();
+            Encomenda encomenda = Get(encomendaID);
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand(@"
+                SELECT Peca_ID, Quantidade
+                FROM [PeçaEtapa]
+                WHERE Etapa_ID = @etapa", connection))
+                {
+                    command.Parameters.AddWithValue("@etapa", encomenda.GetEtapa());
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            pecas.Add((PecaDAO.GetInstance().Get(reader.GetInt32(0)), reader.GetInt32(1)));
+                        }
+                    }
+                }
+            }
+            return pecas;
         }
     }
 }

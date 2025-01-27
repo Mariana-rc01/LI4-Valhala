@@ -1,0 +1,107 @@
+@using Valhala.Controller.UI
+@inject UIService UIService
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
+<MudDialog class="p-12" Style="width: 800px">
+    <DialogContent>
+        <MudStepper CenterLabels="true" ShowCompleteInsteadOfNext="true" CompletedStepColor="Color.Dark" ActiveStepColor="Color.Dark" CurrentStepColor="Color.Dark">
+            <ChildContent>
+            @if(@order.GetEstado() == 0){
+                <MudStep Title="PROCESSAMENTO"></MudStep>
+                <MudStep Title="MONTAGEM"></MudStep>
+                <MudStep Title="ENTREGUE"></MudStep>
+            } else if(@order.GetEstado() == 1){
+                <MudStep Title="PROCESSAMENTO" Completed="true"></MudStep>
+                <MudStep Title="MONTAGEM"></MudStep>
+                <MudStep Title="ENTREGUE"></MudStep>
+            } else if(@order.GetEstado() == 2){
+                <MudStep Title="PROCESSAMENTO" Completed="true"></MudStep>
+                <MudStep Title="MONTAGEM" Completed="true"></MudStep>
+                <MudStep Title="ENTREGUE" Completed="true"></MudStep>
+            }
+            </ChildContent>
+            <ActionContent Context="stepper">
+            </ActionContent>
+        </MudStepper>
+        <div class="flex flex-row gap-8 mt-5 justify-center items-center w-full">
+            <div class="w-full outline outline-dashed rounded-lg my-1 p-4 flex flex-col items-center justify-center ml-8">
+                <img class="w-64 h-64" src="@order.GetProdutoDesenho()" />
+            </div>
+            <div class="w-full flex flex-col pl-4 gap-2">
+                <MudText Typo="Typo.h5" Label="Nome do Produto" class="font-semibold text-4xl">@GetLastWord(order.GetProdutoNome())</MudText>
+                <MudText Typo="Typo.h6" Label="Tipo do Produto">@GetFirstWord(order.GetProdutoNome())</MudText>
+                <MudText Label="Identificador">Encomenda nº @order.GetID()</MudText>
+                <MudText Typo="Typo.h6" Label="DC">Data de Criação</MudText>
+                <MudText Label="Data de Criação">@order.GetDataCriacao().Date.ToString("MM/dd/yyyy")</MudText>
+                <MudText Typo="Typo.h6" Label="DE">Data de Entrega</MudText>
+                @if(@order.GetDataEntrega() != null){
+                    <MudText DataLabel="Data de Entrega">@order.GetDataEntrega().Value.Date.ToString("MM/dd/yyyy")</MudText>
+                } else{
+                    <MudText DataLabel="Data de Entrega">Por entregar</MudText>
+                }
+                @if(@order.GetEstado() == 0){
+                    <MudButton OnClick="ProcessarEncomenda" Variant="Variant.Filled" class="mt-5" Style="background-color: rgba(13,5,27,1); color: white; font-weight: medium; font-size: 18px; width: 245px; height: 50px; border-radius: 28px;">Processar</MudButton>
+                }
+                @if(@order.GetEstado() == 1){
+                    <MudButton OnClick="NavigateToMontagem" Variant="Variant.Filled" class="mt-5" Style="background-color: rgba(13,5,27,1); color: white; font-weight: medium; font-size: 18px; width: 245px; height: 50px; border-radius: 28px;">Linha de Montagem</MudButton>
+                }
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    private MudDialogInstance _MudDialog { get; set; }
+
+    [Parameter]
+    public int orderId { get; set; }
+
+    private EncomendaUI order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = UIService.getEncomenda(orderId);
+    }
+
+    private void Cancel() => _MudDialog.Cancel();
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private string GetFirstWord(string nome)
+    {
+        var words = nome.Split(' ');
+
+        var name = words.FirstOrDefault() ?? nome;
+        switch (name)
+        {
+            case "Cadeira":
+                return "Cadeira";
+            case "Mesa":
+                return "Mesa";
+            case "Estante":
+                return "Estante";
+            case "Banco":
+                return "Banco";
+            case "Estrutura":
+                return "Cama";
+            default:
+                return nome;
+        }
+    }
+
+    private void NavigateToMontagem()
+    {
+        NavigationManager.NavigateTo($"/montagem/{orderId}");
+    }
+
+    private void ProcessarEncomenda()
+    {
+        UIService.changeEstadoEncomenda(orderId, 1);
+        NavigationManager.NavigateTo($"/orders", true);
+    }
+}

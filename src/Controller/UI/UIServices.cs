@@ -89,8 +89,34 @@ namespace Valhala.Controller.UI
             return encomendasUI;
         }
 
+        public EncomendaUI getEncomenda(int id) {
+            Encomenda encomenda = this.valhalaLn.getEncomenda(id);
+            return new EncomendaUI(encomenda);
+        }
+
+        public List<PecaUI> listPecasEncomenda(int idProdutoEnc) {
+            List<int> pecasIds = this.valhalaLn.listPecasEncomenda(idProdutoEnc);
+            List<PecaUI> pecasUI = new List<PecaUI>();
+
+            for(int i = 0; i < pecasIds.Count; i++){
+                PecaUI peca = getPeca(pecasIds[i]);
+                pecasUI.Add(peca);
+            }
+
+            return pecasUI;
+        }
+
+        public void changeEstadoEncomenda(int id, int estado) {
+            this.valhalaLn.changeEstadoEncomenda(id, estado);
+        }
+
         public List<Fornecedor> listFornecedores() {
             return this.valhalaLn.listFornecedores();
+        }
+
+        public Produto GetProduto(int id)
+        {
+            return valhalaLn.getProduto(id);
         }
     }
 }

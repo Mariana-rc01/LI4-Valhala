@@ -29,7 +29,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                string sql = "DELETE FROM Produto_Peça WHERE Peca_ID = @PecaID AND Produto_ID = @ProdutoID";
+                string sql = "DELETE FROM ProdutoPeça WHERE Peca_ID = @PecaID AND Produto_ID = @ProdutoID";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@PecaID", pecaID);
@@ -44,7 +44,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                string sql = "SELECT * FROM Produto_Peça";
+                string sql = "SELECT * FROM ProdutoPeça";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -66,7 +66,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                string sql = "SELECT COUNT(*) FROM Produto_Peça WHERE Peca_ID = @PecaID AND Produto_ID = @ProdutoID";
+                string sql = "SELECT COUNT(*) FROM ProdutoPeça WHERE Peca_ID = @PecaID AND Produto_ID = @ProdutoID";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@PecaID", pecaID);
@@ -83,7 +83,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                string sql = "SELECT Produto_ID FROM Produto_Peça WHERE Peca_ID = @PecaID";
+                string sql = "SELECT Produto_ID FROM ProdutoPeça WHERE Peca_ID = @PecaID";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@PecaID", pecaID);
@@ -104,7 +104,7 @@ namespace Valhala.Controller.Data {
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
             {
                 connection.Open();
-                string sql = "SELECT Peca_ID FROM Produto_Peça WHERE Produto_ID = @ProdutoID";
+                string sql = "SELECT Peca_ID FROM ProdutoPeça WHERE Produto_ID = @ProdutoID";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.AddWithValue("@ProdutoID", produtoID);

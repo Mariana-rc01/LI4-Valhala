@@ -10,6 +10,9 @@
 @using Valhala.Controller.Data
 @inject NavigationManager NavManager
 @using Valhala.Authentication
+@using Valhala.Components.Pages.Dialogs
+@inject IDialogService DialogService
+@inject UIService UIService
 
 @using Microsoft.AspNetCore.Components.Authorization
 
@@ -21,7 +24,7 @@
     Encomendas
 </MudText>
 
-<MudTable Items="@encomendas" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6">
+<MudTable Items="@_encomendas" T="EncomendaUI" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info" Height="70vh" class="mt-8" RowsPerPage="6" OnRowClick="OpenDetailsDialog" RowClass="hover:cursor-pointer">
     <HeaderContent>
         <MudTh></MudTh>
         <MudTh>Identificador</MudTh>
@@ -67,7 +70,7 @@
 
 @code { 
     private bool _loading;
-    private IEnumerable<EncomendaUI> encomendas = new List<EncomendaUI>();
+    private IEnumerable<EncomendaUI> _encomendas = new List<EncomendaUI>();
     private string? UserRole => userSession?.Role;
     private UserSession? userSession;
 
@@ -90,9 +93,9 @@
         }
 
         if(UserRole == "Gestor" || UserRole == "Funcionario"){
-            encomendas = UIService.listEncomendas();
+            _encomendas = UIService.listEncomendas();
         } else if(UserRole == "Cliente"){
-            encomendas = UIService.listEncomendasCliente(int.Parse(id));
+            _encomendas = UIService.listEncomendasCliente(int.Parse(id));
         }
     }
 
@@ -101,5 +104,18 @@
     private bool IsGestor() => userSession?.Role == "Gestor";
 
     private bool IsCliente() => userSession?.Role == "Cliente";
+
+    private void OpenDetailsDialog(TableRowClickEventArgs<EncomendaUI> tableRowClickEventArgs)
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Large };
+
+        var parameters = new DialogParameters<OrderDetailsDialog> {
+            {"orderId", tableRowClickEventArgs.Item.GetID()}
+        };
+
+        if(UserRole == "Gestor" || UserRole == "Funcionario") {
+            DialogService.ShowAsync<OrderDetailsDialog>("", parameters, options);
+        }
+    }
 
 }

@@ -1,0 +1,181 @@
+@page "/montagem/{orderId:int}"
+
+@using Valhala.Controller.Products
+@using Valhala.Controller.UI
+@using Microsoft.AspNetCore.Components
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JSRuntime
+@using MudBlazor
+@using System.Security.Claims
+@using Valhala.Controller.Data
+@inject NavigationManager NavManager
+@using Valhala.Authentication
+@using Valhala.Components.Pages.Dialogs
+@inject IDialogService DialogService
+@inject UIService UIService
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject UIService UIService
+
+<PageTitle>Catálogo</PageTitle>
+
+<div class="flex justify-between items-left flex-column w-full">
+    <MudText Typo="Typo.h4">
+        Linha de Montagem @GetLastWord(orderUI.GetProdutoNome())
+    </MudText>
+    <!-- Por começar montagem -->
+    @if(@order.GetEtapa() == null){
+        <MudPaper Style="width: 100%;" class="mt-8">
+            <div class="flex flex-row">
+                <div class="flex flex-row gap-8 mt-5">
+                    @if(@orderUI.GetProdutoDesenho() != ""){
+
+                        <img src="@orderUI.GetProdutoDesenho()" class="h-[46rem] px-32"/>
+                    }
+                </div>
+                <div class="w-full flex flex-col gap-4 pt-16">
+                    <MudText Typo="Typo.h1" class="text-6xl font-semibold" Label="Nome do Produto">@GetLastWord(orderUI.GetProdutoNome())</MudText>
+                    <MudText Typo="Typo.h5" class="text-md" Label="Peças">Peças necessárias para a montagem:</MudText>
+                    <div class="grid grid-cols-4 gap-8 pr-4 pt-16">
+                        @foreach (var peca in _pecas)
+                        {
+                            <img src="@peca.GetImagem()" class="w-28 h-28"/>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-row justify-end pr-10 -translate-y-6">
+                <MudButton OnClick="(e) => startAssembly()" Variant="Variant.Filled" Color="Color.Dark" class="rounded-full">Começar</MudButton>
+            </div>
+        </MudPaper>
+    } else {
+        <MudPaper Style="width: 100%;" class="mt-8">
+            <!-- Montagem em curso -->
+            <MudStepper CenterLabels="true" ShowCompleteInsteadOfNext="true" CompletedStepColor="Color.Dark" ActiveStepColor="Color.Dark" CurrentStepColor="Color.Dark">
+                <ChildContent>
+                @for (int i = 0; i < _numberOfSteps; i++)
+                {
+                    <MudStep Completed="@(i < index + 1)"></MudStep>
+                }
+                </ChildContent>
+                <ActionContent Context="stepper">
+                    <div class="flex flex-col w-full">
+                        <div class="flex flex-col gap-8 items-center justify-center w-full select-none pointer-events-none">
+                            <img src="@(getEtapaImagem(@order.GetEtapa().Value))" />
+                        </div>
+                        <div class="flex flex-row justify-end pr-6 items-center gap-12">
+                            @if(!_partsAvailable) {
+                                <p>
+                                    ⚠️ Não é possível avançar para a próxima etapa, peças em falta.
+                                </p>
+                            }
+                            <MudButton OnClick="(e) => nextStep()" Variant="Variant.Text" StartIcon="@Icons.Material.Outlined.ArrowForwardIos" Disabled="@(!_partsAvailable)">
+                                Seguinte
+                            </MudButton>
+                        </div>
+                    </div>
+                </ActionContent>
+            </MudStepper>
+        </MudPaper>
+    }
+</div>
+
+
+@code { 
+    [Parameter]
+    public int orderId { get; set; }
+    private Encomenda order;
+    private EncomendaUI orderUI;
+    private IEnumerable<PecaUI> _pecas = new List<PecaUI>();
+    private List<Etapa> _etapas = new List<Etapa>();
+    private int _numberOfSteps = 0;
+    private int index = 0;
+    private bool _partsAvailable = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        order = EncomendaDAO.GetInstance().Get(orderId);
+        orderUI = UIService.getEncomenda(orderId);
+        _pecas = UIService.listPecasEncomenda(@order.GetProduto());
+        _etapas = orderUI.GetSteps().OrderBy(e => e.ID).ToList();
+        for(int i = 0; i < _etapas.Count; i++)
+        {
+            if(_etapas[i].ID == order.GetEtapa())
+            {
+                index = i;
+                break;
+            }
+        }
+
+        if(order.GetEtapa() != null){
+            verifyParts();
+        }
+
+        _numberOfSteps = _etapas.Count;
+    }
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private void startAssembly()
+    {
+        order.SetEtapa(_etapas[0].ID);
+        EncomendaDAO.GetInstance().Update(orderId, order);
+    }
+
+    private void nextStep()
+    {
+        // Update parts stock
+        List<(Peca, int)> neededParts = EncomendaDAO.GetInstance().GetNeededParts(orderId);
+        foreach(var peca in neededParts)
+        {
+            PecaDAO.GetInstance().UpdateStock(peca.Item1.GetID(), PecaDAO.GetInstance().GetStock(peca.Item1.GetID()) - peca.Item2);
+        }
+
+
+        if(index == _etapas.Count - 1)
+        {
+            order.SetEstado(2);
+            EncomendaDAO.GetInstance().Update(orderId, order);
+            NavManager.NavigateTo("/orders");
+            return;
+        }
+
+        index++;
+        order.SetEtapa(_etapas[index].ID);
+        EncomendaDAO.GetInstance().Update(orderId, order);
+        verifyParts();
+    }
+
+    private string getEtapaImagem(int etapa)
+    {
+        for(int i = 0; i < _etapas.Count; i++)
+        {
+            if(_etapas[i].ID == etapa)
+            {
+                return _etapas[i].Imagem;
+            }
+        }
+
+        return "";
+    }
+
+    private void verifyParts()
+    {
+        List<(Peca, int)> neededParts = EncomendaDAO.GetInstance().GetNeededParts(orderId);
+        foreach(var peca in neededParts)
+        {
+            Console.WriteLine("Part: " + peca.Item1.GetID() + " Stock: " + PecaDAO.GetInstance().GetStock(peca.Item1.GetID()) + " Needed: " + peca.Item2);
+            if(peca.Item2 > PecaDAO.GetInstance().GetStock(peca.Item1.GetID()))
+            {
+                _partsAvailable = false;
+                return;
+            }
+        }
+        _partsAvailable = true;
+    }
+}

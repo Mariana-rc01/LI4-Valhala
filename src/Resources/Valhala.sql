@@ -26,7 +26,8 @@ CREATE TABLE [Produto] (
     [Nome] NVARCHAR(75) NOT NULL,
     [Preço] DECIMAL(18, 2) NOT NULL,
     [Descrição] NVARCHAR(MAX) NOT NULL,
-    [Imagem] VARCHAR(200) NULL
+    [Imagem] VARCHAR(200) NULL,
+    [Desenho] VARCHAR(200) NULL
 );
 GO
 
