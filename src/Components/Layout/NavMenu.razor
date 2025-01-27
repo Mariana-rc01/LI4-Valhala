@@ -110,6 +110,7 @@
                     new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
                     new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
                     new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
+                    new NavLink { Name = "Encomenda de Peças", Href = "/ordersparts", Icon = Icons.Material.Outlined.Inventory2 },
                     new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group, Expanded = true, SubLinks = new List<NavLink>
                     {
                         new NavLink { Name = "Registar Utilizador", Href = "/users/register", Icon = Icons.Material.Outlined.PersonAdd },
@@ -128,7 +129,8 @@
                 return new List<NavLink>
                 {
                     new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
-                    new NavLink { Name = "Gestão de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Handyman },
+                    new NavLink { Name = "Lista de Peças", Href = "/parts", Icon = Icons.Material.Outlined.Inventory2 },
+                    new NavLink { Name = "Encomenda de Peças", Href = "/ordersparts", Icon = Icons.Material.Outlined.Handyman },
                 };
 
             case "Funcionario":
@@ -136,7 +138,6 @@
                 {
                     new NavLink { Name = "Catálogo", Href = "/catalog", Icon = Icons.Material.Outlined.Chair },
                     new NavLink { Name = "Encomendas", Href = "/orders", Icon = Icons.Material.Outlined.Inventory2 },
-                    new NavLink { Name = "Utilizadores", Href = "/users", Icon = Icons.Material.Outlined.Group },
                 };
 
             default:
