@@ -9,16 +9,18 @@ namespace Valhala.Controller.UI{
             private DateTime? dataEntrega;
             private int cliente;
             private int produto;
+            private int? etapa;
             private ProdutoDAO produtoDAO;
             private ClienteDAO clienteDAO;
 
-            public EncomendaUI(int id, int estado, DateTime dataCriacao, DateTime? dataEntrega, int cliente, int produto) {
+            public EncomendaUI(int id, int estado, DateTime dataCriacao, DateTime? dataEntrega, int cliente, int produto, int? etapa) {
                 this.id = id;
                 this.estado = estado;
                 this.dataCriacao = dataCriacao;
                 this.dataEntrega = dataEntrega;
                 this.cliente = cliente;
                 this.produto = produto;
+                this.etapa = etapa;
                 this.produtoDAO = ProdutoDAO.GetInstance();
                 this.clienteDAO = ClienteDAO.GetInstance();
             }
@@ -30,6 +32,7 @@ namespace Valhala.Controller.UI{
                 this.dataEntrega = encomenda.GetDataEntrega();
                 this.cliente = encomenda.GetCliente();
                 this.produto = encomenda.GetProduto();
+                this.etapa = encomenda.GetEtapa();
                 this.produtoDAO = ProdutoDAO.GetInstance();
                 this.clienteDAO = ClienteDAO.GetInstance();
             }
@@ -58,6 +61,10 @@ namespace Valhala.Controller.UI{
                 return this.produto;
             }
 
+            public int? GetEtapa() {
+                return this.etapa;
+            }
+
             public string GetClienteNome() {
                 return this.clienteDAO.Get(this.cliente).GetNome();
             }
@@ -72,6 +79,14 @@ namespace Valhala.Controller.UI{
 
             public string GetProdutoDesenho() {
                 return this.produtoDAO.Get(this.produto).GetDesenho();
+            }
+
+            public int GetNumberOfSteps() {
+                return this.produtoDAO.GetNumberOfSteps(this.produto);
+            }
+
+            public List<Etapa> GetSteps() {
+                return this.produtoDAO.GetSteps(this.produto);
             }
     }
 }

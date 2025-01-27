@@ -92,7 +92,6 @@ namespace Valhala.Controller.Data {
             }
         }
 
-
         public bool ExisteProduto(int id) {
             bool existe = false;
             using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
@@ -269,6 +268,52 @@ namespace Valhala.Controller.Data {
                 }
             }
             return vendas;
+        }
+
+        public int GetNumberOfSteps(int id)
+        {
+            int steps = 0;
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM Etapa WHERE Produto = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            steps = reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            return steps;
+        }
+
+        public List<Etapa> GetSteps(int id)
+        {
+            List<Etapa> steps = new List<Etapa>();
+            using (SqlConnection connection = new SqlConnection(DAOConfig.GetConnectionString()))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("SELECT * FROM Etapa WHERE Produto = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            steps.Add(new Etapa(
+                                reader.GetInt32(0),   // ID
+                                reader.GetString(1),  // Imagem
+                                reader.GetInt32(2)    // Produto
+                            ));
+                        }
+                    }
+                }
+            }
+            return steps;
         }
     }
 }

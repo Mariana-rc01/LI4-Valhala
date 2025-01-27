@@ -110,5 +110,13 @@ namespace Valhala.Controller.Products {
         public override int GetHashCode() {
             return id.GetHashCode();
         }
+
+        public int GetNumberOfSteps() {
+            return this.produtoDAO.GetNumberOfSteps(this.id);
+        }
+
+        public List<Etapa> GetSteps() {
+            return this.produtoDAO.GetSteps(this.id);
+        }
     }
 }

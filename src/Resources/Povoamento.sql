@@ -342,8 +342,8 @@ INSERT INTO Encomenda (ID, Estado, [Data de Criação], [Data de Entrega], Clien
 (11, 2, '2025-01-09', '2025-01-18', 8, 2, 29),
 (12, 1, '2025-01-09', NULL, 9, 1, 12),
 (13, 1, '2025-01-09', NULL, 10, 4, 41),
-(14, 0, '2025-01-09', NULL, 3, 5, 53),
-(15, 0, '2025-01-10', NULL, 7, 5, 54);
+(14, 0, '2025-01-09', NULL, 3, 5, NULL),
+(15, 0, '2025-01-10', NULL, 7, 5, NULL);
 
 -- Tabela FuncionárioEncomenda
 INSERT INTO FuncionárioEncomenda (Funcionario_ID, Encomenda_ID) VALUES

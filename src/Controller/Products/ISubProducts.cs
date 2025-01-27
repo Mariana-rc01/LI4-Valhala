@@ -1,5 +1,7 @@
 namespace Valhala.Controller.Products {
     public interface ISubProducts {
+        public Produto getProduto(int id);
+
         public List<Peca> listPecas();
 
         public Peca getPeca(int id);
@@ -15,6 +17,8 @@ namespace Valhala.Controller.Products {
         public List<Encomenda> listEncomendas();
       
         public List<Encomenda> listEncomendasCliente(int idCliente);
+
+        public void changeEstadoEncomenda(int id, int estado);
 
         public Encomenda getEncomenda(int id);
 

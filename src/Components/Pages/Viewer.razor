@@ -1,0 +1,155 @@
+@page "/viewer/{produtoId:int}"
+
+@using Valhala.Controller.Products
+@using Valhala.Controller.UI
+@using Microsoft.AspNetCore.Components
+@inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JSRuntime
+@using MudBlazor
+@using System.Security.Claims
+@using Valhala.Controller.Data
+@inject NavigationManager NavManager
+@using Valhala.Authentication
+@using Valhala.Components.Pages.Dialogs
+@inject IDialogService DialogService
+@inject UIService UIService
+
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject UIService UIService
+
+<PageTitle>Catálogo</PageTitle>
+
+<div class="flex justify-between items-left flex-column w-full">
+    <MudText Typo="Typo.h4">
+        Linha de Montagem @GetLastWord(_produto.GetNome())
+    </MudText>
+    <!-- Por começar montagem -->
+    @if(_etapa == null){
+        <MudPaper Style="width: 100%;" class="mt-8">
+            <div class="flex flex-row">
+                <div class="flex flex-row gap-8 mt-5">
+                    @if(@_produto.GetDesenho() != ""){
+
+                        <img src="@_produto.GetDesenho()" class="h-[46rem] px-32"/>
+                    }
+                </div>
+                <div class="w-full flex flex-col gap-4 pt-16">
+                    <MudText Typo="Typo.h1" class="text-6xl font-semibold" Label="Nome do Produto">@GetLastWord(_produto.GetNome())</MudText>
+                    <MudText Typo="Typo.h5" class="text-md" Label="Peças">Peças necessárias para a montagem:</MudText>
+                    <div class="grid grid-cols-4 gap-8 pr-4 pt-16 select-none">
+                        @foreach (var peca in _pecas)
+                        {
+                            <img src="@peca.GetImagem()" class="w-28 h-28"/>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-row justify-end pr-10 -translate-y-6">
+                <MudButton Variant="Variant.Filled" Color="Color.Dark" class="rounded-full" OnClick="@((e) => startAssembly())">Visualizar</MudButton>
+            </div>
+        </MudPaper>
+    } else {
+        <MudPaper Style="width: 100%;" class="mt-8">
+            <!-- Montagem em curso -->
+            <MudStepper CenterLabels="true" ShowCompleteInsteadOfNext="true" CompletedStepColor="Color.Dark" ActiveStepColor="Color.Dark" CurrentStepColor="Color.Dark">
+                <ChildContent>
+                @for (int i = 0; i < _numberOfSteps; i++)
+                {
+                    <MudStep Completed="@(i < index + 1)"></MudStep>
+                }
+                </ChildContent>
+                <ActionContent Context="stepper">
+                    <div class="flex flex-col w-full">
+                        <div class="flex flex-col gap-8 items-center justify-center w-full select-none pointer-events-none">
+                            <img src="@(getEtapaImagem(_etapa.Value))" />
+                        </div>
+                        <div class="flex flex-row justify-between pr-6 select-none">
+                            <div class="select-none">
+                                <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Outlined.FirstPage" OnClick="@((e) => restartAssembly())">
+                                    Recomeçar
+                                </MudButton>
+                                <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Outlined.ArrowBackIos" OnClick="@((e) => previousStep())" Disabled="@(index == 0)">
+                                    Anterior
+                                </MudButton>
+                            </div>
+                            <MudButton Variant="Variant.Text" StartIcon="@Icons.Material.Outlined.ArrowForwardIos" OnClick="@((e) => nextStep())" Disabled="@(index == _numberOfSteps - 1)">
+                                Seguinte
+                            </MudButton>
+                        </div>
+                    </div>
+                </ActionContent>
+            </MudStepper>
+        </MudPaper>
+    }
+</div>
+
+
+@code { 
+    [Parameter]
+    public int produtoId { get; set; }
+    private Produto _produto;
+    private IEnumerable<PecaUI> _pecas = new List<PecaUI>();
+    private List<Etapa> _etapas = new List<Etapa>();
+    private int? _etapa = null;
+    private int _numberOfSteps = 0;
+    private int index = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _produto = UIService.GetProduto(produtoId);
+        _pecas = UIService.listPecasEncomenda(produtoId);
+        _etapas = _produto.GetSteps().OrderBy(e => e.ID).ToList();
+        _numberOfSteps = _etapas.Count;
+    }
+
+    private string GetLastWord(string nome)
+    {
+        var words = nome.Split(' ');
+        return words.LastOrDefault() ?? nome;
+    }
+
+    private string getEtapaImagem(int etapa)
+    {
+        Console.WriteLine("Etapa: " + etapa);
+        for(int i = 0; i < _etapas.Count; i++)
+        {
+            if(_etapas[i].ID == etapa)
+            {
+                return _etapas[i].Imagem;
+            }
+        }
+
+        return "";
+    }
+
+    private void startAssembly()
+    {
+        _etapa = _etapas[0].ID;
+    }
+
+    private void previousStep()
+    {
+        if(_etapa != null)
+        {
+            _etapa = _etapas[index - 1].ID;
+        }
+        index--;
+    }
+
+    private void nextStep()
+    {
+        if(_etapa != null)
+        {
+            _etapa = _etapas[index + 1].ID;
+        }
+
+        index++;
+    }
+
+    private void restartAssembly()
+    {
+        _etapa = _etapas[0].ID;
+        index = 0;
+    }
+}

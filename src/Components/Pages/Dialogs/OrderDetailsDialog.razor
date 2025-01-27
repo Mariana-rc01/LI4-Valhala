@@ -5,27 +5,31 @@
 
 <MudDialog class="p-12" Style="width: 800px">
     <DialogContent>
-        <MudStepper CenterLabels="true" ShowCompleteInsteadOfNext="true">
+        <MudStepper CenterLabels="true" ShowCompleteInsteadOfNext="true" CompletedStepColor="Color.Dark" ActiveStepColor="Color.Dark" CurrentStepColor="Color.Dark">
+            <ChildContent>
             @if(@order.GetEstado() == 0){
-                <MudStep Title="PROCESSAMENTO" Completed="true"></MudStep>
+                <MudStep Title="PROCESSAMENTO"></MudStep>
                 <MudStep Title="MONTAGEM"></MudStep>
                 <MudStep Title="ENTREGUE"></MudStep>
             } else if(@order.GetEstado() == 1){
                 <MudStep Title="PROCESSAMENTO" Completed="true"></MudStep>
-                <MudStep Title="MONTAGEM" Completed="true"></MudStep>
+                <MudStep Title="MONTAGEM"></MudStep>
                 <MudStep Title="ENTREGUE"></MudStep>
             } else if(@order.GetEstado() == 2){
                 <MudStep Title="PROCESSAMENTO" Completed="true"></MudStep>
                 <MudStep Title="MONTAGEM" Completed="true"></MudStep>
                 <MudStep Title="ENTREGUE" Completed="true"></MudStep>
             }
+            </ChildContent>
+            <ActionContent Context="stepper">
+            </ActionContent>
         </MudStepper>
-        <div class="flex flex-row gap-8 mt-5">
-            <div class="w-full outline outline-dashed rounded-lg my-1 p-4 center">
+        <div class="flex flex-row gap-8 mt-5 justify-center items-center w-full">
+            <div class="w-full outline outline-dashed rounded-lg my-1 p-4 flex flex-col items-center justify-center ml-8">
                 <img class="w-64 h-64" src="@order.GetProdutoDesenho()" />
             </div>
-            <div class="w-full flex flex-col">
-                <MudText Typo="Typo.h5" Label="Nome do Produto">@GetLastWord(order.GetProdutoNome())</MudText>
+            <div class="w-full flex flex-col pl-4 gap-2">
+                <MudText Typo="Typo.h5" Label="Nome do Produto" class="font-semibold text-4xl">@GetLastWord(order.GetProdutoNome())</MudText>
                 <MudText Typo="Typo.h6" Label="Tipo do Produto">@GetFirstWord(order.GetProdutoNome())</MudText>
                 <MudText Label="Identificador">Encomenda nº @order.GetID()</MudText>
                 <MudText Typo="Typo.h6" Label="DC">Data de Criação</MudText>
@@ -36,7 +40,12 @@
                 } else{
                     <MudText DataLabel="Data de Entrega">Por entregar</MudText>
                 }
-                <MudButton OnClick="NavigateToMontagem" Variant="Variant.Filled" Style="background-color: rgba(13,5,27,1); color: white; font-weight: medium; font-size: 18px; width: 245px; height: 50px; border-radius: 28px;">Linha de Montagem</MudButton>
+                @if(@order.GetEstado() == 0){
+                    <MudButton OnClick="ProcessarEncomenda" Variant="Variant.Filled" class="mt-5" Style="background-color: rgba(13,5,27,1); color: white; font-weight: medium; font-size: 18px; width: 245px; height: 50px; border-radius: 28px;">Processar</MudButton>
+                }
+                @if(@order.GetEstado() == 1){
+                    <MudButton OnClick="NavigateToMontagem" Variant="Variant.Filled" class="mt-5" Style="background-color: rgba(13,5,27,1); color: white; font-weight: medium; font-size: 18px; width: 245px; height: 50px; border-radius: 28px;">Linha de Montagem</MudButton>
+                }
             </div>
         </div>
     </DialogContent>
@@ -88,5 +97,11 @@
     private void NavigateToMontagem()
     {
         NavigationManager.NavigateTo($"/montagem/{orderId}");
+    }
+
+    private void ProcessarEncomenda()
+    {
+        UIService.changeEstadoEncomenda(orderId, 1);
+        NavigationManager.NavigateTo($"/orders", true);
     }
 }

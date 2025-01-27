@@ -20,6 +20,11 @@ namespace Valhala.Controller {
             return subUtilizadores.GetNomeUtilizador(id, tipo);
         }
 
+        // Produtos
+        public Produto getProduto(int id) {
+            return this.subProducts.getProduto(id);
+        }
+
         // Peças
         public List<Peca> listPecas() {
             return this.subProducts.listPecas();
@@ -67,6 +72,10 @@ namespace Valhala.Controller {
 
         public List<int> listPecasEncomenda(int idProdutoEnc) {
             return this.subProducts.listPecasEncomenda(idProdutoEnc);
+        }
+
+        public void changeEstadoEncomenda(int id, int estado) {
+            this.subProducts.changeEstadoEncomenda(id, estado);
         }
 
         // Fornecedores

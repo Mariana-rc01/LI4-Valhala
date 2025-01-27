@@ -99,15 +99,24 @@ namespace Valhala.Controller.UI
             List<PecaUI> pecasUI = new List<PecaUI>();
 
             for(int i = 0; i < pecasIds.Count; i++){
-                Peca peca = getPeca(pecasIds[i]);
+                PecaUI peca = getPeca(pecasIds[i]);
                 pecasUI.Add(peca);
             }
 
             return pecasUI;
         }
 
+        public void changeEstadoEncomenda(int id, int estado) {
+            this.valhalaLn.changeEstadoEncomenda(id, estado);
+        }
+
         public List<Fornecedor> listFornecedores() {
             return this.valhalaLn.listFornecedores();
+        }
+
+        public Produto GetProduto(int id)
+        {
+            return valhalaLn.getProduto(id);
         }
     }
 }

@@ -13,6 +13,10 @@ public interface IValhalaLN {
 
     public int RegistarUtilizador(int id, string nome, string senha, string tipo);
 
+    // Produtos
+
+    public Produto getProduto(int id);
+
     // Peças
     public List<Peca> listPecas();
 
@@ -33,6 +37,8 @@ public interface IValhalaLN {
     public Encomenda getEncomenda(int id);
 
     public List<int> listPecasEncomenda(int idProdutoEnc);
+
+    public void changeEstadoEncomenda(int id, int estado);
 
     // Fornecedores
 
