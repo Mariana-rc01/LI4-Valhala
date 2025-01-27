@@ -1,0 +1,133 @@
+@page "/ordersparts"
+@using MudBlazor
+@using Valhala.Controller.UI
+@using Valhala.Controller.Data
+@using Valhala.Controller.Products
+@using System.Security.Claims
+@using Valhala.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+
+<PageTitle>Pedidos de Peças</PageTitle>
+
+<MudText Typo="Typo.h1">Pedidos de Peças</MudText>
+
+<MudTable Items="@_pedidos" T="PedidoPeca" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" RowsPerPage="6" Height="70vh" RowClass="hover:cursor-pointer">
+    <HeaderContent>
+        <MudTh Class="text-center">Identificador</MudTh>
+        <MudTh Class="text-center">Peça</MudTh>
+        <MudTh Class="text-center">Quantidade</MudTh>
+        <MudTh Class="text-center">Estado</MudTh>
+        <MudTh Class="text-center">Ações</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Identificador" Class="text-center">@context.GetID()</MudTd>
+        <MudTd DataLabel="Peça" Class="text-center">@context.GetPecaID()</MudTd>
+        <MudTd DataLabel="Quantidade" Class="text-center">@context.GetQuantidade()</MudTd>
+        <MudTd DataLabel="Estado" Class="text-center">
+            @switch (@context.GetEstado())
+            {
+                case 0:
+                    <MudChip T="string" Color="Color.Info" Class="mr-2">Em Processamento</MudChip>;
+                    break;
+                case 1:
+                    <MudChip T="string" Color="Color.Warning" Class="mr-2">Enviado</MudChip>;
+                    break;
+                case 2:
+                    <MudChip T="string" Color="Color.Success" Class="mr-2">Entregue</MudChip>;
+                    break;
+                default:
+                    <MudChip T="string" Color="Color.Default" Class="mr-2">Desconhecido</MudChip>;
+                    break;
+            }
+        </MudTd>
+
+        @if (IsFornecedor() && context.GetEstado() == 0)
+        {
+            <MudTd Class="text-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => MarkAsSent(context)" Class="mud-button-fullwidth">Marcar como Enviado</MudButton>
+            </MudTd>
+        }
+
+        @if (IsGestor() && context.GetEstado() == 1)
+        {
+            <MudTd Class="text-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="() => MarkAsDelivered(context)" Class="mud-button-fullwidth">Marcar como Entregue</MudButton>
+            </MudTd>
+        }
+
+        @if (IsGestor() && context.GetEstado() == 2)
+        {
+            <MudTd Class="text-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => DeletePedido(context)" Class="mud-button-fullwidth">Eliminar Pedido</MudButton>
+            </MudTd>
+        }
+
+        @if (!IsFornecedor() && !IsGestor()) 
+        {
+            <MudTd Class="text-center">
+                <MudText>&nbsp;</MudText>
+            </MudTd>
+        }
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private bool _loading = true;
+    private IEnumerable<PedidoPeca> _pedidos = new List<PedidoPeca>();
+    private UserSession? userSession;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var claimsPrincipal = authState.User;
+
+        var id = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var role = claimsPrincipal.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+
+        userSession = id != null && role != null
+            ? new UserSession(int.Parse(id), "", role)
+            : null;
+
+        await CarregarPedidos();
+    }
+
+    private async Task CarregarPedidos()
+    {
+        _loading = true;
+
+        if (IsGestor())
+        {
+            _pedidos = await PedidoPecaDAO.GetInstance().ListarPedidoPecasAsync();
+        }
+        else if (IsFornecedor())
+        {
+            _pedidos = await PedidoPecaDAO.GetInstance().ListarPedidosFornecedorAsync(userSession!.ID);
+        }
+
+        _loading = false;
+    }
+
+    private bool IsGestor() => userSession?.Role == "Gestor";
+    private bool IsFornecedor() => userSession?.Role == "Fornecedor";
+
+    private async Task MarkAsSent(PedidoPeca pedido)
+    {
+        pedido.SetEstado(1); // Marcar como "Enviado"
+        await PedidoPecaDAO.GetInstance().AtualizarPedidoPeca(pedido);
+        await CarregarPedidos();
+    }
+
+    private async Task MarkAsDelivered(PedidoPeca pedido)
+    {
+        pedido.SetEstado(2); // Marcar como "Entregue"
+        await PedidoPecaDAO.GetInstance().AtualizarStockPeca(pedido.GetID());
+        await CarregarPedidos();
+    }
+    private async Task DeletePedido(PedidoPeca pedido)
+    {
+        await PedidoPecaDAO.GetInstance().RemoverPedidoPeca(pedido.GetID());
+        await CarregarPedidos();
+    }
+}
