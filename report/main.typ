@@ -14,7 +14,11 @@
 #counter(page).update(1)
 
 #heading(numbering: none, outlined: false)[Resumo]
-Este relatório apresenta o desenvolvimento inicial de um sistema de gestão para a empresa Valhala, especializada na produção e comercialização de móveis, focada na sua montagem. Desde a identificação de necessidades até o desenvolvimento de protótipos, todas as fases fundamentais foram consideradas para assegurar que o sistema satisfaça os requisitos de diversos utilizadores, como clientes, gestores, funcionários e fornecedores. A estrutura robusta do sistema é garantida pela correspondência do modelo lógico da base de dados e dos _casos de uso_, garantindo eficácia e funcionalidade. A tarefa feita estabelece o alicerce necessário para a execução do sistema, que será a etapa subsequente deste projeto. 
+Este relatório descreve o desenvolvimento inicial de um sistema de gestão para a empresa Valhala, especializada na produção de móveis, com foco na montagem. A primeira fase do projeto envolveu o levantamento de requisitos, definição de casos de uso e a criação de esboços de _interfaces_, com o objetivo de garantir que o sistema atende às necessidades dos utilizadores, como clientes, gestores, funcionários e fornecedores.
+
+Durante esta etapa, foi realizada a modelação lógica da base de dados, garantindo que a estrutura do sistema fosse eficiente e sem redundâncias. Além disso, os _mockups_ foram elaborados para oferecer uma visão clara da interface do utilizador, facilitando a definição das interações e funcionalidades.
+
+Este trabalho inicial estabeleceu as bases para a fase seguinte, que envolve a criação da base de dados física, desenvolvimento da aplicação e testes para validar a conformidade com os requisitos. A estrutura robusta do sistema, alinhada com os casos de uso e a modelação lógica, assegura que a futura implementação será eficaz e funcional.
 
 \
 
@@ -549,7 +553,7 @@ Esta funcionalidade permite ao gestor efetuar encomendas de _stock_ diretamente 
 
 9.3. O sistema deve enviar a encomenda ao fornecedor, registando a data e os itens encomendados para consulta futura.
 
-==== Gestão de Encomendas pelo Fornecedor
+==== Gestão de Encomendas de Peças
 
 Este requisito foi identificado durante uma reunião com os fornecedores.
 
@@ -561,7 +565,9 @@ Esta funcionalidade facilita a comunicação entre a empresa e os fornecedores, 
 
 10.1. O fornecedor deve poder visualizar as encomendas de peças recebidas da empresa.
 
-10.2. O fornecedor deve poder atualizar o estado de cada encomenda conforme o progresso do pedido.
+10.2. O gestor deve poder visualizar todas as encomendas de peças.
+
+10.2. O fornecedor e o gestor devem poder atualizar o estado de cada encomenda conforme o progresso do pedido.
 
 *Especificação dos requisitos do sistema:*
 
@@ -569,7 +575,9 @@ Esta funcionalidade facilita a comunicação entre a empresa e os fornecedores, 
 
 10.1.2. O sistema deve exibir detalhes relevantes de cada encomenda, como data de emissão, peça, quantidade e o estado atual.
 
-10.2.1 O sistema deve permitir que o fornecedor atualize o estado da encomenda, com opções como "Em processamento," "Despachada," e "Entregue.”
+10.2.1 O sistema deve permitir que o fornecedor atualize o estado da encomenda de "Em Processamento" para "Enviado".
+
+10.2.2. O sistema deve permitir que o gestor atualize o estado da encomenda para o estado de "Entregue".
 
 ==== Atualização Manual de _Stock_
 
@@ -1756,7 +1764,7 @@ A página inicial apresenta um design moderno, simples e funcional, o que reflet
 
 A implementação da aplicação seguiu um processo estruturado e metódico, baseado numa abordagem iterativa e incremental, conhecida como "_divide and conquer_". A estratégia consistiu em dividir o desenvolvimneto em fases bem definidas pela equipa de desenvolvedores de _software_, o que permitiu o avanço progressivo, a validação contínua e a integração das funcionalidades de forma coordenada e cooperativa.
 
-O trabalho inicial focou-se na configuração da base do projeto utilizando `.NET` para o _frontend_ e o _backend_, e a criação da base de dados em `SQL Server`. Nesta fase, partimos do modelo lógico definido na fase 4 - Conceção do Sistema de Dados, que foi traduzido para um modelo físico no ficheiro `Valhala.sql`. Além disso, o ficheiro `Povoamento.sql` foi utilizado para inserir os dados da empresa Valhala, de modo a ser possível testar as funcionalidades ao longo do desenvolvimento e apresentar o produto final completo.
+O trabalho inicial focou-se na configuração da base do projeto utilizando `.NET` para o _frontend_ e o _backend_. A base de dados foi criada em `SQL Server`, uma escolha que garantiu a integridade e a escalabilidade dos dados, além de facilitar a implementação das funcionalidades necessárias para o sistema. Nesta fase, partimos do modelo lógico definido na fase 4 - Conceção do Sistema de Dados. A partir disso, as tabelas e as relações entre elas foram configuradas, de acordo com os requisitos levantados. Por exemplo, criámos tabelas como Cliente, Produto, Peça, Fornecedor, entre outras, para suportar os dados fundamentais da empresa Valhala. Além disso, utilizámos o ficheiro Povoamento.sql para povoar a base de dados com dados de teste que permitiram validar as funcionalidades do sistema à medida que o desenvolvimento avançava.
 
 A arquitetura da aplicação foi desenhada com uma clara separação de responsabilidades, dividindo-a nas seguintes camadas:
 
@@ -1936,6 +1944,38 @@ A funcionalidade de *Atualização Manual de _Stock_* é essencial para garantir
   caption: "Atualizar stock de Peça",
   kind: image,
   image("images/UI/stockpeca.png", width: 50%)
+)
+
+=== Gestão de Encomendas de Peças - Mariana Done
+
+A funcionalidade de *Gestão de Encomendas de Peças* foi desenvolvida com o objetivo de otimizar o controlo e monitorização dos pedidos de peças dentro do sistema. O processo do pedido é composto por vários estados, permitindo que os utilizadores interajam com os pedidos de forma eficiente e com visibilidade em tempo real sobre o seu progresso. O fluxo é intuitivo, facilitando tanto para os fornecedores quanto para os gestores, isto garante uma gestão eficaz dos pedidos de peças.
+
+De seguida, é detalhado como este processo procede, conforme estabelecido no *requisito funcional nº 10 - Gestão de Encomendas de Peças*.
+
+1. Visualização de Pedidos de Peças
+No primeiro passo, o utilizador (fornecedor ou gestor) pode visualizar a tabela com todos os pedidos de peças. Cada linha da tabela contém informações essenciais sobre os pedidos, como *identificador do pedido*, *identificador da peça*, *quantidade solicitada* e o *estado do pedido*. Esta visualização permite uma rápida consulta e acompanhamento dos pedidos ativos no sistema.
+
+2. Ações Disponíveis conforme o Estado do Pedido
+No segundo passo, dependendo do *estado do pedido* e do *tipo de utilizador*, ações específicas são disponibilizadas. Estas ações estão integradas diretamente na tabela, permitindo ao utilizador realizar operações como *marcar um pedido como enviado* ou *marcar um pedido como entregue*, diretamente da interface. 
+
+- O *Fornecedor* pode marcar o pedido como *Enviado* assim que o pedido for enviado.
+- O *Gestor* tem a possibilidade de *marcar os pedidos como entregues* e *remover pedidos* quando estes forem finalizados. Essas funcionalidades são geridas de forma dinâmica, mostrando apenas as opções apropriadas de acordo com o estado do pedido e o papel do utilizador (fornecedor ou gestor).
+
+3. Atualização de Estado de Pedido
+Quando o utilizador executa qualquer uma das ações (como marcar o pedido como enviado ou entregue), o estado do pedido é atualizado automaticamente no sistema. Essa atualização é refletida de imediato na tabela, proporcionando uma resposta instantânea para o utilizador.
+
+A interação com a base de dados é feita de forma eficiente, garantindo que os pedidos são geridos e atualizados conforme as ações realizadas pelos utilizadores. O sistema permite também a gestão de pedidos de forma dinâmica, podendo adicionar novos pedidos à base de dados ou excluir aqueles que já foram concluídos.
+
+#figure(
+  caption: "Visualização de Pedidos de Peças - Gestor",
+  kind: image,
+  image("images/UI/pedidoGestor.png", width: 90%)
+)
+
+#figure(
+  caption: "Visualização de Pedidos de Peças - Fornecedor",
+  kind: image,
+  image("images/UI/pedidoFornecedor.png", width: 90%)
 )
 
 === Registo e atualização de peças pelo Fornecedor - Lobo Done
@@ -2165,6 +2205,12 @@ A funcionalidade de encomendas de peças destaca-se pela sua eficiência e integ
 
 A funcionalidade de atualização manual de stock oferece aos gestores um controlo direto e preciso sobre os níveis de inventário, permitindo intervenções rápidas sempre que necessário. Esta funcionalidade é particularmente útil para ajustes pontuais, correções ou atualizações que não dependem de processos automáticos, assegurando que os dados refletem a realidade do armazém em tempo real.
 
+=== Gestão de Encomendas de Peças - Mariana Done
+
+A funcionalidade de *Gestão de Encomendas de Peças* foi bem implementada e oferece uma experiência fluida e eficiente. A tabela exibe os pedidos de forma clara e responsiva. O processo de atualização do estado, como marcar pedidos como enviados ou entregues, é simples e reflete as mudanças em tempo real, garantindo que os utilizadores tenham visibilidade imediata. Além disso, a aplicação adapta as ações disponíveis conforme o papel do utilizador, com funcionalidades específicas para gestores e fornecedores, o que facilita a gestão e aumenta a segurança.
+
+Em termos de desempenho, a aplicação é estável e rápida, sem falhas notáveis. As operações de atualização são realizadas sem interrupções, proporcionando uma experiência de utilizador agradável e sem complexidade. A interface é intuitiva e fácil de navegar, tornando a gestão dos pedidos eficiente e simples.
+
 === Registo e atualização de peças pelo Fornecedor - Lobo Done
 
 A funcionalidade de registo e atualização de peças pelo fornecedor foi concebida para simplificar e agilizar a comunicação e o alinhamento entre os fornecedores e a gestão de inventário. Este recurso permite que os fornecedores registem novas peças e atualizem a sua informação diretamente no sistema, mantendo os dados sempre precisos e atualizados.
@@ -2204,11 +2250,9 @@ Esta função demonstra um equilíbrio eficaz entre a simplicidade e o desempenh
 
 = Conclusões e Trabalho Futuro
 
->>> Breve abordagem crítica a TODO o trabalho realizado (parte 1 e parte 2), referindo aspetos positivos e negativos que acharem dignos de realce, acompanhada, quando necessário, com a exposição de algumas linhas de orientação para trabalho futuro com vista à correção ou melhoramento de tudo aquilo que foi realizado nesta primeira parte do trabalho. 
+Concluímos a primeira fase do desenvolvimento do sistema, que abrangeu o levantamento de requisitos, modelação lógica e criação de _mockups_, sendo estas etapas essenciais para garantir que o projeto atendesse às necessidades da empresa. Durante este processo, a normalização dos dados e a estruturação de um modelo lógico robusto foram pontos chave, enquanto a criação de interfaces intuitivas visou assegurar uma experiência de utilizador eficiente. Esta fase estabeleceu as bases para a implementação do sistema, proporcionando uma visão clara do produto final.
 
-Concluímos a primeira fase do desenvolvimento do sistema, que incluiu o levantamento de requisitos, realização de casos de usos, modelação lógica e a criação de _mockups_. Durante esta etapa, foi garantida a normalização dos dados e a estruturação de um modelo lógico robusto, bem como o desenvolvimento de interfaces intuitivas.
-
-Os próximos passos consistem na preparação e implementação do sistema, incluindo a criação do esquema físico da base de dados, o desenvolvimento da aplicação e a realização de testes para assegurar a sua funcionalidade e conformidade com os requisitos levantados.
+A fase seguinte focou-se na implementação e avaliação dos serviços desenvolvidos, como a linha de montagem de um produto. A aplicação revelou-se estável e com bom desempenho, permitindo uma gestão eficaz e simplificada. No entanto, existem áreas de melhoria que devem ser exploradas, nomeadamente na realização de testes mais aprofundados e na expansão das funcionalidades de forma a garantir que o sistema continue a responder de forma eficiente às necessidades dos utilizadores. O trabalho futuro passará por implementar melhorias no desempenho e na usabilidade, além de explorar integrações com outros sistemas para uma experiência ainda mais fluida.
 
 #heading(numbering: none)[Referências]
 
