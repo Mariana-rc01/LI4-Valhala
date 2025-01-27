@@ -2330,18 +2330,23 @@ A fase seguinte focou-se na implementação e avaliação dos serviços desenvol
 
 #heading(numbering: none)[Referências]
 
-+ Kessler, J. (2022, setembro). Relax. Obtido de https://dbis-uibk.github.io/relax/landing
++ Kessler, J. (2022, setembro). Relax. Obtido de https://dbis-uibk.github.io/relax/landing.
 
-+ MySQL (s.d.). Documentação SQL. Obtido de https://dev.mysql.com/doc/
++ MySQL (s.d.). Documentação SQL. Obtido de https://dev.mysql.com/doc/.
 
-+ MySQL. (s.d.). MySQL Workbench. Obtido de https://www.mysql.com/products/workbench/
++ MySQL. (s.d.). MySQL Workbench. Obtido de https://www.mysql.com/products/workbench/.
 
-+ Sommerville, I. (2006). Software Engineering, 9th Edition, Pearson Education, 2010.Jay Hilyard, Stephen Teilhet, C\# Cookbook, 2nd Edition (Cookbooks (O'Reilly)), O'Reilly Media, Inc., 2nd edition, 2006. Obtido de https://engineering.futureuniversity.com/BOOKS%20FOR%20IT/Software-Engineering-9th-Edition-by-Ian-Sommerville.pdf
++ Sommerville, I. (2006). Software Engineering, 9th Edition, Pearson Education, 2010.Jay Hilyard, Stephen Teilhet, C\# Cookbook, 2nd Edition (Cookbooks (O'Reilly)), O'Reilly Media, Inc., 2nd edition, 2006. Obtido de https://engineering.futureuniversity.com/BOOKS%20FOR%20IT/Software-Engineering-9th-Edition-by-Ian-Sommerville.pdf.
 
-+ Visual Paradigm. (s.d.). Visual Paradigm. Obtido de https://www.visual-paradigm.com/
++ Visual Paradigm. (s.d.). Visual Paradigm. Obtido de https://www.visual-paradigm.com/.
 
-+ IKEA. (s.d.). IKEA. Obtido de https://www.ikea.com/pt/pt/
++ IKEA. (s.d.). IKEA. Obtido de https://www.ikea.com/pt/pt/.
 
++ Microsoft SQL Server (s.d.). Documentação SQL. Obtido de https://www.microsoft.com/en-us/sql-server.
+
++ .Net (s.d.). Documentação .Net. Obtido de https://dotnet.microsoft.com/en-us/.
+
++ MudBlazor (s.d.). Documentação MudBlazor. Obtido de https://mudblazor.com/.
 
 
 #heading(numbering: none)[Lista de Siglas e Acrónimos]
