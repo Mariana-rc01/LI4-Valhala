@@ -15,50 +15,59 @@
 
 <MudTable Items="@_pedidos" T="PedidoPeca" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" RowsPerPage="6" Height="70vh" RowClass="hover:cursor-pointer">
     <HeaderContent>
-        <MudTh>Identificador</MudTh>
-        <MudTh>Peça</MudTh>
-        <MudTh>Quantidade</MudTh>
-        <MudTh>Estado</MudTh>
-        @if (IsGestor()) { <MudTh>Ações</MudTh> }
+        <MudTh Class="text-center">Identificador</MudTh>
+        <MudTh Class="text-center">Peça</MudTh>
+        <MudTh Class="text-center">Quantidade</MudTh>
+        <MudTh Class="text-center">Estado</MudTh>
+        <MudTh Class="text-center">Ações</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Identificador">@context.GetID()</MudTd>
-        <MudTd DataLabel="Peça">@context.GetPecaID()</MudTd>
-        <MudTd DataLabel="Quantidade">@context.GetQuantidade()</MudTd>
-        <MudTd DataLabel="Estado">
+        <MudTd DataLabel="Identificador" Class="text-center">@context.GetID()</MudTd>
+        <MudTd DataLabel="Peça" Class="text-center">@context.GetPecaID()</MudTd>
+        <MudTd DataLabel="Quantidade" Class="text-center">@context.GetQuantidade()</MudTd>
+        <MudTd DataLabel="Estado" Class="text-center">
             @switch (@context.GetEstado())
             {
                 case 0:
-                    <MudChip T="string" Color="Color.Info">Em Processamento</MudChip>;
+                    <MudChip T="string" Color="Color.Info" Class="mr-2">Em Processamento</MudChip>;
                     break;
                 case 1:
-                    <MudChip T="string" Color="Color.Warning">Enviado</MudChip>;
+                    <MudChip T="string" Color="Color.Warning" Class="mr-2">Enviado</MudChip>;
                     break;
                 case 2:
-                    <MudChip T="string" Color="Color.Success">Entregue</MudChip>;
+                    <MudChip T="string" Color="Color.Success" Class="mr-2">Entregue</MudChip>;
                     break;
                 default:
-                    <MudChip T="string" Color="Color.Default">Desconhecido</MudChip>;
+                    <MudChip T="string" Color="Color.Default" Class="mr-2">Desconhecido</MudChip>;
                     break;
             }
         </MudTd>
 
         @if (IsFornecedor() && context.GetEstado() == 0)
         {
-            <MudTd>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => MarkAsSent(context)">Marcar como Enviado</MudButton>
+            <MudTd Class="text-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => MarkAsSent(context)" Class="mud-button-fullwidth">Marcar como Enviado</MudButton>
             </MudTd>
         }
+
         @if (IsGestor() && context.GetEstado() == 1)
         {
-            <MudTd>
-                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="() => MarkAsDelivered(context)">Marcar como Entregue</MudButton>
+            <MudTd Class="text-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="() => MarkAsDelivered(context)" Class="mud-button-fullwidth">Marcar como Entregue</MudButton>
             </MudTd>
         }
+
         @if (IsGestor() && context.GetEstado() == 2)
         {
-            <MudTd>
-                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => DeletePedido(context)">Eliminar Pedido</MudButton>
+            <MudTd Class="text-center">
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="() => DeletePedido(context)" Class="mud-button-fullwidth">Eliminar Pedido</MudButton>
+            </MudTd>
+        }
+
+        @if (!IsFornecedor() && !IsGestor()) 
+        {
+            <MudTd Class="text-center">
+                <MudText>&nbsp;</MudText>
             </MudTd>
         }
     </RowTemplate>
@@ -118,7 +127,6 @@
     }
     private async Task DeletePedido(PedidoPeca pedido)
     {
-        // Implementar a lógica para eliminar o pedido
         await PedidoPecaDAO.GetInstance().RemoverPedidoPeca(pedido.GetID());
         await CarregarPedidos();
     }
